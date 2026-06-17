@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from .accuracy import write_prediction_accuracy
 from .backtest import rank_candidates, run_backtest, write_summary
 from .config import (
     CONFIG_DIR,
@@ -15,6 +16,7 @@ from .config import (
     DEFAULT_FACTOR_PARAMS,
     DEFAULT_PAPER_STATE,
     DEFAULT_PAPER_TRADES,
+    DEFAULT_PREDICTION_ACCURACY,
     MINUTE_FILE,
     MODEL_DIR,
     PROCESSED_DIR,
@@ -519,8 +521,11 @@ def run_paper_from_prices(
     summary["optimization_total_return"] = best.get("total_return")
     summary["learning_top5_hit_rate"] = learning.get("top5_hit_rate")
     summary["learning_actual_limit_up_count"] = learning.get("actual_limit_up_count")
-    (REPORT_DIR / "paper_daily_summary.json").write_text(json.dumps(summary, indent=2, default=str))
     rank.to_csv(REPORT_DIR / "latest_rank.csv", index=False)
+    accuracy = write_prediction_accuracy(frame, model, summary, learning, DEFAULT_PREDICTION_ACCURACY)
+    if accuracy:
+        summary["prediction_accuracy_file"] = str(DEFAULT_PREDICTION_ACCURACY)
+    (REPORT_DIR / "paper_daily_summary.json").write_text(json.dumps(summary, indent=2, default=str))
     buys, sells = load_trade_lists(summary["date"])
     if send_email:
         email_config = load_email_config(email_config_file)

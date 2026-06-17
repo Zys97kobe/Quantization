@@ -42,6 +42,7 @@ PAPER_DIR = DATA_DIR / "paper"
 DEFAULT_PAPER_STATE = PAPER_DIR / "account.json"
 DEFAULT_PAPER_TRADES = PAPER_DIR / "trades.csv"
 DEFAULT_PAPER_DAILY = PAPER_DIR / "daily_returns.csv"
+DEFAULT_PREDICTION_ACCURACY = PAPER_DIR / "prediction_accuracy.csv"
 DEFAULT_LEARNING_REPORT = REPORT_DIR / "learning_report.json"
 DEFAULT_FACTOR_PARAMS = MODEL_DIR / "factor_params.json"
 
