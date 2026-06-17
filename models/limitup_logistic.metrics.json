@@ -1,0 +1,8 @@
+{
+  "rows": 260640,
+  "positive_rate": 0.02610880908532842,
+  "accuracy_at_0_5": 0.9738911909146716,
+  "precision_at_0_5": 0.0,
+  "recall_at_0_5": 0.0,
+  "top_decile_hit_rate": 0.039096071209330875
+}

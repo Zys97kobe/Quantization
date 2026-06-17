@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.quant.limitup.sell-morning</string>
+  <key>WorkingDirectory</key>
+  <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Library/Frameworks/Python.framework/Versions/3.12/bin/python3</string>
+    <string>-m</string>
+    <string>quant_limitup.cli</string>
+    <string>daily</string>
+    <string>--provider</string>
+    <string>sina</string>
+    <string>--start-date</string>
+    <string>20240101</string>
+    <string>--phase</string>
+    <string>sell-morning</string>
+    <string>--symbols</string>
+    <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv</string>
+    <string>--use-minute</string>
+    <string>--minute-mode</string>
+    <string>top</string>
+    <string>--minute-top-n</string>
+    <string>300</string>
+    <string>--paper</string>
+    <string>--send-feishu</string>
+    <string>--feishu-webhook-file</string>
+    <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/feishu_webhook.txt</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>10</integer>
+    <key>Minute</key>
+    <integer>30</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/reports/daily.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/reports/daily.err.log</string>
+</dict>
+</plist>

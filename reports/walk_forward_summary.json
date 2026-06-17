@@ -1,0 +1,20 @@
+{
+  "evaluated_days": 48,
+  "predictions": 254606,
+  "actual_hit_rate_all": 0.026083438724931855,
+  "top3_hit_rate": 0.04861111111111111,
+  "top3_days_with_hit": 0.14583333333333334,
+  "top5_hit_rate": 0.041666666666666664,
+  "top5_days_with_hit": 0.1875,
+  "top10_hit_rate": 0.05,
+  "top10_days_with_hit": 0.3958333333333333,
+  "top20_hit_rate": 0.04583333333333333,
+  "top20_days_with_hit": 0.5208333333333334,
+  "trades": 139,
+  "final_equity": 426072.3745059999,
+  "total_return": 41.60723745059999,
+  "max_drawdown": -0.03287238694681094,
+  "trade_win_rate": 0.5323741007194245,
+  "trade_limit_hit_rate": 0.050359712230215826,
+  "avg_trade_return": 0.8822858287697073
+}

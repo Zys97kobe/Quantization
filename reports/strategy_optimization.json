@@ -1,0 +1,115 @@
+{
+  "best_threshold": 0.001,
+  "results": [
+    {
+      "threshold": 0.001,
+      "objective": 84.58913422064497,
+      "trades": 119,
+      "final_equity": 855981.4192531985,
+      "total_return": 84.59814192531985,
+      "max_drawdown": -0.011259630843614143,
+      "win_rate": 0.5462184873949579,
+      "limit_hit_rate": 0.08403361344537816,
+      "avg_trade_return": 2.5568808768026936
+    },
+    {
+      "threshold": 0.003,
+      "objective": 84.58913422064497,
+      "trades": 119,
+      "final_equity": 855981.4192531985,
+      "total_return": 84.59814192531985,
+      "max_drawdown": -0.011259630843614143,
+      "win_rate": 0.5462184873949579,
+      "limit_hit_rate": 0.08403361344537816,
+      "avg_trade_return": 2.5568808768026936
+    },
+    {
+      "threshold": 0.005,
+      "objective": 84.58913422064497,
+      "trades": 119,
+      "final_equity": 855981.4192531985,
+      "total_return": 84.59814192531985,
+      "max_drawdown": -0.011259630843614143,
+      "win_rate": 0.5462184873949579,
+      "limit_hit_rate": 0.08403361344537816,
+      "avg_trade_return": 2.5568808768026936
+    },
+    {
+      "threshold": 0.01,
+      "objective": 84.58913422064497,
+      "trades": 119,
+      "final_equity": 855981.4192531985,
+      "total_return": 84.59814192531985,
+      "max_drawdown": -0.011259630843614143,
+      "win_rate": 0.5462184873949579,
+      "limit_hit_rate": 0.08403361344537816,
+      "avg_trade_return": 2.5568808768026936
+    },
+    {
+      "threshold": 0.03372699199581851,
+      "objective": 36.28862244447925,
+      "trades": 98,
+      "final_equity": 373126.16554400005,
+      "total_return": 36.3126165544,
+      "max_drawdown": -0.029992637400939937,
+      "win_rate": 0.45918367346938777,
+      "limit_hit_rate": 0.08163265306122448,
+      "avg_trade_return": 1.1502621376461537
+    },
+    {
+      "threshold": 0.03407072215082561,
+      "objective": 34.03111430968177,
+      "trades": 93,
+      "final_equity": 350571.3025692001,
+      "total_return": 34.05713025692001,
+      "max_drawdown": -0.03251993404779974,
+      "win_rate": 0.44086021505376344,
+      "limit_hit_rate": 0.08602150537634409,
+      "avg_trade_return": 1.1405679548630252
+    },
+    {
+      "threshold": 0.034596516038257974,
+      "objective": 31.928983234664816,
+      "trades": 84,
+      "final_equity": 329703.63531840005,
+      "total_return": 31.970363531840007,
+      "max_drawdown": -0.05172537146898737,
+      "win_rate": 0.42857142857142855,
+      "limit_hit_rate": 0.09523809523809523,
+      "avg_trade_return": 1.1914873842196652
+    },
+    {
+      "threshold": 0.035172641907757346,
+      "objective": 28.793417730892692,
+      "trades": 79,
+      "final_equity": 298660.0993387999,
+      "total_return": 28.86600993387999,
+      "max_drawdown": -0.09074025373412398,
+      "win_rate": 0.43037974683544306,
+      "limit_hit_rate": 0.10126582278481013,
+      "avg_trade_return": 1.148489035103808
+    },
+    {
+      "threshold": 0.039095886393249624,
+      "objective": -0.7007990106240003,
+      "trades": 4,
+      "final_equity": 6106.672163199999,
+      "total_return": -0.3893327836800001,
+      "max_drawdown": -0.3893327836800001,
+      "win_rate": 0.0,
+      "limit_hit_rate": 0.25,
+      "avg_trade_return": -0.4670651819900599
+    },
+    {
+      "threshold": 0.05,
+      "objective": -0.7007990106240003,
+      "trades": 4,
+      "final_equity": 6106.672163199999,
+      "total_return": -0.3893327836800001,
+      "max_drawdown": -0.3893327836800001,
+      "win_rate": 0.0,
+      "limit_hit_rate": 0.25,
+      "avg_trade_return": -0.4670651819900599
+    }
+  ]
+}

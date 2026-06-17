@@ -1,0 +1,20 @@
+[project]
+name = "a-share-limit-up-lab"
+version = "0.1.0"
+description = "A-share next-day limit-up research, paper trading, and ranking MVP."
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "pandas",
+  "requests",
+]
+
+[project.optional-dependencies]
+data = [
+  "akshare",
+  "tushare",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
