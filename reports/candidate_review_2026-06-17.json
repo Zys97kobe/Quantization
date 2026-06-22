@@ -1,0 +1,81 @@
+{
+  "signal_date": "2026-06-17",
+  "result_date": "2026-06-18",
+  "top10_hit_rate": 0.375,
+  "top10_evaluated_count": 8,
+  "candidate_count": 8,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "002297.SZ",
+      "name": "博云新材",
+      "score": 0.4010167259172361,
+      "hit_limit": true,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "000066.SZ",
+      "name": "中国长城",
+      "score": 0.2389507958494766,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "002171.SZ",
+      "name": "楚江新材",
+      "score": 0.2057173487342198,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "000811.SZ",
+      "name": "冰轮环境",
+      "score": 0.0331,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "603773.SH",
+      "name": "沃格光电",
+      "score": 0.0324,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "600110.SH",
+      "name": "诺德股份",
+      "score": 0.03235,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "000725.SZ",
+      "name": "京东方Ａ",
+      "score": 0.0323,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "600353.SH",
+      "name": "旭光电子",
+      "score": 0.03225,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}
