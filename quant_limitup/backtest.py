@@ -56,21 +56,29 @@ def run_backtest(
         picks = (
             filter_tradeable(day[day["score"] >= cfg.min_score_to_buy])
             .sort_values("score", ascending=False)
-            .head(cfg.max_positions_per_day)
         )
         if picks.empty:
             equity_curve.append({"date": date, "equity": cash})
             continue
 
-        capital_per_trade = min(cash / len(picks), cfg.initial_cash * cfg.max_position_pct)
+        day_start_cash = cash
+        available_cash = cash
+        pending_proceeds = 0.0
+        opened = 0
         for row in picks.itertuples(index=False):
+            if opened >= cfg.max_positions_per_day:
+                break
+            capital_per_trade = min(available_cash, day_start_cash * cfg.max_position_pct)
             buy_price = row.close * (1 + cfg.buy_slippage_bps / 10_000)
             shares = int(capital_per_trade / buy_price / 100) * 100
             if shares <= 0:
                 continue
             gross_buy = shares * buy_price
             buy_fee = max(gross_buy * cfg.commission_bps / 10_000, cfg.min_commission)
-            cash -= gross_buy + buy_fee
+            cost = gross_buy + buy_fee
+            if cost > available_cash:
+                continue
+            available_cash -= cost
 
             hit_limit = row.next_high >= row.next_limit_up_price * 0.999
             raw_sell_price = row.next_limit_up_price if hit_limit else row.next_close
@@ -78,8 +86,10 @@ def run_backtest(
             gross_sell = shares * sell_price
             sell_fee = max(gross_sell * cfg.commission_bps / 10_000, cfg.min_commission)
             stamp_tax = gross_sell * cfg.stamp_tax_bps / 10_000
-            cash += gross_sell - sell_fee - stamp_tax
+            proceeds = gross_sell - sell_fee - stamp_tax
+            pending_proceeds += proceeds
             pnl = gross_sell - sell_fee - stamp_tax - gross_buy - buy_fee
+            opened += 1
 
             trades.append(
                 {
@@ -93,9 +103,10 @@ def run_backtest(
                     "hit_limit": bool(hit_limit),
                     "pnl": pnl,
                     "return_pct": pnl / max(gross_buy + buy_fee, 1),
-                    "cash_after": cash,
+                    "cash_after": available_cash + pending_proceeds,
                 }
             )
+        cash = available_cash + pending_proceeds
         equity_curve.append({"date": date, "equity": cash})
 
     trades_df = pd.DataFrame(trades)

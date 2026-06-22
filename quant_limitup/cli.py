@@ -9,6 +9,14 @@ import pandas as pd
 
 from .accuracy import write_prediction_accuracy
 from .backtest import rank_candidates, run_backtest, write_summary
+from .candidate_review import (
+    build_pending_reviews,
+    load_completed_signals,
+    load_rank_history,
+    mark_review_completed,
+    pending_candidate_pool,
+    upsert_rank_history,
+)
 from .config import (
     CONFIG_DIR,
     DEFAULT_PAPER_DAILY,
@@ -26,17 +34,24 @@ from .config import (
     ensure_dirs,
 )
 from .data import read_prices, write_sample_prices
-from .emailing import load_email_config, send_daily_email, write_email_config_template
+from .emailing import (
+    load_email_config,
+    send_candidate_review_email,
+    send_daily_email,
+    write_email_config_template,
+)
 from .features import build_feature_frame
 from .intraday_features import normalize_minute_bars
-from .messaging import load_feishu_webhook, send_feishu_daily
+from .messaging import load_feishu_webhook, send_feishu_candidate_review, send_feishu_daily
 from .model import LogisticLimitUpModel, train_logistic
 from .paper import load_account, reset_account, run_paper_day
 from .providers import (
     fetch_akshare_daily_prices,
+    fetch_sina_candidate_daily_prices,
     fetch_sina_daily_prices,
     fetch_sina_minute_bars,
     fetch_tushare_daily_prices,
+    sina_minute_market_is_current,
     update_sina_stock_pool,
 )
 from .reports import write_dashboard
@@ -51,6 +66,9 @@ DEFAULT_TUSHARE_TOKEN_FILE = CONFIG_DIR / "tushare_token.txt"
 DEFAULT_EMAIL_CONFIG_FILE = CONFIG_DIR / "email.json"
 DEFAULT_FEISHU_WEBHOOK_FILE = CONFIG_DIR / "feishu_webhook.txt"
 DEFAULT_SYMBOL_POOL_FILE = CONFIG_DIR / "stock_pool.csv"
+DAILY_RANK_SNAPSHOT = REPORT_DIR / "today_rank_all.csv"
+RANK_HISTORY_FILE = REPORT_DIR / "rank_history.csv"
+CANDIDATE_REVIEW_HISTORY = DEFAULT_PAPER_TRADES.parent / "candidate_reviews.csv"
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -267,6 +285,20 @@ def main(argv: list[str] | None = None) -> None:
                 token=_resolve_token(args.token, args.token_file),
             )
         elif args.provider == "sina":
+            if args.paper and args.phase == "sell-morning":
+                run_pending_candidate_reviews(
+                    send_email=args.send_email,
+                    email_config_file=args.email_config,
+                    send_feishu=args.send_feishu,
+                    feishu_webhook_file=args.feishu_webhook_file,
+                )
+            if args.paper and args.use_minute and not sina_minute_market_is_current(
+                args.symbols,
+                scale=args.minute_scale,
+                bars=min(args.minute_bars, 2),
+            ):
+                print(f"Skipping {args.phase}: no minute bars for {pd.Timestamp.now():%Y-%m-%d} (market closed)")
+                return
             if args.refresh_stock_pool:
                 update_sina_stock_pool(args.symbols)
             fetch_sina_daily_prices(args.prices, args.symbols, days=args.days)
@@ -293,6 +325,9 @@ def main(argv: list[str] | None = None) -> None:
                     max_symbols=max_symbols,
                 )
         if args.paper:
+            if args.use_minute and not minute_data_is_current(MINUTE_FILE):
+                print(f"Skipping {args.phase}: no minute bars for {pd.Timestamp.now():%Y-%m-%d} (market closed)")
+                return
             run_paper_from_prices(
                 args.prices,
                 MINUTE_FILE if args.use_minute else None,
@@ -493,12 +528,21 @@ def run_paper_from_prices(
     base_config = TradingConfig(initial_cash=10_000.0)
     initialize_factor_params(frame, 22, DEFAULT_FACTOR_PARAMS)
     threshold, best = optimize_threshold(frame, model, base_config, REPORT_DIR / "strategy_optimization.json")
-    learning = build_learning_report(frame, model)
+    minute_bars = normalize_minute_bars(pd.read_csv(minute_file)) if minute_file and minute_file.exists() else None
+    latest_labeled = frame.loc[frame["target_limit_up_next"].notna(), "date"].max()
+    bought_symbols = load_buy_symbols(latest_labeled)
+    candidate_rank = load_rank_snapshot(latest_labeled)
+    learning = build_learning_report(
+        frame,
+        model,
+        bought_symbols=bought_symbols,
+        candidate_rank=candidate_rank,
+    )
     DEFAULT_LEARNING_REPORT.write_text(json.dumps(learning, indent=2, ensure_ascii=False, default=str))
     config = TradingConfig(
         initial_cash=10_000.0,
         max_positions_per_day=base_config.max_positions_per_day,
-        max_position_pct=base_config.max_position_pct,
+        max_position_pct=float(best.get("max_position_pct", base_config.max_position_pct)),
         min_score_to_buy=threshold,
         buy_slippage_bps=base_config.buy_slippage_bps,
         sell_slippage_bps=base_config.sell_slippage_bps,
@@ -507,7 +551,6 @@ def run_paper_from_prices(
         min_commission=base_config.min_commission,
     )
     settle, open_new, sell_mode = _phase_flags(phase)
-    minute_bars = normalize_minute_bars(pd.read_csv(minute_file)) if minute_file and minute_file.exists() else None
     account, rank, summary = run_paper_day(
         frame,
         model,
@@ -518,22 +561,29 @@ def run_paper_from_prices(
         sell_mode=sell_mode,
     )
     summary["optimized_threshold"] = threshold
+    summary["optimized_max_position_pct"] = config.max_position_pct
     summary["optimization_total_return"] = best.get("total_return")
     summary["learning_top5_hit_rate"] = learning.get("top5_hit_rate")
-    summary["learning_actual_limit_up_count"] = learning.get("actual_limit_up_count")
     rank.to_csv(REPORT_DIR / "latest_rank.csv", index=False)
+    display_rank = rank.head(10).copy()
+    display_rank["display_rank"] = range(1, len(display_rank) + 1)
+    if phase in {"buy", "full"}:
+        display_rank.to_csv(DAILY_RANK_SNAPSHOT, index=False)
+        upsert_rank_history(RANK_HISTORY_FILE, display_rank)
     accuracy = write_prediction_accuracy(frame, model, summary, learning, DEFAULT_PREDICTION_ACCURACY)
     if accuracy:
         summary["prediction_accuracy_file"] = str(DEFAULT_PREDICTION_ACCURACY)
     (REPORT_DIR / "paper_daily_summary.json").write_text(json.dumps(summary, indent=2, default=str))
     buys, sells = load_trade_lists(summary["date"])
+    positions = build_position_list(account, rank)
+    notification_learning = None if phase == "sell-morning" else learning
     if send_email:
         email_config = load_email_config(email_config_file)
-        send_daily_email(email_config, summary, rank, buys, sells, learning)
+        send_daily_email(email_config, summary, display_rank, buys, sells, positions, notification_learning)
         print(f"Sent daily email to {email_config.recipient}")
     if send_feishu:
         webhook = load_feishu_webhook(feishu_webhook_file)
-        send_feishu_daily(webhook, summary, rank, buys, sells, learning)
+        send_feishu_daily(webhook, summary, display_rank, buys, sells, positions, notification_learning)
         print("Sent daily Feishu message")
     print(json.dumps(summary, indent=2, default=str))
     return rank, summary
@@ -551,6 +601,105 @@ def load_trade_lists(date: str) -> tuple[pd.DataFrame, pd.DataFrame]:
     buys = day[day["action"] == "BUY"].copy()
     sells = day[day["action"] == "SELL"].copy()
     return buys, sells
+
+
+def load_buy_symbols(date: str | pd.Timestamp | None) -> set[str]:
+    if date is None or pd.isna(date) or not DEFAULT_PAPER_TRADES.exists():
+        return set()
+    trades = pd.read_csv(DEFAULT_PAPER_TRADES)
+    if trades.empty or not {"date", "action", "symbol"}.issubset(trades.columns):
+        return set()
+    target = pd.to_datetime(date).strftime("%Y-%m-%d")
+    buys = trades[(trades["date"].astype(str) == target) & (trades["action"] == "BUY")]
+    return set(buys["symbol"].astype(str))
+
+
+def load_rank_snapshot(date: str | pd.Timestamp | None) -> pd.DataFrame | None:
+    if date is None or pd.isna(date) or not DAILY_RANK_SNAPSHOT.exists():
+        return None
+    rank = pd.read_csv(DAILY_RANK_SNAPSHOT)
+    if rank.empty or "date" not in rank.columns:
+        return None
+    target = pd.to_datetime(date).normalize()
+    snapshot = rank[pd.to_datetime(rank["date"], errors="coerce").dt.normalize() == target].copy()
+    return snapshot if not snapshot.empty else None
+
+
+def run_pending_candidate_reviews(
+    send_email: bool,
+    email_config_file: Path,
+    send_feishu: bool,
+    feishu_webhook_file: Path,
+) -> list[dict]:
+    history = load_rank_history(
+        RANK_HISTORY_FILE,
+        fallback_files=(DAILY_RANK_SNAPSHOT, REPORT_DIR / "latest_rank.csv"),
+    )
+    completed = load_completed_signals(CANDIDATE_REVIEW_HISTORY)
+    trades = pd.read_csv(DEFAULT_PAPER_TRADES) if DEFAULT_PAPER_TRADES.exists() else pd.DataFrame()
+    candidates = pending_candidate_pool(history, completed, trades)
+    if candidates.empty:
+        return []
+    prices = fetch_sina_candidate_daily_prices(candidates, days=5)
+    reviews = build_pending_reviews(prices, history, completed, trades)
+    if not reviews:
+        return []
+    email_config = load_email_config(email_config_file) if send_email else None
+    webhook = load_feishu_webhook(feishu_webhook_file) if send_feishu else None
+    for review in reviews:
+        if email_config:
+            send_candidate_review_email(email_config, review)
+        if webhook:
+            send_feishu_candidate_review(webhook, review)
+        report_file = REPORT_DIR / f"candidate_review_{review['signal_date']}.json"
+        report_file.write_text(json.dumps(review, indent=2, ensure_ascii=False, default=str))
+        mark_review_completed(CANDIDATE_REVIEW_HISTORY, review)
+        candidate_count = int(review.get("candidate_count", 10))
+        print(
+            f"Reviewed candidates {review['signal_date']} -> {review['result_date']}: "
+            f"Top{candidate_count} hit rate {review['top10_hit_rate'] * 100:.2f}%"
+        )
+    return reviews
+
+
+def minute_data_is_current(path: Path, expected_date: str | None = None) -> bool:
+    if not path.exists():
+        return False
+    try:
+        minute = pd.read_csv(path, usecols=["datetime"])
+    except (OSError, ValueError, pd.errors.EmptyDataError):
+        return False
+    if minute.empty:
+        return False
+    dates = pd.to_datetime(minute["datetime"], errors="coerce").dropna().dt.normalize()
+    if dates.empty:
+        return False
+    expected = pd.to_datetime(expected_date).normalize() if expected_date else pd.Timestamp.now().normalize()
+    return bool((dates == expected).any())
+
+
+def build_position_list(account, rank: pd.DataFrame) -> pd.DataFrame:
+    if not account.positions:
+        return pd.DataFrame()
+    prices = rank.set_index("symbol")["close"] if not rank.empty else pd.Series(dtype=float)
+    rows = []
+    for pos in account.positions:
+        current_price = float(prices.get(pos.symbol, pos.buy_price))
+        market_value = pos.shares * current_price
+        rows.append(
+            {
+                "symbol": pos.symbol,
+                "name": pos.name,
+                "shares": pos.shares,
+                "buy_price": pos.buy_price,
+                "cost": pos.cost,
+                "score": pos.score,
+                "current_price": current_price,
+                "market_value": market_value,
+                "unrealized_pnl": market_value - pos.cost,
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def write_launchd_plist(

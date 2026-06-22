@@ -7,6 +7,7 @@ import pandas as pd
 
 from .backtest import run_backtest
 from .config import TradingConfig
+from .filters import filter_tradeable
 from .model import LogisticLimitUpModel
 
 
@@ -19,6 +20,9 @@ def optimize_threshold(
     history = frame.dropna(subset=["next_high", "next_close", "next_limit_up_price"]).copy()
     if history.empty:
         return config.min_score_to_buy, {"reason": "no labeled rows"}
+    optimization_dates = sorted(pd.to_datetime(history["date"]).unique())
+    if len(optimization_dates) > 60:
+        history = history[pd.to_datetime(history["date"]) >= optimization_dates[-60]].copy()
 
     scored = history.copy()
     scored["score"] = model.predict_proba(scored)
@@ -33,27 +37,33 @@ def optimize_threshold(
     best_threshold = config.min_score_to_buy
     best_summary: dict | None = None
     results = []
+    position_candidates = sorted(set([0.30, 0.34, 0.40, 0.50, config.max_position_pct]))
     for threshold in candidates:
-        cfg = TradingConfig(
-            initial_cash=config.initial_cash,
-            max_positions_per_day=config.max_positions_per_day,
-            max_position_pct=config.max_position_pct,
-            min_score_to_buy=threshold,
-            buy_slippage_bps=config.buy_slippage_bps,
-            sell_slippage_bps=config.sell_slippage_bps,
-            commission_bps=config.commission_bps,
-            stamp_tax_bps=config.stamp_tax_bps,
-            min_commission=config.min_commission,
-        )
-        trades, summary = run_backtest(history, model, cfg)
-        score = summary["total_return"] + summary["max_drawdown"] * 0.8
-        result = {"threshold": threshold, "objective": score, **summary}
-        results.append(result)
-        if best_summary is None or score > best_summary["objective"]:
-            best_threshold = threshold
-            best_summary = result
+        for position_pct in position_candidates:
+            cfg = TradingConfig(
+                initial_cash=config.initial_cash,
+                max_positions_per_day=config.max_positions_per_day,
+                max_position_pct=position_pct,
+                min_score_to_buy=threshold,
+                buy_slippage_bps=config.buy_slippage_bps,
+                sell_slippage_bps=config.sell_slippage_bps,
+                commission_bps=config.commission_bps,
+                stamp_tax_bps=config.stamp_tax_bps,
+                min_commission=config.min_commission,
+            )
+            trades, summary = run_backtest(history, model, cfg)
+            score = summary["total_return"] + summary["max_drawdown"] * 0.8
+            result = {"threshold": threshold, "max_position_pct": position_pct, "objective": score, **summary}
+            results.append(result)
+            if best_summary is None or score > best_summary["objective"]:
+                best_threshold = threshold
+                best_summary = result
 
-    payload = {"best_threshold": best_threshold, "results": results}
+    payload = {
+        "best_threshold": best_threshold,
+        "best_max_position_pct": (best_summary or {}).get("max_position_pct", config.max_position_pct),
+        "results": results,
+    }
     if out_file:
         out_file.parent.mkdir(parents=True, exist_ok=True)
         out_file.write_text(json.dumps(payload, indent=2, default=str))
@@ -191,8 +201,14 @@ def _load_factor_threshold(out_file: Path | None) -> float | None:
         return None
 
 
-def build_learning_report(frame: pd.DataFrame, model: LogisticLimitUpModel, current_date: str | None = None) -> dict:
-    data = frame.copy()
+def build_learning_report(
+    frame: pd.DataFrame,
+    model: LogisticLimitUpModel,
+    current_date: str | None = None,
+    bought_symbols: set[str] | None = None,
+    candidate_rank: pd.DataFrame | None = None,
+) -> dict:
+    data = filter_tradeable(frame.copy())
     data["date"] = pd.to_datetime(data["date"])
     current = pd.to_datetime(current_date) if current_date else data["date"].max()
     today = data[data["date"] == current].copy()
@@ -200,25 +216,42 @@ def build_learning_report(frame: pd.DataFrame, model: LogisticLimitUpModel, curr
     if labeled.empty:
         return {"date": str(current.date()), "reason": "no labeled rows"}
 
-    scored = labeled.copy()
-    scored["score"] = model.predict_proba(scored)
-    latest_labeled_date = scored["date"].max()
-    latest = scored[scored["date"] == latest_labeled_date].sort_values("score", ascending=False)
-    actual = latest[latest["target_limit_up_next"] == 1][["symbol", "name", "score"]].head(50)
+    latest_labeled_date = labeled["date"].max()
+    result_date = _next_result_date(data, latest_labeled_date)
+    latest = _evaluation_rank(data, model, latest_labeled_date, candidate_rank)
+    target_column = "target_limit_up_next"
+    latest["candidate_rank"] = range(1, len(latest) + 1)
+    actual = latest[latest[target_column] == 1][["symbol", "name", "score"]].head(50)
+    bought_symbols = bought_symbols or set()
+    top10 = latest.head(10).copy()
+    extra_bought = latest[
+        latest["symbol"].isin(bought_symbols) & ~latest["symbol"].isin(top10["symbol"])
+    ].copy()
+    evaluated = pd.concat([top10, extra_bought], ignore_index=True)
+    evaluated["hit_limit"] = evaluated[target_column].map(
+        lambda value: None if pd.isna(value) else bool(value)
+    )
+    evaluated["was_bought"] = evaluated["symbol"].isin(bought_symbols)
+    evaluated["in_top10"] = evaluated["candidate_rank"] <= 10
 
     report = {
         "date": str(current.date()),
         "latest_labeled_signal_date": str(latest_labeled_date.date()),
-        "latest_result_date": _next_result_date(data, latest_labeled_date),
+        "latest_result_date": str(pd.to_datetime(result_date).date()) if result_date is not None else None,
+        "evaluation_source": "daily",
         "labeled_rows": int(len(labeled)),
         "positive_rows": int(labeled["target_limit_up_next"].sum()),
         "positive_rate": float(labeled["target_limit_up_next"].mean()),
-        "actual_limit_up_count": int(latest["target_limit_up_next"].sum()),
-        "top3_hit_rate": _top_hit_rate(latest, 3),
-        "top5_hit_rate": _top_hit_rate(latest, 5),
-        "top10_hit_rate": _top_hit_rate(latest, 10),
-        "top20_hit_rate": _top_hit_rate(latest, 20),
+        "actual_limit_up_count": int(latest[target_column].sum()),
+        "top3_hit_rate": _top_hit_rate(latest, 3, target_column),
+        "top5_hit_rate": _top_hit_rate(latest, 5, target_column),
+        "top10_hit_rate": _top_hit_rate(latest, 10, target_column),
+        "top20_hit_rate": _top_hit_rate(latest, 20, target_column),
+        "top10_evaluated_count": int(latest.head(10)[target_column].notna().sum()),
         "actual_limit_ups": actual.to_dict("records"),
+        "evaluated_candidates": evaluated[
+            ["candidate_rank", "symbol", "name", "score", "hit_limit", "was_bought", "in_top10"]
+        ].to_dict("records"),
     }
     if not today.empty:
         today_scored = today.copy()
@@ -228,10 +261,30 @@ def build_learning_report(frame: pd.DataFrame, model: LogisticLimitUpModel, curr
     return report
 
 
-def _top_hit_rate(frame: pd.DataFrame, n: int) -> float:
+def _evaluation_rank(
+    data: pd.DataFrame,
+    model: LogisticLimitUpModel,
+    signal_date: pd.Timestamp,
+    candidate_rank: pd.DataFrame | None,
+) -> pd.DataFrame:
+    day = data[data["date"] == signal_date].copy()
+    if candidate_rank is not None and not candidate_rank.empty:
+        snapshot = candidate_rank.copy()
+        if "date" in snapshot.columns:
+            snapshot = snapshot[pd.to_datetime(snapshot["date"]) == signal_date]
+        if not snapshot.empty and {"symbol", "score"}.issubset(snapshot.columns):
+            metadata = day.drop(columns=["name", "board"], errors="ignore")
+            snapshot = snapshot.merge(metadata, on="symbol", how="inner", suffixes=("", "_feature"))
+            return snapshot.sort_values("score", ascending=False).reset_index(drop=True)
+    day["score"] = model.predict_proba(day)
+    return day.sort_values("score", ascending=False).reset_index(drop=True)
+
+
+def _top_hit_rate(frame: pd.DataFrame, n: int, target_column: str = "target_limit_up_next") -> float:
     if frame.empty:
         return 0.0
-    return float(frame.head(n)["target_limit_up_next"].mean())
+    evaluated = frame.head(n)[target_column].dropna()
+    return float(evaluated.mean()) if not evaluated.empty else 0.0
 
 
 def _next_result_date(data: pd.DataFrame, signal_date: pd.Timestamp) -> str | None:

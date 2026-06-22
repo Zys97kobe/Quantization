@@ -8,6 +8,7 @@ import pandas as pd
 
 from .backtest import rank_candidates
 from .config import DEFAULT_PAPER_DAILY, DEFAULT_PAPER_STATE, DEFAULT_PAPER_TRADES, TradingConfig
+from .data import limit_up_price
 from .filters import filter_tradeable
 from .model import LogisticLimitUpModel
 
@@ -49,9 +50,12 @@ def run_paper_day(
 ) -> tuple[PaperAccount, pd.DataFrame, dict]:
     account = load_account(state_file, config.initial_cash)
     work = frame.copy()
-    current_date = pd.to_datetime(date) if date else work["date"].max()
+    current_date = _resolve_paper_date(work, date, minute_bars, settle)
     current_date_str = current_date.strftime("%Y-%m-%d")
     day = work[work["date"] == current_date].copy()
+    if day.empty and minute_bars is not None and not minute_bars.empty:
+        day = _build_intraday_snapshot(work, minute_bars, current_date)
+        work = pd.concat([work, day], ignore_index=True, sort=False)
     if day.empty:
         raise RuntimeError(f"No rows available for paper date {current_date.date()}")
 
@@ -76,11 +80,13 @@ def run_paper_day(
                 account.last_buy_date = current_date_str
 
     equity = _mark_to_market(account, day)
-    daily_pnl = equity - _previous_equity(daily_file, account.initial_cash)
+    previous_equity = _previous_equity(daily_file, account.initial_cash, current_date)
+    daily_pnl = equity - previous_equity
     daily_return = daily_pnl / max(equity - daily_pnl, 1)
     account.last_run_date = current_date.strftime("%Y-%m-%d")
     save_account(account, state_file)
     append_csv(trades_file, trade_rows)
+    opened_today, closed_today = _daily_trade_counts(trades_file, current_date_str)
 
     summary = {
         "date": account.last_run_date,
@@ -91,8 +97,8 @@ def run_paper_day(
         "daily_return": daily_return,
         "total_return": equity / account.initial_cash - 1,
         "open_positions": len(account.positions),
-        "opened_positions": opened,
-        "closed_trades": len([row for row in trade_rows if row["action"] == "SELL"]),
+        "opened_positions": opened_today,
+        "closed_trades": closed_today,
         "phase": _phase_name(settle, open_new, sell_mode),
     }
     if skipped:
@@ -187,6 +193,56 @@ def _settle_positions(
     account.positions = remaining
 
 
+def _resolve_paper_date(
+    frame: pd.DataFrame,
+    date: str | None,
+    minute_bars: pd.DataFrame | None,
+    settle: bool,
+) -> pd.Timestamp:
+    if date:
+        return pd.to_datetime(date).normalize()
+    daily_date = pd.to_datetime(frame["date"]).max().normalize()
+    if minute_bars is None or minute_bars.empty or "datetime" not in minute_bars.columns:
+        return daily_date
+    minute_date = pd.to_datetime(minute_bars["datetime"], errors="coerce").max()
+    if pd.isna(minute_date):
+        return daily_date
+    return max(daily_date, minute_date.normalize())
+
+
+def _build_intraday_snapshot(
+    frame: pd.DataFrame,
+    minute_bars: pd.DataFrame,
+    current_date: pd.Timestamp,
+) -> pd.DataFrame:
+    latest_date = pd.to_datetime(frame["date"]).max()
+    snapshot = frame[frame["date"] == latest_date].copy()
+    snapshot["date"] = current_date
+    snapshot["limit_up_price"] = [
+        limit_up_price(float(close), board, int(str(name).upper().startswith(("ST", "*ST"))))
+        for close, board, name in zip(snapshot["close"], snapshot["board"], snapshot["name"])
+    ]
+
+    bars = minute_bars.copy()
+    bars["datetime"] = pd.to_datetime(bars["datetime"], errors="coerce")
+    bars = bars[bars["datetime"].dt.normalize() == current_date.normalize()]
+    if bars.empty:
+        return snapshot
+    intraday = bars.groupby("symbol", as_index=False).agg(
+        open=("open", "first"),
+        high=("high", "max"),
+        low=("low", "min"),
+        close=("close", "last"),
+    )
+    snapshot = snapshot.set_index("symbol")
+    intraday = intraday.set_index("symbol")
+    common = snapshot.index.intersection(intraday.index)
+    snapshot.loc[common, ["open", "high", "low", "close"]] = intraday.loc[
+        common, ["open", "high", "low", "close"]
+    ]
+    return snapshot.reset_index()
+
+
 def _open_positions(
     account: PaperAccount,
     rank: pd.DataFrame,
@@ -196,17 +252,19 @@ def _open_positions(
     trade_rows: list[dict],
 ) -> int:
     existing_symbols = {pos.symbol for pos in account.positions}
-    candidates = filter_tradeable(rank[rank["score"] >= config.min_score_to_buy]).head(config.max_positions_per_day)
+    candidates = filter_tradeable(rank[rank["score"] >= config.min_score_to_buy])
     if candidates.empty:
         return 0
     day_by_symbol = day.set_index("symbol")
     opened = 0
     cash_budget = account.cash
     for row in candidates.itertuples(index=False):
+        if opened >= config.max_positions_per_day:
+            break
         if row.symbol in existing_symbols or row.symbol not in day_by_symbol.index:
             continue
         price_row = day_by_symbol.loc[row.symbol]
-        capital = min(cash_budget / max(config.max_positions_per_day - opened, 1), account.initial_cash * config.max_position_pct)
+        capital = min(account.cash, cash_budget * config.max_position_pct)
         buy_price = float(price_row["close"]) * (1 + config.buy_slippage_bps / 10_000)
         shares = int(capital / buy_price / 100) * 100
         if shares <= 0:
@@ -260,13 +318,28 @@ def _mark_to_market(account: PaperAccount, day: pd.DataFrame) -> float:
     return float(value)
 
 
-def _previous_equity(daily_file: Path, initial_cash: float) -> float:
+def _previous_equity(daily_file: Path, initial_cash: float, current_date: pd.Timestamp) -> float:
     if not daily_file.exists():
         return initial_cash
     daily = pd.read_csv(daily_file)
     if daily.empty:
         return initial_cash
-    return float(daily.iloc[-1]["equity"])
+    daily["date"] = pd.to_datetime(daily["date"], errors="coerce")
+    previous = daily[daily["date"] < current_date.normalize()]
+    if previous.empty:
+        return initial_cash
+    previous_date = previous["date"].max()
+    return float(previous[previous["date"] == previous_date].iloc[-1]["equity"])
+
+
+def _daily_trade_counts(trades_file: Path, current_date: str) -> tuple[int, int]:
+    if not trades_file.exists():
+        return 0, 0
+    trades = pd.read_csv(trades_file)
+    if trades.empty:
+        return 0, 0
+    today = trades[trades["date"].astype(str) == current_date]
+    return int((today["action"] == "BUY").sum()), int((today["action"] == "SELL").sum())
 
 
 def _sell_decision(

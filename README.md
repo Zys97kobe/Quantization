@@ -122,6 +122,8 @@ python3 -m quant_limitup.cli make-launchd --time 15:10 --provider sina --paper -
 - `data/paper/account.json`：当前现金和持仓。
 - `data/paper/trades.csv`：每日虚拟买卖记录。
 - `data/paper/daily_returns.csv`：每天收益、余额和累计收益。
+- `data/paper/candidate_reviews.csv`：每次候选复盘的信号日、结果日、命中数量和命中率历史，同时用于防止重复推送。
+- `reports/rank_history.csv`：按信号日永久保存的原始候选排名。
 
 启用 macOS 定时任务：
 
@@ -135,6 +137,8 @@ launchctl load ~/Library/LaunchAgents/com.quant.limitup.daily.plist
 - `10:30 sell-morning`：只处理已有持仓；如果 09:30-10:30 分钟线触及涨停，或冲高回落超过 3%，虚拟卖出并单独推送卖出通知。
 - `14:50 sell-force`：仍未卖出的隔夜持仓强制虚拟卖出，并单独推送卖出通知。
 - `15:10 buy`：刷新股票池和行情，训练模型，生成今日候选并虚拟买入，单独推送买入通知。
+
+`sell-morning` 会先执行独立的候选日线复盘：只使用已完成交易日的日线最高价，按原始候选排名计算 Top10 命中率。复盘不训练模型、不修改账户或收益；休市日完成复盘后，买卖流程仍会因缺少当天分钟行情而跳过。
 
 当前免费源实时性有限，`14:50/15:10` 的执行依赖新浪接口当时可返回的数据；专业实盘前应替换为稳定实时行情源。
 

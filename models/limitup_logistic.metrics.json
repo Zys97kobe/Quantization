@@ -1,8 +1,8 @@
 {
-  "rows": 260640,
-  "positive_rate": 0.02610880908532842,
-  "accuracy_at_0_5": 0.9738911909146716,
-  "precision_at_0_5": 0.0,
-  "recall_at_0_5": 0.0,
-  "top_decile_hit_rate": 0.039096071209330875
+  "rows": 1350221,
+  "positive_rate": 0.02251409213750934,
+  "accuracy_at_0_5": 0.9774007366201533,
+  "precision_at_0_5": 0.37894736842105264,
+  "recall_at_0_5": 0.005921247409454258,
+  "top_decile_hit_rate": 0.12219490157159574
 }

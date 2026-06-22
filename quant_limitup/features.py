@@ -44,6 +44,11 @@ def build_feature_frame(prices: pd.DataFrame, minute_bars: pd.DataFrame | None =
     for board in ["main", "star", "chinext", "bse"]:
         df[f"board_{board}"] = (df["board"] == board).astype(int)
 
+    # merge() creates a new index, so rebuild the symbol groups before shifting
+    # next-day outcomes. Reusing the pre-merge groupby can align another symbol's
+    # values onto the current row.
+    df = df.sort_values(["symbol", "date"]).reset_index(drop=True)
+    grp = df.groupby("symbol", group_keys=False)
     df["next_open"] = grp["open"].shift(-1)
     df["next_high"] = grp["high"].shift(-1)
     df["next_close"] = grp["close"].shift(-1)

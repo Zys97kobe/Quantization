@@ -154,6 +154,33 @@ def fetch_sina_daily_prices(
     return data
 
 
+def fetch_sina_candidate_daily_prices(candidates: pd.DataFrame, days: int = 5) -> pd.DataFrame:
+    """Fetch recent daily bars for review candidates without writing market data files."""
+    if candidates.empty:
+        return pd.DataFrame()
+    required = {"symbol", "name", "board", "is_st"}
+    missing = required - set(candidates.columns)
+    if missing:
+        raise ValueError(f"Candidate pool missing columns: {sorted(missing)}")
+    rows = []
+    items = list(candidates.drop_duplicates("symbol").itertuples(index=False))
+    with ThreadPoolExecutor(max_workers=min(len(items), 16)) as executor:
+        futures = {
+            executor.submit(_fetch_one_sina, item.symbol, item.name, item.board, item.is_st, days): item
+            for item in items
+        }
+        for future in as_completed(futures):
+            try:
+                frame = future.result()
+            except Exception:  # noqa: BLE001
+                continue
+            if not frame.empty:
+                rows.append(frame)
+    if not rows:
+        return pd.DataFrame()
+    return pd.concat(rows, ignore_index=True).sort_values(["symbol", "date"]).reset_index(drop=True)
+
+
 def fetch_sina_minute_bars(
     out_file: Path,
     symbols_file: Path,
@@ -205,6 +232,38 @@ def fetch_sina_minute_bars(
     if failures:
         pd.DataFrame(failures, columns=["symbol", "error"]).to_csv(out_file.with_suffix(".failures.csv"), index=False)
     return data
+
+
+def sina_minute_market_is_current(
+    symbols_file: Path,
+    expected_date: str | None = None,
+    scale: int = 5,
+    bars: int = 2,
+    sample_size: int = 12,
+) -> bool:
+    """Probe diversified symbols without writing files or training a model."""
+    pool = read_symbol_pool(symbols_file)
+    if pool.empty:
+        return False
+    step = max(len(pool) // max(sample_size, 1), 1)
+    sample = pool.iloc[::step].head(sample_size)
+    expected = pd.to_datetime(expected_date).normalize() if expected_date else pd.Timestamp.now().normalize()
+    with ThreadPoolExecutor(max_workers=min(len(sample), 12)) as executor:
+        futures = [
+            executor.submit(_fetch_one_sina_minute, item.symbol, scale, bars)
+            for item in sample.itertuples(index=False)
+        ]
+        for future in as_completed(futures):
+            try:
+                frame = future.result()
+            except Exception:  # noqa: BLE001
+                continue
+            if frame.empty or "datetime" not in frame.columns:
+                continue
+            dates = pd.to_datetime(frame["datetime"], errors="coerce").dropna().dt.normalize()
+            if bool((dates == expected).any()):
+                return True
+    return False
 
 
 def update_sina_stock_pool(out_file: Path, page_size: int = 100) -> pd.DataFrame:

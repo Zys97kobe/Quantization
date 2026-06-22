@@ -6,7 +6,7 @@
   <key>Label</key>
   <string>com.quant.limitup.daily</string>
   <key>WorkingDirectory</key>
-  <string>/Users/baibaibaibaibai/Documents/Data Center</string>
+  <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization</string>
   <key>ProgramArguments</key>
   <array>
     <string>/Library/Frameworks/Python.framework/Versions/3.12/bin/python3</string>
@@ -18,7 +18,7 @@
     <string>--start-date</string>
     <string>20240101</string>
     <string>--symbols</string>
-    <string>/Users/baibaibaibaibai/Documents/Data Center/config/stock_pool.csv</string>
+    <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv</string>
     <string>--refresh-stock-pool</string>
     <string>--use-minute</string>
     <string>--minute-mode</string>
@@ -28,7 +28,7 @@
     <string>--paper</string>
     <string>--send-feishu</string>
     <string>--feishu-webhook-file</string>
-    <string>/Users/baibaibaibaibai/Documents/Data Center/config/feishu_webhook.txt</string>
+    <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/feishu_webhook.txt</string>
   </array>
   <key>StartCalendarInterval</key>
   <dict>
@@ -38,8 +38,8 @@
     <integer>10</integer>
   </dict>
   <key>StandardOutPath</key>
-  <string>/Users/baibaibaibaibai/Documents/Data Center/reports/daily.out.log</string>
+  <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/reports/daily.out.log</string>
   <key>StandardErrorPath</key>
-  <string>/Users/baibaibaibaibai/Documents/Data Center/reports/daily.err.log</string>
+  <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/reports/daily.err.log</string>
 </dict>
 </plist>
