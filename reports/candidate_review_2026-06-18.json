@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-06-18",
+  "result_date": "2026-06-22",
+  "top10_hit_rate": 0.1,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "688549.SH",
+      "name": "中巨芯",
+      "score": 0.6177060259631818,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "688323.SH",
+      "name": "瑞华泰",
+      "score": 0.460952410203879,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "688260.SH",
+      "name": "昀冢科技",
+      "score": 0.4295377358151071,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "688766.SH",
+      "name": "普冉股份",
+      "score": 0.4178558864145682,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "688598.SH",
+      "name": "金博股份",
+      "score": 0.4019548202952177,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "603186.SH",
+      "name": "华正新材",
+      "score": 0.3592699161940622,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "300903.SZ",
+      "name": "科翔股份",
+      "score": 0.3576545843358644,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "301373.SZ",
+      "name": "凌玮科技",
+      "score": 0.3364820533008938,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "300088.SZ",
+      "name": "长信科技",
+      "score": 0.3100763114970927,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "600353.SH",
+      "name": "旭光电子",
+      "score": 0.3087749783781977,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

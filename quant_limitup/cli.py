@@ -4,6 +4,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from time import sleep
 
 import pandas as pd
 
@@ -44,7 +45,7 @@ from .features import build_feature_frame
 from .intraday_features import normalize_minute_bars
 from .messaging import load_feishu_webhook, send_feishu_candidate_review, send_feishu_daily
 from .model import LogisticLimitUpModel, train_logistic
-from .paper import load_account, reset_account, run_paper_day
+from .paper import _daily_trade_counts, _previous_equity, load_account, reset_account, run_paper_day
 from .providers import (
     fetch_akshare_daily_prices,
     fetch_sina_candidate_daily_prices,
@@ -270,6 +271,7 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     if args.cmd == "daily":
+        no_position_sell_phase = False
         if args.provider == "akshare":
             fetch_akshare_daily_prices(
                 args.prices,
@@ -300,16 +302,20 @@ def main(argv: list[str] | None = None) -> None:
                 print(f"Skipping {args.phase}: no minute bars for {pd.Timestamp.now():%Y-%m-%d} (market closed)")
                 return
             if args.refresh_stock_pool:
-                update_sina_stock_pool(args.symbols)
-            fetch_sina_daily_prices(args.prices, args.symbols, days=args.days)
+                safe_update_sina_stock_pool(args.symbols)
+            run_with_retries("daily price fetch", fetch_sina_daily_prices, args.prices, args.symbols, days=args.days)
             if args.use_minute:
                 minute_symbols = args.symbols
                 max_symbols = None
                 if args.phase in {"sell-morning", "sell-force"}:
-                    minute_symbols = build_position_symbol_pool(
-                        args.symbols,
-                        CONFIG_DIR / "position_stock_pool.csv",
-                    )
+                    if paper_account_has_positions():
+                        minute_symbols = build_position_symbol_pool(
+                            args.symbols,
+                            CONFIG_DIR / "position_stock_pool.csv",
+                        )
+                    else:
+                        no_position_sell_phase = True
+                        print(f"Skipping minute fetch for {args.phase}: no open positions")
                 elif args.minute_mode == "top":
                     minute_symbols = build_minute_symbol_pool(
                         args.prices,
@@ -317,14 +323,26 @@ def main(argv: list[str] | None = None) -> None:
                         CONFIG_DIR / "minute_stock_pool.csv",
                         top_n=args.minute_top_n,
                     )
-                fetch_sina_minute_bars(
-                    MINUTE_FILE,
-                    minute_symbols,
-                    scale=args.minute_scale,
-                    bars=args.minute_bars,
-                    max_symbols=max_symbols,
-                )
+                if not no_position_sell_phase:
+                    run_with_retries(
+                        "minute bar fetch",
+                        fetch_sina_minute_bars,
+                        MINUTE_FILE,
+                        minute_symbols,
+                        scale=args.minute_scale,
+                        bars=args.minute_bars,
+                        max_symbols=max_symbols,
+                    )
         if args.paper:
+            if args.use_minute and args.phase in {"sell-morning", "sell-force"} and no_position_sell_phase:
+                send_no_position_sell_report(
+                    args.phase,
+                    args.send_email,
+                    args.email_config,
+                    args.send_feishu,
+                    args.feishu_webhook_file,
+                )
+                return
             if args.use_minute and not minute_data_is_current(MINUTE_FILE):
                 print(f"Skipping {args.phase}: no minute bars for {pd.Timestamp.now():%Y-%m-%d} (market closed)")
                 return
@@ -511,6 +529,116 @@ def build_position_symbol_pool(full_symbols_file: Path, out_file: Path) -> Path:
     pool.to_csv(out_file, index=False)
     print(f"Wrote {len(pool)} position symbols for minute fetch to {out_file}")
     return out_file
+
+
+def safe_update_sina_stock_pool(path: Path, attempts: int = 3, retry_sleep_seconds: float = 2.0) -> pd.DataFrame | None:
+    last_error: Exception | None = None
+    for attempt in range(1, max(attempts, 1) + 1):
+        try:
+            return update_sina_stock_pool(path)
+        except Exception as exc:
+            last_error = exc
+            if attempt < attempts:
+                print(f"Warning: stock pool refresh attempt {attempt}/{attempts} failed: {exc}; retrying")
+                sleep(retry_sleep_seconds)
+    if stock_pool_is_usable(path):
+        print(f"Warning: stock pool refresh failed after {attempts} attempts, using existing {path}: {last_error}")
+        return None
+    raise RuntimeError(f"Stock pool refresh failed and no usable local pool exists: {last_error}") from last_error
+
+
+def run_with_retries(label: str, func, *args, attempts: int = 3, retry_sleep_seconds: float = 2.0, **kwargs):
+    last_error: Exception | None = None
+    for attempt in range(1, max(attempts, 1) + 1):
+        try:
+            return func(*args, **kwargs)
+        except Exception as exc:
+            last_error = exc
+            if attempt < attempts:
+                print(f"Warning: {label} attempt {attempt}/{attempts} failed: {exc}; retrying")
+                sleep(retry_sleep_seconds)
+    raise RuntimeError(f"{label} failed after {attempts} attempts: {last_error}") from last_error
+
+
+def stock_pool_is_usable(path: Path) -> bool:
+    if not path.exists():
+        return False
+    try:
+        pool = pd.read_csv(path, usecols=["symbol", "name"])
+    except (OSError, ValueError, pd.errors.EmptyDataError):
+        return False
+    return not pool.empty
+
+
+def paper_account_has_positions() -> bool:
+    account = load_account(DEFAULT_PAPER_STATE, 10_000.0)
+    return bool(account.positions)
+
+
+def send_no_position_sell_report(
+    phase: str,
+    send_email: bool,
+    email_config_file: Path,
+    send_feishu: bool,
+    feishu_webhook_file: Path,
+) -> dict:
+    account = load_account(DEFAULT_PAPER_STATE, 10_000.0)
+    current_date = pd.Timestamp.now().strftime("%Y-%m-%d")
+    equity = float(account.cash)
+    previous_equity = _previous_equity(DEFAULT_PAPER_DAILY, account.initial_cash, pd.to_datetime(current_date))
+    daily_pnl = equity - previous_equity
+    daily_return = daily_pnl / max(equity - daily_pnl, 1)
+    opened_today, closed_today = _daily_trade_counts(DEFAULT_PAPER_TRADES, current_date)
+    summary = {
+        "date": current_date,
+        "initial_cash": account.initial_cash,
+        "cash": account.cash,
+        "equity": equity,
+        "daily_pnl": daily_pnl,
+        "daily_return": daily_return,
+        "total_return": equity / account.initial_cash - 1,
+        "open_positions": 0,
+        "opened_positions": opened_today,
+        "closed_trades": closed_today,
+        "phase": phase,
+        "skipped": "no_positions",
+        "note": f"{phase} 无持仓，本阶段无需卖出",
+    }
+    append_daily_summary_once(DEFAULT_PAPER_DAILY, summary)
+    (REPORT_DIR / "paper_daily_summary.json").write_text(json.dumps(summary, indent=2, default=str))
+    empty_rank = pd.DataFrame()
+    empty_trades = pd.DataFrame()
+    empty_positions = pd.DataFrame()
+    if send_email:
+        email_config = load_email_config(email_config_file)
+        send_daily_email(email_config, summary, empty_rank, empty_trades, empty_trades, empty_positions, None)
+        print(f"Sent daily email to {email_config.recipient}")
+    if send_feishu:
+        webhook = load_feishu_webhook(feishu_webhook_file)
+        send_feishu_daily(webhook, summary, empty_rank, empty_trades, empty_trades, empty_positions, None)
+        print("Sent daily Feishu message")
+    print(json.dumps(summary, indent=2, default=str))
+    return summary
+
+
+def append_daily_summary_once(path: Path, summary: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    new_row = pd.DataFrame([summary])
+    if not path.exists():
+        new_row.to_csv(path, index=False)
+        return
+    existing = pd.read_csv(path)
+    if existing.empty:
+        new_row.to_csv(path, index=False)
+        return
+    same = (
+        (existing.get("date", pd.Series(dtype=str)).astype(str) == str(summary.get("date")))
+        & (existing.get("phase", pd.Series(dtype=str)).astype(str) == str(summary.get("phase")))
+        & (existing.get("skipped", pd.Series(dtype=str)).fillna("").astype(str) == str(summary.get("skipped", "")))
+    )
+    if same.any():
+        return
+    pd.concat([existing, new_row], ignore_index=True, sort=False).to_csv(path, index=False)
 
 
 def run_paper_from_prices(

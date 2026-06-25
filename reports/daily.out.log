@@ -130,3 +130,148 @@ Sent daily Feishu message
   "learning_top5_hit_rate": 0.2,
   "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
 }
+Wrote 0 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Skipping sell-force: no minute bars for 2026-06-22 (market closed)
+Wrote 1355245 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1355245 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349725,
+  "positive_rate": 0.022415677267591548,
+  "accuracy_at_0_5": 0.9775028246494656,
+  "precision_at_0_5": 0.38247863247863245,
+  "recall_at_0_5": 0.0059163774582713605,
+  "top_decile_hit_rate": 0.12157336336425333
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-22",
+  "initial_cash": 10000.0,
+  "cash": 366.913186400001,
+  "equity": 10836.913186400001,
+  "daily_pnl": 556.5391040000013,
+  "daily_return": 0.054136075160221675,
+  "total_return": 0.08369131864000012,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 3,
+  "phase": "buy",
+  "optimized_threshold": 0.12061506336715862,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 2.372845078680008,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-06-18 -> 2026-06-22: Top10 hit rate 10.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355133 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349614,
+  "positive_rate": 0.022481242784974074,
+  "accuracy_at_0_5": 0.9774402162396063,
+  "precision_at_0_5": 0.38626609442060084,
+  "recall_at_0_5": 0.005932566494182789,
+  "top_decile_hit_rate": 0.12185742547847156
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-23",
+  "initial_cash": 10000.0,
+  "cash": 6278.207858,
+  "equity": 10779.207858,
+  "daily_pnl": -57.705328399999416,
+  "daily_return": -0.005324886100630378,
+  "total_return": 0.07792078579999995,
+  "open_positions": 1,
+  "opened_positions": 0,
+  "closed_trades": 2,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 2.3487086948000084,
+  "learning_top5_hit_rate": 0.6,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355631 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350110,
+  "positive_rate": 0.02248705661020213,
+  "accuracy_at_0_5": 0.9774322092273963,
+  "precision_at_0_5": 0.3827956989247312,
+  "recall_at_0_5": 0.005862977602108037,
+  "top_decile_hit_rate": 0.12181970357970832
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-23",
+  "initial_cash": 10000.0,
+  "cash": 10762.366156,
+  "equity": 10762.366156,
+  "daily_pnl": -74.54703039999913,
+  "daily_return": -0.00687899119590193,
+  "total_return": 0.07623661560000006,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 2.2779796423600076,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-06-22 -> 2026-06-23: Top10 hit rate 0.00%
+Wrote 0 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Skipping sell-morning: no minute bars for 2026-06-24 (market closed)
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-06-24",
+  "initial_cash": 10000.0,
+  "cash": 10762.366156,
+  "equity": 10762.366156,
+  "daily_pnl": 0.0,
+  "daily_return": 0.0,
+  "total_return": 0.07623661560000006,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 0,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Wrote 1355271 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1355271 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349751,
+  "positive_rate": 0.022481924443841863,
+  "accuracy_at_0_5": 0.9774425060622293,
+  "precision_at_0_5": 0.38913043478260867,
+  "recall_at_0_5": 0.005898830120283407,
+  "top_decile_hit_rate": 0.12160770513057974
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-24",
+  "initial_cash": 10000.0,
+  "cash": 166.90855600000123,
+  "equity": 10738.908556000002,
+  "daily_pnl": -23.45759999999791,
+  "daily_return": -0.002179595050008621,
+  "total_return": 0.0738908556000002,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 2.411734184200008,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}

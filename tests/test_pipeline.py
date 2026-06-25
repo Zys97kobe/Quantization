@@ -23,7 +23,7 @@ from quant_limitup.config import TradingConfig
 from quant_limitup.strategy import build_learning_report, optimize_threshold
 from quant_limitup.messaging import _daily_text
 from quant_limitup.providers import sina_minute_market_is_current
-from quant_limitup.cli import main, minute_data_is_current
+from quant_limitup.cli import append_daily_summary_once, main, minute_data_is_current, safe_update_sina_stock_pool
 
 class PipelineTest(unittest.TestCase):
     def test_sample_pipeline_runs(self) -> None:
@@ -282,6 +282,32 @@ class PipelineTest(unittest.TestCase):
         fetch_daily.assert_not_called()
         build_pool.assert_not_called()
         run_paper.assert_not_called()
+
+    def test_stock_pool_refresh_failure_falls_back_to_existing_pool(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        symbols = Path(tmp.name) / "symbols.csv"
+        pd.DataFrame([{"symbol": "000001.SZ", "name": "平安银行"}]).to_csv(symbols, index=False)
+
+        with patch("quant_limitup.cli.update_sina_stock_pool", side_effect=ConnectionError("reset")):
+            self.assertIsNone(safe_update_sina_stock_pool(symbols, attempts=1))
+
+    def test_no_position_sell_summary_is_idempotent(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        daily_file = Path(tmp.name) / "daily.csv"
+        summary = {
+            "date": "2026-06-24",
+            "phase": "sell-morning",
+            "skipped": "no_positions",
+            "equity": 10000.0,
+        }
+
+        append_daily_summary_once(daily_file, summary)
+        append_daily_summary_once(daily_file, summary)
+        saved = pd.read_csv(daily_file)
+
+        self.assertEqual(len(saved), 1)
 
     def test_reviews_follow_next_trading_day_across_market_closure(self) -> None:
         history = pd.DataFrame([

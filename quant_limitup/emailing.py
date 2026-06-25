@@ -129,6 +129,8 @@ def _build_body(
     else:
         lines.extend(["", "今日卖出:"])
         lines.extend(_trade_lines(sells, "SELL"))
+    if summary.get("note"):
+        lines.extend(["", f"阶段说明: {summary['note']}"])
     lines.extend(["", "当前持仓明细:"])
     lines.extend(_position_lines(positions))
     if show_evaluation:

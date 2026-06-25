@@ -22,11 +22,6 @@
     <string>--symbols</string>
     <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv</string>
     <string>--refresh-stock-pool</string>
-    <string>--use-minute</string>
-    <string>--minute-mode</string>
-    <string>top</string>
-    <string>--minute-top-n</string>
-    <string>300</string>
     <string>--paper</string>
     <string>--send-feishu</string>
     <string>--feishu-webhook-file</string>

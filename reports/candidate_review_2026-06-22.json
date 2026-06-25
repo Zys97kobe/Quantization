@@ -1,18 +1,9 @@
 {
-  "date": "2026-06-23",
-  "latest_labeled_signal_date": "2026-06-22",
-  "latest_result_date": "2026-06-23",
-  "evaluation_source": "daily",
-  "labeled_rows": 1223274,
-  "positive_rows": 22964,
-  "positive_rate": 0.018772572620688415,
-  "actual_limit_up_count": 0,
-  "top3_hit_rate": 0.0,
-  "top5_hit_rate": 0.0,
+  "signal_date": "2026-06-22",
+  "result_date": "2026-06-23",
   "top10_hit_rate": 0.0,
-  "top20_hit_rate": 0.0,
   "top10_evaluated_count": 10,
-  "actual_limit_ups": [],
+  "candidate_count": 10,
   "evaluated_candidates": [
     {
       "candidate_rank": 1,
@@ -104,7 +95,5 @@
       "was_bought": false,
       "in_top10": true
     }
-  ],
-  "today_candidate_count": 4970,
-  "today_top_score": 0.3892287006679253
+  ]
 }
