@@ -359,7 +359,7 @@ def _sell_decision(
             return limit_price, True, "morning_limit_hit"
         running_high = morning["high"].cummax()
         pullback = morning["close"] / running_high - 1
-        hit_pullback = morning[pullback <= -0.03]
+        hit_pullback = morning[(pullback <= -0.03) & (morning["close"] < pos.buy_price)]
         if not hit_pullback.empty:
             return float(hit_pullback.iloc[0]["close"]), False, "morning_pullback"
         return None

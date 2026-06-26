@@ -611,12 +611,32 @@ def send_no_position_sell_report(
     empty_positions = pd.DataFrame()
     if send_email:
         email_config = load_email_config(email_config_file)
-        send_daily_email(email_config, summary, empty_rank, empty_trades, empty_trades, empty_positions, None)
-        print(f"Sent daily email to {email_config.recipient}")
+        safe_notify(
+            "daily email",
+            send_daily_email,
+            email_config,
+            summary,
+            empty_rank,
+            empty_trades,
+            empty_trades,
+            empty_positions,
+            None,
+            success_message=f"Sent daily email to {email_config.recipient}",
+        )
     if send_feishu:
         webhook = load_feishu_webhook(feishu_webhook_file)
-        send_feishu_daily(webhook, summary, empty_rank, empty_trades, empty_trades, empty_positions, None)
-        print("Sent daily Feishu message")
+        safe_notify(
+            "daily Feishu message",
+            send_feishu_daily,
+            webhook,
+            summary,
+            empty_rank,
+            empty_trades,
+            empty_trades,
+            empty_positions,
+            None,
+            success_message="Sent daily Feishu message",
+        )
     print(json.dumps(summary, indent=2, default=str))
     return summary
 
@@ -707,12 +727,32 @@ def run_paper_from_prices(
     notification_learning = None if phase == "sell-morning" else learning
     if send_email:
         email_config = load_email_config(email_config_file)
-        send_daily_email(email_config, summary, display_rank, buys, sells, positions, notification_learning)
-        print(f"Sent daily email to {email_config.recipient}")
+        safe_notify(
+            "daily email",
+            send_daily_email,
+            email_config,
+            summary,
+            display_rank,
+            buys,
+            sells,
+            positions,
+            notification_learning,
+            success_message=f"Sent daily email to {email_config.recipient}",
+        )
     if send_feishu:
         webhook = load_feishu_webhook(feishu_webhook_file)
-        send_feishu_daily(webhook, summary, display_rank, buys, sells, positions, notification_learning)
-        print("Sent daily Feishu message")
+        safe_notify(
+            "daily Feishu message",
+            send_feishu_daily,
+            webhook,
+            summary,
+            display_rank,
+            buys,
+            sells,
+            positions,
+            notification_learning,
+            success_message="Sent daily Feishu message",
+        )
     print(json.dumps(summary, indent=2, default=str))
     return rank, summary
 
@@ -776,9 +816,9 @@ def run_pending_candidate_reviews(
     webhook = load_feishu_webhook(feishu_webhook_file) if send_feishu else None
     for review in reviews:
         if email_config:
-            send_candidate_review_email(email_config, review)
+            safe_notify("candidate review email", send_candidate_review_email, email_config, review)
         if webhook:
-            send_feishu_candidate_review(webhook, review)
+            safe_notify("candidate review Feishu message", send_feishu_candidate_review, webhook, review)
         report_file = REPORT_DIR / f"candidate_review_{review['signal_date']}.json"
         report_file.write_text(json.dumps(review, indent=2, ensure_ascii=False, default=str))
         mark_review_completed(CANDIDATE_REVIEW_HISTORY, review)
@@ -788,6 +828,17 @@ def run_pending_candidate_reviews(
             f"Top{candidate_count} hit rate {review['top10_hit_rate'] * 100:.2f}%"
         )
     return reviews
+
+
+def safe_notify(label: str, func, *args, success_message: str | None = None, **kwargs) -> bool:
+    try:
+        func(*args, **kwargs)
+    except Exception as exc:
+        print(f"Warning: {label} failed, continuing workflow: {exc}")
+        return False
+    if success_message:
+        print(success_message)
+    return True
 
 
 def minute_data_is_current(path: Path, expected_date: str | None = None) -> bool:

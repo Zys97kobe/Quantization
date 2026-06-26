@@ -2905,7 +2905,7 @@ symbol,name,board,is_st
 600016.SH,民生银行,main,0
 600017.SH,日照港,main,0
 600018.SH,上港集团,main,0
-600019.SH,宝钢股份,main,0
+600019.SH,XD宝钢股,main,0
 600020.SH,中原高速,main,0
 600021.SH,上海电力,main,0
 600022.SH,山东钢铁,main,0
@@ -2934,7 +2934,7 @@ symbol,name,board,is_st
 600056.SH,中国医药,main,0
 600057.SH,厦门象屿,main,0
 600058.SH,五矿发展,main,0
-600059.SH,XD古越龙,main,0
+600059.SH,古越龙山,main,0
 600060.SH,海信视像,main,0
 600061.SH,国投资本,main,0
 600062.SH,华润双鹤,main,0
@@ -2962,7 +2962,7 @@ symbol,name,board,is_st
 600097.SH,开创国际,main,0
 600098.SH,广州发展,main,0
 600099.SH,林海股份,main,0
-600100.SH,同方股份,main,0
+600100.SH,XD同方股,main,0
 600101.SH,明星电力,main,0
 600103.SH,青山纸业,main,0
 600104.SH,上汽集团,main,0
@@ -3003,7 +3003,7 @@ symbol,name,board,is_st
 600150.SH,中国船舶,main,0
 600151.SH,航天机电,main,0
 600152.SH,维科技术,main,0
-600153.SH,XD建发股,main,0
+600153.SH,建发股份,main,0
 600155.SH,华创云信,main,0
 600156.SH,华升股份,main,0
 600157.SH,永泰能源,main,0
@@ -3123,7 +3123,7 @@ symbol,name,board,is_st
 600308.SH,华泰股份,main,0
 600309.SH,万华化学,main,0
 600310.SH,广西能源,main,0
-600312.SH,平高电气,main,0
+600312.SH,XD平高电,main,0
 600313.SH,农发种业,main,0
 600315.SH,上海家化,main,0
 600316.SH,洪都航空,main,0
@@ -3135,7 +3135,7 @@ symbol,name,board,is_st
 600325.SH,华发股份,main,0
 600326.SH,西藏天路,main,0
 600327.SH,大东方,main,0
-600328.SH,XD中盐化,main,0
+600328.SH,中盐化工,main,0
 600329.SH,达仁堂,main,0
 600330.SH,天通股份,main,0
 600331.SH,宏达股份,main,0
@@ -3220,7 +3220,7 @@ symbol,name,board,is_st
 600446.SH,金证股份,main,0
 600448.SH,华纺股份,main,0
 600449.SH,宁夏建材,main,0
-600452.SH,涪陵电力,main,0
+600452.SH,XD涪陵电,main,0
 600455.SH,博通股份,main,0
 600456.SH,宝钛股份,main,0
 600458.SH,时代新材,main,0
@@ -3241,7 +3241,7 @@ symbol,name,board,is_st
 600481.SH,双良节能,main,0
 600482.SH,中国动力,main,0
 600483.SH,福能股份,main,0
-600486.SH,扬农化工,main,0
+600486.SH,XD扬农化,main,0
 600487.SH,亨通光电,main,0
 600488.SH,津药药业,main,0
 600489.SH,中金黄金,main,0
@@ -3261,7 +3261,7 @@ symbol,name,board,is_st
 600506.SH,统一股份,main,0
 600507.SH,方大特钢,main,0
 600508.SH,上海能源,main,0
-600509.SH,天富能源,main,0
+600509.SH,XD天富能,main,0
 600510.SH,黑牡丹,main,0
 600511.SH,国药股份,main,0
 600512.SH,腾达建设,main,0
@@ -3277,7 +3277,7 @@ symbol,name,board,is_st
 600523.SH,贵航股份,main,0
 600525.SH,ST长园,main,1
 600526.SH,菲达环保,main,0
-600527.SH,江南高纤,main,0
+600527.SH,XD江南高,main,0
 600528.SH,中铁工业,main,0
 600529.SH,山东药玻,main,0
 600530.SH,交大昂立,main,0
@@ -3312,7 +3312,7 @@ symbol,name,board,is_st
 600569.SH,安阳钢铁,main,0
 600570.SH,恒生电子,main,0
 600571.SH,信雅达,main,0
-600572.SH,XD康恩贝,main,0
+600572.SH,康恩贝,main,0
 600573.SH,惠泉啤酒,main,0
 600575.SH,淮河能源,main,0
 600576.SH,祥源文旅,main,0
@@ -3329,7 +3329,7 @@ symbol,name,board,is_st
 600587.SH,新华医疗,main,0
 600588.SH,用友网络,main,0
 600589.SH,大位科技,main,0
-600590.SH,泰豪科技,main,0
+600590.SH,XD泰豪科,main,0
 600592.SH,龙溪股份,main,0
 600593.SH,大连圣亚,main,0
 600594.SH,益佰制药,main,0
@@ -3363,7 +3363,7 @@ symbol,name,board,is_st
 600624.SH,ST复华,main,1
 600626.SH,申达股份,main,0
 600628.SH,新世界,main,0
-600629.SH,DR华建集,main,0
+600629.SH,华建集团,main,0
 600630.SH,龙头股份,main,0
 600633.SH,浙数文化,main,0
 600635.SH,大众公用,main,0
@@ -3423,7 +3423,7 @@ symbol,name,board,is_st
 600703.SH,三安光电,main,0
 600704.SH,物产中大,main,0
 600706.SH,曲江文旅,main,0
-600707.SH,彩虹股份,main,0
+600707.SH,XD彩虹股,main,0
 600708.SH,光明地产,main,0
 600710.SH,苏美达,main,0
 600711.SH,盛屯矿业,main,0
@@ -3441,7 +3441,7 @@ symbol,name,board,is_st
 600724.SH,宁波富达,main,0
 600725.SH,云维股份,main,0
 600726.SH,华电能源,main,0
-600727.SH,鲁北化工,main,0
+600727.SH,XD鲁北化,main,0
 600728.SH,佳都科技,main,0
 600729.SH,重百集团,main,0
 600730.SH,*ST高科,main,1
@@ -3492,8 +3492,8 @@ symbol,name,board,is_st
 600782.SH,新钢股份,main,0
 600783.SH,鲁信创投,main,0
 600784.SH,鲁银投资,main,0
-600785.SH,新华百货,main,0
-600787.SH,XD中储股,main,0
+600785.SH,DR新华百,main,0
+600787.SH,中储股份,main,0
 600789.SH,鲁抗医药,main,0
 600790.SH,轻纺城,main,0
 600791.SH,京能置业,main,0
@@ -3580,7 +3580,7 @@ symbol,name,board,is_st
 600888.SH,新疆众和,main,0
 600889.SH,*ST京化,main,1
 600892.SH,*ST大晟,main,1
-600893.SH,XD航发动,main,0
+600893.SH,航发动力,main,0
 600894.SH,广日股份,main,0
 600895.SH,张江高科,main,0
 600897.SH,厦门空港,main,0
@@ -3591,7 +3591,7 @@ symbol,name,board,is_st
 600906.SH,财达证券,main,0
 600908.SH,无锡银行,main,0
 600909.SH,华安证券,main,0
-600916.SH,中国黄金,main,0
+600916.SH,XD中国黄,main,0
 600917.SH,重庆燃气,main,0
 600918.SH,中泰证券,main,0
 600919.SH,江苏银行,main,0
@@ -3618,7 +3618,7 @@ symbol,name,board,is_st
 600965.SH,*ST福成,main,1
 600966.SH,博汇纸业,main,0
 600967.SH,内蒙一机,main,0
-600968.SH,海油发展,main,0
+600968.SH,XD海油发,main,0
 600969.SH,郴电国际,main,0
 600970.SH,中材国际,main,0
 600971.SH,恒源煤电,main,0
@@ -3675,7 +3675,7 @@ symbol,name,board,is_st
 601068.SH,中铝国际,main,0
 601069.SH,西部黄金,main,0
 601077.SH,渝农商行,main,0
-601083.SH,锦江航运,main,0
+601083.SH,XD锦江航,main,0
 601086.SH,国芳集团,main,0
 601088.SH,中国神华,main,0
 601089.SH,福元医药,main,0
@@ -3711,12 +3711,12 @@ symbol,name,board,is_st
 601168.SH,西部矿业,main,0
 601169.SH,北京银行,main,0
 601177.SH,杭齿前进,main,0
-601179.SH,中国西电,main,0
+601179.SH,XD中国西,main,0
 601186.SH,中国铁建,main,0
 601187.SH,厦门银行,main,0
 601188.SH,龙江交通,main,0
 601198.SH,东兴证券,main,0
-601199.SH,XD江南水,main,0
+601199.SH,江南水务,main,0
 601200.SH,上海环境,main,0
 601208.SH,东材科技,main,0
 601211.SH,国泰海通,main,0
@@ -3796,7 +3796,7 @@ symbol,name,board,is_st
 601688.SH,华泰证券,main,0
 601689.SH,拓普集团,main,0
 601696.SH,中银证券,main,0
-601698.SH,中国卫通,main,0
+601698.SH,XD中国卫,main,0
 601699.SH,潞安环能,main,0
 601700.SH,风范股份,main,0
 601702.SH,华峰铝业,main,0
@@ -3845,7 +3845,7 @@ symbol,name,board,is_st
 601916.SH,浙商银行,main,0
 601918.SH,新集能源,main,0
 601919.SH,中远海控,main,0
-601921.SH,XD浙版传,main,0
+601921.SH,浙版传媒,main,0
 601928.SH,凤凰传媒,main,0
 601929.SH,吉视传媒,main,0
 601933.SH,永辉超市,main,0
@@ -3856,7 +3856,7 @@ symbol,name,board,is_st
 601958.SH,金钼股份,main,0
 601963.SH,重庆银行,main,0
 601965.SH,中国汽研,main,0
-601966.SH,XD玲珑轮,main,0
+601966.SH,玲珑轮胎,main,0
 601968.SH,宝钢包装,main,0
 601969.SH,海南矿业,main,0
 601975.SH,招商南油,main,0
@@ -3907,7 +3907,7 @@ symbol,name,board,is_st
 603037.SH,凯众股份,main,0
 603038.SH,华立股份,main,0
 603039.SH,泛微网络,main,0
-603040.SH,新坐标,main,0
+603040.SH,DR新坐标,main,0
 603041.SH,美思德,main,0
 603042.SH,华脉科技,main,0
 603043.SH,广州酒家,main,0
@@ -3934,14 +3934,14 @@ symbol,name,board,is_st
 603070.SH,万控智造,main,0
 603071.SH,物产环能,main,0
 603072.SH,天和磁材,main,0
-603073.SH,彩蝶实业,main,0
+603073.SH,XD彩蝶实,main,0
 603075.SH,热威股份,main,0
 603076.SH,乐惠国际,main,0
 603077.SH,和邦生物,main,0
 603078.SH,江化微,main,0
 603079.SH,圣达生物,main,0
 603080.SH,新疆火炬,main,0
-603081.SH,大丰实业,main,0
+603081.SH,XD大丰实,main,0
 603082.SH,北自科技,main,0
 603083.SH,剑桥科技,main,0
 603085.SH,天成自控,main,0
@@ -3950,8 +3950,8 @@ symbol,name,board,is_st
 603088.SH,宁波精达,main,0
 603089.SH,正裕工业,main,0
 603090.SH,宏盛股份,main,0
-603091.SH,众鑫股份,main,0
-603092.SH,德力佳,main,0
+603091.SH,DR众鑫股,main,0
+603092.SH,XD德力佳,main,0
 603093.SH,南华期货,main,0
 603095.SH,越剑智能,main,0
 603096.SH,新经典,main,0
@@ -4002,7 +4002,7 @@ symbol,name,board,is_st
 603158.SH,腾龙股份,main,0
 603159.SH,上海亚虹,main,0
 603160.SH,汇顶科技,main,0
-603161.SH,科华控股,main,0
+603161.SH,XD科华控,main,0
 603162.SH,海通发展,main,0
 603163.SH,圣晖集成,main,0
 603165.SH,荣晟环保,main,0
@@ -4027,7 +4027,7 @@ symbol,name,board,is_st
 603186.SH,华正新材,main,0
 603187.SH,海容冷链,main,0
 603188.SH,亚邦股份,main,0
-603189.SH,XD*ST网,main,1
+603189.SH,*ST网达,main,1
 603190.SH,亚通精工,main,0
 603191.SH,望变电气,main,0
 603192.SH,汇得科技,main,0
@@ -4038,7 +4038,7 @@ symbol,name,board,is_st
 603197.SH,保隆科技,main,0
 603198.SH,迎驾贡酒,main,0
 603199.SH,九华旅游,main,0
-603200.SH,上海洗霸,main,0
+603200.SH,XD上海洗,main,0
 603201.SH,常润股份,main,0
 603202.SH,天有为,main,0
 603203.SH,快克智能,main,0
@@ -4061,7 +4061,7 @@ symbol,name,board,is_st
 603221.SH,爱丽家居,main,0
 603222.SH,济民健康,main,0
 603223.SH,恒通股份,main,0
-603225.SH,XD新凤鸣,main,0
+603225.SH,新凤鸣,main,0
 603226.SH,菲林格尔,main,0
 603227.SH,雪峰科技,main,0
 603228.SH,景旺电子,main,0
@@ -4099,7 +4099,7 @@ symbol,name,board,is_st
 603279.SH,景津装备,main,0
 603280.SH,南方路机,main,0
 603281.SH,江瀚新材,main,0
-603282.SH,亚光股份,main,0
+603282.SH,XD亚光股,main,0
 603283.SH,赛腾股份,main,0
 603284.SH,林平发展,main,0
 603285.SH,键邦股份,main,0
@@ -4142,7 +4142,7 @@ symbol,name,board,is_st
 603329.SH,上海雅仕,main,0
 603330.SH,天洋新材,main,0
 603331.SH,百达精工,main,0
-603332.SH,苏州龙杰,main,0
+603332.SH,XD苏州龙,main,0
 603333.SH,福华尚纬,main,0
 603334.SH,丰倍生物,main,0
 603335.SH,迪生力,main,0
@@ -4161,7 +4161,7 @@ symbol,name,board,is_st
 603355.SH,莱克电气,main,0
 603356.SH,华菱精工,main,0
 603357.SH,设计总院,main,0
-603358.SH,华达科技,main,0
+603358.SH,XD华达科,main,0
 603359.SH,*ST东珠,main,1
 603360.SH,百傲化学,main,0
 603363.SH,傲农生物,main,0
@@ -4285,7 +4285,7 @@ symbol,name,board,is_st
 603630.SH,拉芳家化,main,0
 603633.SH,徕木股份,main,0
 603636.SH,南威软件,main,0
-603637.SH,镇海股份,main,0
+603637.SH,XD镇海股,main,0
 603638.SH,艾迪精密,main,0
 603639.SH,海利尔,main,0
 603648.SH,畅联股份,main,0
@@ -4323,14 +4323,14 @@ symbol,name,board,is_st
 603697.SH,有友食品,main,0
 603698.SH,航天工程,main,0
 603699.SH,纽威股份,main,0
-603700.SH,宁水集团,main,0
+603700.SH,XD宁水集,main,0
 603701.SH,德宏股份,main,0
 603703.SH,盛洋科技,main,0
 603706.SH,东方环宇,main,0
 603707.SH,健友股份,main,0
 603708.SH,家家悦,main,0
 603709.SH,中源家居,main,0
-603711.SH,XD香飘飘,main,0
+603711.SH,香飘飘,main,0
 603712.SH,七一二,main,0
 603713.SH,密尔克卫,main,0
 603716.SH,塞力医疗,main,0
@@ -4389,7 +4389,7 @@ symbol,name,board,is_st
 603826.SH,坤彩科技,main,0
 603828.SH,*ST利达,main,1
 603829.SH,洛凯股份,main,0
-603833.SH,欧派家居,main,0
+603833.SH,XD欧派家,main,0
 603836.SH,海程邦达,main,0
 603838.SH,*ST四通,main,1
 603839.SH,安正时尚,main,0
@@ -4450,7 +4450,7 @@ symbol,name,board,is_st
 603936.SH,博敏电子,main,0
 603937.SH,丽岛新材,main,0
 603938.SH,三孚股份,main,0
-603939.SH,益丰药房,main,0
+603939.SH,XD益丰药,main,0
 603948.SH,建业股份,main,0
 603949.SH,雪龙集团,main,0
 603950.SH,长源东谷,main,0
@@ -4493,7 +4493,7 @@ symbol,name,board,is_st
 605009.SH,豪悦护理,main,0
 605011.SH,杭州热电,main,0
 605016.SH,百龙创园,main,0
-605018.SH,长华集团,main,0
+605018.SH,XD长华集,main,0
 605020.SH,永和股份,main,0
 605028.SH,世茂能源,main,0
 605033.SH,美邦股份,main,0
@@ -4528,12 +4528,12 @@ symbol,name,board,is_st
 605138.SH,盛泰集团,main,0
 605151.SH,西上海,main,0
 605155.SH,西大门,main,0
-605158.SH,华达新材,main,0
-605162.SH,新中港,main,0
-605166.SH,XD聚合顺,main,0
+605158.SH,XD华达新,main,0
+605162.SH,XD新中港,main,0
+605166.SH,聚合顺,main,0
 605167.SH,利柏特,main,0
 605168.SH,三人行,main,0
-605169.SH,XD洪通燃,main,0
+605169.SH,洪通燃气,main,0
 605177.SH,东亚药业,main,0
 605178.SH,时空科技,main,0
 605179.SH,一鸣食品,main,0
@@ -4547,7 +4547,7 @@ symbol,name,board,is_st
 605199.SH,ST葫芦娃,main,1
 605208.SH,永茂泰,main,0
 605218.SH,伟时电子,main,0
-605222.SH,起帆电缆,main,0
+605222.SH,XD起帆电,main,0
 605228.SH,神通科技,main,0
 605255.SH,天普股份,main,0
 605258.SH,协和电子,main,0
@@ -4577,7 +4577,7 @@ symbol,name,board,is_st
 605366.SH,宏柏新材,main,0
 605368.SH,蓝天燃气,main,0
 605369.SH,拱东医疗,main,0
-605376.SH,博迁新材,main,0
+605376.SH,XD博迁新,main,0
 605377.SH,华旺科技,main,0
 605378.SH,野马电池,main,0
 605388.SH,均瑶健康,main,0
@@ -4638,7 +4638,7 @@ symbol,name,board,is_st
 688046.SH,药康生物,star,0
 688047.SH,龙芯中科,star,0
 688048.SH,长光华芯,star,0
-688049.SH,XD炬芯科,star,0
+688049.SH,炬芯科技,star,0
 688050.SH,爱博医疗,star,0
 688051.SH,佳华科技,star,0
 688052.SH,纳芯微,star,0
@@ -4675,7 +4675,7 @@ symbol,name,board,is_st
 688087.SH,英科再生,star,0
 688088.SH,虹软科技,star,0
 688089.SH,嘉必优,star,0
-688090.SH,瑞松科技,star,0
+688090.SH,DR瑞松科,star,0
 688091.SH,上海谊众,star,0
 688092.SH,爱科科技,star,0
 688093.SH,世华科技,star,0
@@ -4755,7 +4755,7 @@ symbol,name,board,is_st
 688179.SH,阿拉丁,star,0
 688180.SH,君实生物,star,0
 688181.SH,八亿时空,star,0
-688182.SH,灿勤科技,star,0
+688182.SH,XD灿勤科,star,0
 688183.SH,生益电子,star,0
 688184.SH,ST帕瓦,star,1
 688185.SH,康希诺,star,0
@@ -4768,7 +4768,7 @@ symbol,name,board,is_st
 688192.SH,迪哲医药,star,0
 688193.SH,仁度生物,star,0
 688195.SH,腾景科技,star,0
-688196.SH,卓越新能,star,0
+688196.SH,XD卓越新,star,0
 688197.SH,首药控股,star,0
 688198.SH,佰仁医疗,star,0
 688199.SH,久日新材,star,0
@@ -4808,7 +4808,7 @@ symbol,name,board,is_st
 688236.SH,春立医疗,star,0
 688237.SH,超卓航科,star,0
 688238.SH,和元生物,star,0
-688239.SH,XD航宇科,star,0
+688239.SH,航宇科技,star,0
 688244.SH,永信至诚,star,0
 688246.SH,嘉和美康,star,0
 688247.SH,宣泰医药,star,0
@@ -4887,7 +4887,7 @@ symbol,name,board,is_st
 688330.SH,宏力达,star,0
 688331.SH,荣昌生物,star,0
 688332.SH,中科蓝讯,star,0
-688333.SH,XD铂力特,star,0
+688333.SH,铂力特,star,0
 688334.SH,西高院,star,0
 688335.SH,复洁科技,star,0
 688336.SH,三生国健,star,0
@@ -4919,7 +4919,7 @@ symbol,name,board,is_st
 688369.SH,致远互联,star,0
 688370.SH,丛麟科技,star,0
 688371.SH,菲沃泰,star,0
-688372.SH,XD伟测科,star,0
+688372.SH,伟测科技,star,0
 688373.SH,盟科药业,star,0
 688375.SH,国博电子,star,0
 688376.SH,美埃科技,star,0
@@ -4940,7 +4940,7 @@ symbol,name,board,is_st
 688392.SH,骄成超声,star,0
 688393.SH,安必平,star,0
 688395.SH,正弦电气,star,0
-688396.SH,华润微,star,0
+688396.SH,XD华润微,star,0
 688398.SH,赛特新材,star,0
 688399.SH,硕世生物,star,0
 688400.SH,凌云光,star,0
@@ -4950,7 +4950,7 @@ symbol,name,board,is_st
 688409.SH,富创精密,star,0
 688410.SH,山外山,star,0
 688411.SH,海博思创,star,0
-688416.SH,XR恒烁股,star,0
+688416.SH,恒烁股份,star,0
 688418.SH,震有科技,star,0
 688419.SH,耐科装备,star,0
 688420.SH,美腾科技,star,0
@@ -4958,7 +4958,7 @@ symbol,name,board,is_st
 688426.SH,康为世纪,star,0
 688428.SH,诺诚健华,star,0
 688429.SH,时创能源,star,0
-688432.SH,XD有研硅,star,0
+688432.SH,有研硅,star,0
 688433.SH,华曙高科,star,0
 688435.SH,英方软件,star,0
 688439.SH,振华风光,star,0
@@ -4967,9 +4967,9 @@ symbol,name,board,is_st
 688449.SH,联芸科技,star,0
 688450.SH,光格科技,star,0
 688455.SH,科捷智能,star,0
-688456.SH,有研粉材,star,0
+688456.SH,XD有研粉,star,0
 688458.SH,美芯晟,star,0
-688459.SH,XD哈铁科,star,0
+688459.SH,哈铁科技,star,0
 688466.SH,金科环境,star,0
 688468.SH,科美诊断,star,0
 688469.SH,芯联集成,star,0
@@ -5018,7 +5018,7 @@ symbol,name,board,is_st
 688535.SH,华海诚科,star,0
 688536.SH,思瑞浦,star,0
 688538.SH,和辉光电,star,0
-688539.SH,高华科技,star,0
+688539.SH,XD高华科,star,0
 688543.SH,国科军工,star,0
 688545.SH,兴福电子,star,0
 688548.SH,广钢气体,star,0
@@ -5036,7 +5036,7 @@ symbol,name,board,is_st
 688562.SH,航天软件,star,0
 688563.SH,航材股份,star,0
 688565.SH,力源科技,star,0
-688566.SH,吉贝尔,star,0
+688566.SH,XD吉贝尔,star,0
 688567.SH,孚能科技,star,0
 688568.SH,中科星图,star,0
 688569.SH,铁科轨道,star,0
@@ -5051,7 +5051,7 @@ symbol,name,board,is_st
 688580.SH,伟思医疗,star,0
 688581.SH,安杰思,star,0
 688582.SH,芯动联科,star,0
-688583.SH,思看科技,star,0
+688583.SH,DR思看科,star,0
 688584.SH,上海合晶,star,0
 688585.SH,上纬新材,star,0
 688586.SH,江航装备,star,0
@@ -5156,7 +5156,7 @@ symbol,name,board,is_st
 688719.SH,爱科赛博,star,0
 688720.SH,艾森股份,star,0
 688721.SH,龙图光罩,star,0
-688722.SH,XD同益中,star,0
+688722.SH,同益中,star,0
 688726.SH,拉普拉斯,star,0
 688727.SH,恒坤新材,star,0
 688728.SH,格科微,star,0
@@ -5190,7 +5190,7 @@ symbol,name,board,is_st
 688793.SH,倍轻松,star,0
 688795.SH,摩尔线程,star,0
 688796.SH,百奥赛图,star,0
-688797.SH,N臻宝,star,0
+688797.SH,C臻宝,star,0
 688798.SH,艾为电子,star,0
 688799.SH,华纳药厂,star,0
 688800.SH,瑞可达,star,0
@@ -5213,7 +5213,7 @@ symbol,name,board,is_st
 920005.BJ,鼎佳精密,bse,0
 920006.BJ,晟楠科技,bse,0
 920007.BJ,酉立智能,bse,0
-920008.BJ,成电光信,bse,0
+920008.BJ,XD成电光,bse,0
 920009.BJ,丹娜生物,bse,0
 920010.BJ,凯添燃气,bse,0
 920011.BJ,晨光电机,bse,0
@@ -5223,7 +5223,7 @@ symbol,name,board,is_st
 920016.BJ,中草香料,bse,0
 920017.BJ,星昊医药,bse,0
 920018.BJ,宏远股份,bse,0
-920019.BJ,铜冠矿建,bse,0
+920019.BJ,XD铜冠矿,bse,0
 920020.BJ,泰凯英,bse,0
 920021.BJ,流金科技,bse,0
 920022.BJ,世昌股份,bse,0
@@ -5275,7 +5275,7 @@ symbol,name,board,is_st
 920108.BJ,宏海科技,bse,0
 920110.BJ,雷特科技,bse,0
 920111.BJ,聚星科技,bse,0
-920112.BJ,DR巴兰仕,bse,0
+920112.BJ,巴兰仕,bse,0
 920116.BJ,星图测控,bse,0
 920118.BJ,太湖远大,bse,0
 920119.BJ,美德乐,bse,0
@@ -5362,7 +5362,7 @@ symbol,name,board,is_st
 920305.BJ,*ST云创,bse,1
 920339.BJ,恒太照明,bse,0
 920344.BJ,三元基因,bse,0
-920346.BJ,威贸电子,bse,0
+920346.BJ,XD威贸电,bse,0
 920351.BJ,华光源海,bse,0
 920357.BJ,雅葆轩,bse,0
 920363.BJ,莱赛激光,bse,0
@@ -5378,7 +5378,7 @@ symbol,name,board,is_st
 920395.BJ,朗鸿科技,bse,0
 920396.BJ,常辅股份,bse,0
 920402.BJ,硅烷科技,bse,0
-920403.BJ,DR康农种,bse,0
+920403.BJ,康农种业,bse,0
 920405.BJ,海希通讯,bse,0
 920407.BJ,驰诚股份,bse,0
 920414.BJ,欧普泰,bse,0
@@ -5524,6 +5524,6 @@ symbol,name,board,is_st
 920976.BJ,视声智能,bse,0
 920978.BJ,开特股份,bse,0
 920981.BJ,晶赛科技,bse,0
-920982.BJ,锦波生物,bse,0
+920982.BJ,XD锦波生,bse,0
 920985.BJ,海泰新能,bse,0
 920992.BJ,中科美菱,bse,0

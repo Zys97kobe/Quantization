@@ -23,7 +23,7 @@ from quant_limitup.config import TradingConfig
 from quant_limitup.strategy import build_learning_report, optimize_threshold
 from quant_limitup.messaging import _daily_text
 from quant_limitup.providers import sina_minute_market_is_current
-from quant_limitup.cli import append_daily_summary_once, main, minute_data_is_current, safe_update_sina_stock_pool
+from quant_limitup.cli import append_daily_summary_once, main, minute_data_is_current, safe_notify, safe_update_sina_stock_pool
 
 class PipelineTest(unittest.TestCase):
     def test_sample_pipeline_runs(self) -> None:
@@ -129,6 +129,75 @@ class PipelineTest(unittest.TestCase):
         self.assertEqual(summary["date"], trade_date.strftime("%Y-%m-%d"))
         self.assertEqual(summary["closed_trades"], 1)
         self.assertFalse(account.positions)
+
+    def test_morning_pullback_does_not_sell_profitable_position(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        price_file = root / "daily_prices.csv"
+        write_sample_prices(price_file, symbols=24, days=90)
+        features = build_feature_frame(read_prices(price_file))
+        model, _ = train_logistic(features, epochs=50)
+        latest = features.iloc[-1]
+        signal_date = pd.to_datetime(latest["date"])
+        trade_date = signal_date + pd.offsets.BDay(1)
+        state_file = root / "account.json"
+        save_account(
+            PaperAccount(
+                initial_cash=10_000,
+                cash=8_000,
+                positions=[
+                    Position(
+                        latest.symbol,
+                        latest["name"],
+                        latest.board,
+                        signal_date.strftime("%Y-%m-%d"),
+                        100,
+                        20.0,
+                        2_000.0,
+                        0.5,
+                    )
+                ],
+            ),
+            state_file,
+        )
+        minute_bars = pd.DataFrame(
+            [
+                {
+                    "datetime": f"{trade_date:%Y-%m-%d} 09:35:00",
+                    "symbol": latest.symbol,
+                    "open": 22.0,
+                    "high": 22.0,
+                    "low": 22.0,
+                    "close": 22.0,
+                },
+                {
+                    "datetime": f"{trade_date:%Y-%m-%d} 09:40:00",
+                    "symbol": latest.symbol,
+                    "open": 21.2,
+                    "high": 21.2,
+                    "low": 21.0,
+                    "close": 21.0,
+                },
+            ]
+        )
+
+        account, _, summary = run_paper_day(
+            features,
+            model,
+            TradingConfig(),
+            state_file=state_file,
+            trades_file=root / "trades.csv",
+            daily_file=root / "daily.csv",
+            settle=True,
+            open_new=False,
+            minute_bars=minute_bars,
+            sell_mode="morning",
+        )
+
+        self.assertEqual(summary["date"], trade_date.strftime("%Y-%m-%d"))
+        self.assertEqual(summary["closed_trades"], 0)
+        self.assertEqual(len(account.positions), 1)
 
     def test_buy_uses_newer_minute_date(self) -> None:
         tmp = TemporaryDirectory()
@@ -308,6 +377,12 @@ class PipelineTest(unittest.TestCase):
         saved = pd.read_csv(daily_file)
 
         self.assertEqual(len(saved), 1)
+
+    def test_notification_failure_does_not_raise(self) -> None:
+        def fail_notify() -> None:
+            raise RuntimeError("frequency limited")
+
+        self.assertFalse(safe_notify("feishu", fail_notify))
 
     def test_reviews_follow_next_trading_day_across_market_closure(self) -> None:
         history = pd.DataFrame([
