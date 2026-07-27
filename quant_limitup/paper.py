@@ -58,6 +58,17 @@ def run_paper_day(
         work = pd.concat([work, day], ignore_index=True, sort=False)
     if day.empty:
         raise RuntimeError(f"No rows available for paper date {current_date.date()}")
+    if settle and minute_bars is not None and not minute_bars.empty and account.positions:
+        missing_day = _build_missing_position_intraday_rows(
+            work,
+            account.positions,
+            minute_bars,
+            current_date,
+            day,
+            config,
+        )
+        if not missing_day.empty:
+            day = pd.concat([day, missing_day], ignore_index=True, sort=False)
 
     trade_rows: list[dict] = []
     skipped = []
@@ -86,7 +97,8 @@ def run_paper_day(
     account.last_run_date = current_date.strftime("%Y-%m-%d")
     save_account(account, state_file)
     append_csv(trades_file, trade_rows)
-    opened_today, closed_today = _daily_trade_counts(trades_file, current_date_str)
+    opened_in_phase = sum(1 for row in trade_rows if row.get("action") == "BUY")
+    closed_in_phase = sum(1 for row in trade_rows if row.get("action") == "SELL")
 
     summary = {
         "date": account.last_run_date,
@@ -97,8 +109,8 @@ def run_paper_day(
         "daily_return": daily_return,
         "total_return": equity / account.initial_cash - 1,
         "open_positions": len(account.positions),
-        "opened_positions": opened_today,
-        "closed_trades": closed_today,
+        "opened_positions": opened_in_phase,
+        "closed_trades": closed_in_phase,
         "phase": _phase_name(settle, open_new, sell_mode),
     }
     if skipped:
@@ -243,6 +255,59 @@ def _build_intraday_snapshot(
     return snapshot.reset_index()
 
 
+def _build_missing_position_intraday_rows(
+    frame: pd.DataFrame,
+    positions: list[Position],
+    minute_bars: pd.DataFrame,
+    current_date: pd.Timestamp,
+    day: pd.DataFrame,
+    config: TradingConfig,
+) -> pd.DataFrame:
+    if day.empty:
+        current_symbols: set[str] = set()
+    else:
+        current_symbols = set(day["symbol"].astype(str))
+
+    rows = []
+    work = frame.copy()
+    work["date"] = pd.to_datetime(work["date"], errors="coerce")
+    for pos in positions:
+        if pos.symbol in current_symbols:
+            continue
+        bars = _position_minutes(pos.symbol, current_date, minute_bars)
+        if bars.empty:
+            continue
+        history = work[(work["symbol"].astype(str) == pos.symbol) & (work["date"] < current_date.normalize())]
+        history = history.sort_values("date")
+        if history.empty:
+            if day.empty:
+                row = pd.Series(dtype=object)
+            else:
+                row = day.iloc[0].copy()
+            prev_close = pos.buy_price / (1 + config.buy_slippage_bps / 10_000)
+            row["symbol"] = pos.symbol
+            row["name"] = pos.name
+            row["board"] = pos.board
+        else:
+            row = history.iloc[-1].copy()
+            prev_close = float(row["close"])
+        row["date"] = current_date.normalize()
+        row["open"] = float(bars.iloc[0]["open"])
+        row["high"] = float(bars["high"].max())
+        row["low"] = float(bars["low"].min())
+        row["close"] = float(bars.iloc[-1]["close"])
+        is_st = int(str(row.get("name", "")).upper().startswith(("ST", "*ST")))
+        row["limit_up_price"] = limit_up_price(prev_close, pos.board, is_st)
+        for col in ("next_close", "next_high", "next_limit_up_price", "target_limit_up"):
+            if col in row.index:
+                row[col] = pd.NA
+        rows.append(row)
+
+    if not rows:
+        return pd.DataFrame()
+    return pd.DataFrame(rows).reset_index(drop=True)
+
+
 def _open_positions(
     account: PaperAccount,
     rank: pd.DataFrame,
@@ -252,19 +317,20 @@ def _open_positions(
     trade_rows: list[dict],
 ) -> int:
     existing_symbols = {pos.symbol for pos in account.positions}
-    candidates = filter_tradeable(rank[rank["score"] >= config.min_score_to_buy])
+    max_positions, max_position_pct, min_score = _buy_risk_limits(rank, config)
+    candidates = filter_tradeable(rank[rank["score"] >= min_score])
     if candidates.empty:
         return 0
     day_by_symbol = day.set_index("symbol")
     opened = 0
     cash_budget = account.cash
     for row in candidates.itertuples(index=False):
-        if opened >= config.max_positions_per_day:
+        if opened >= max_positions:
             break
         if row.symbol in existing_symbols or row.symbol not in day_by_symbol.index:
             continue
         price_row = day_by_symbol.loc[row.symbol]
-        capital = min(account.cash, cash_budget * config.max_position_pct)
+        capital = min(account.cash, cash_budget * max_position_pct)
         buy_price = float(price_row["close"]) * (1 + config.buy_slippage_bps / 10_000)
         shares = int(capital / buy_price / 100) * 100
         if shares <= 0:
@@ -305,6 +371,24 @@ def _open_positions(
         )
         opened += 1
     return opened
+
+
+def _buy_risk_limits(rank: pd.DataFrame, config: TradingConfig) -> tuple[int, float, float]:
+    max_positions = config.max_positions_per_day
+    max_position_pct = config.max_position_pct
+    min_score = config.min_score_to_buy
+    if rank.empty or "market_limit_hits" not in rank.columns:
+        return max_positions, max_position_pct, min_score
+
+    market_limit_hits = pd.to_numeric(rank["market_limit_hits"], errors="coerce").dropna()
+    if market_limit_hits.empty:
+        return max_positions, max_position_pct, min_score
+    current_limit_hits = float(market_limit_hits.iloc[0])
+    if current_limit_hits < config.weak_market_limit_hits:
+        max_positions = min(max_positions, config.weak_market_max_positions)
+        max_position_pct = min(max_position_pct, config.weak_market_max_position_pct)
+        min_score = max(min_score, config.weak_market_min_score)
+    return max_positions, max_position_pct, min_score
 
 
 def _mark_to_market(account: PaperAccount, day: pd.DataFrame) -> float:

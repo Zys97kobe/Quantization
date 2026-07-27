@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-06-29",
+  "result_date": "2026-06-30",
+  "top10_hit_rate": 0.1,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "688110.SH",
+      "name": "东芯股份",
+      "score": 0.9999999999999992,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "002930.SZ",
+      "name": "宏川智慧",
+      "score": 0.9999999999999992,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "688392.SH",
+      "name": "骄成超声",
+      "score": 0.9999999999999988,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "688525.SH",
+      "name": "佰维存储",
+      "score": 0.999999999999822,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "002225.SZ",
+      "name": "濮耐股份",
+      "score": 0.9999999999958884,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "002745.SZ",
+      "name": "木林森",
+      "score": 0.9999999999913088,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "000818.SZ",
+      "name": "航锦科技",
+      "score": 0.9999999999533922,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "300668.SZ",
+      "name": "杰恩股份",
+      "score": 0.9999999998841184,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "301132.SZ",
+      "name": "满坤科技",
+      "score": 0.999999999396236,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "001309.SZ",
+      "name": "德明利",
+      "score": 0.9999999989926618,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

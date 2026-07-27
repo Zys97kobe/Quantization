@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-16",
+  "result_date": "2026-07-17",
+  "top10_hit_rate": 0.3,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "603580.SH",
+      "name": "艾艾精工",
+      "score": 0.7173160246629914,
+      "hit_limit": true,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "600664.SH",
+      "name": "哈药股份",
+      "score": 0.5609570814356569,
+      "hit_limit": true,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "600246.SH",
+      "name": "万通发展",
+      "score": 0.5020002923523297,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "600403.SH",
+      "name": "大有能源",
+      "score": 0.4491876313724064,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "600227.SH",
+      "name": "赤天化",
+      "score": 0.3614337530569989,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "600353.SH",
+      "name": "旭光电子",
+      "score": 0.3534151731912542,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "603989.SH",
+      "name": "艾华集团",
+      "score": 0.3507924551110183,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "600667.SH",
+      "name": "太极实业",
+      "score": 0.3102779674710167,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "000504.SZ",
+      "name": "南华生物",
+      "score": 0.3024495231230987,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "002739.SZ",
+      "name": "儒意电影",
+      "score": 0.3006623394106612,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

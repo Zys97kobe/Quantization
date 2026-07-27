@@ -45,12 +45,14 @@ from .features import build_feature_frame
 from .intraday_features import normalize_minute_bars
 from .messaging import load_feishu_webhook, send_feishu_candidate_review, send_feishu_daily
 from .model import LogisticLimitUpModel, train_logistic
+from .model_compare import compare_models
 from .paper import _daily_trade_counts, _previous_equity, load_account, reset_account, run_paper_day
 from .providers import (
     fetch_akshare_daily_prices,
     fetch_sina_candidate_daily_prices,
     fetch_sina_daily_prices,
     fetch_sina_minute_bars,
+    fetch_tencent_daily_prices,
     fetch_tushare_daily_prices,
     sina_minute_market_is_current,
     update_sina_stock_pool,
@@ -98,6 +100,20 @@ def main(argv: list[str] | None = None) -> None:
     bt = sub.add_parser("backtest", help="Run simple next-day paper-trading backtest")
     bt.add_argument("--features", type=Path, default=DEFAULT_FEATURE_FILE)
     bt.add_argument("--model", type=Path, default=DEFAULT_MODEL_FILE)
+
+    compare = sub.add_parser("compare-models", help="Compare Logistic and optional GBDT on recent TopN hit rates")
+    compare.add_argument("--features", type=Path, default=DEFAULT_FEATURE_FILE)
+    compare.add_argument("--out", type=Path, default=REPORT_DIR / "model_compare.json")
+    compare.add_argument("--lookback-dates", type=int, default=60)
+    compare.add_argument("--train-days", type=int, default=180)
+    compare.add_argument("--min-train-rows", type=int, default=20_000)
+    compare.add_argument("--max-train-rows", type=int, default=250_000)
+
+    review = sub.add_parser("review-candidates", help="Review and send pending candidate Top10 results")
+    review.add_argument("--send-email", action="store_true")
+    review.add_argument("--email-config", type=Path, default=DEFAULT_EMAIL_CONFIG_FILE)
+    review.add_argument("--send-feishu", action="store_true")
+    review.add_argument("--feishu-webhook-file", type=Path, default=DEFAULT_FEISHU_WEBHOOK_FILE)
 
     fetch = sub.add_parser("fetch-akshare", help="Fetch real A-share daily prices through AkShare")
     fetch.add_argument("--start-date", type=str, required=True, help="YYYYMMDD, e.g. 20240101")
@@ -224,6 +240,28 @@ def main(argv: list[str] | None = None) -> None:
         backtest_to_files(args.features, args.model)
         return
 
+    if args.cmd == "compare-models":
+        frame = pd.read_csv(args.features, parse_dates=["date"])
+        summary = compare_models(
+            frame,
+            args.out,
+            lookback_dates=args.lookback_dates,
+            train_days=args.train_days,
+            min_train_rows=args.min_train_rows,
+            max_train_rows=args.max_train_rows,
+        )
+        print(json.dumps(summary, ensure_ascii=False, indent=2, default=str))
+        return
+
+    if args.cmd == "review-candidates":
+        run_pending_candidate_reviews(
+            send_email=args.send_email,
+            email_config_file=args.email_config,
+            send_feishu=args.send_feishu,
+            feishu_webhook_file=args.feishu_webhook_file,
+        )
+        return
+
     if args.cmd == "fetch-akshare":
         df = fetch_akshare_daily_prices(
             args.out,
@@ -303,7 +341,20 @@ def main(argv: list[str] | None = None) -> None:
                 return
             if args.refresh_stock_pool:
                 safe_update_sina_stock_pool(args.symbols)
-            run_with_retries("daily price fetch", fetch_sina_daily_prices, args.prices, args.symbols, days=args.days)
+            if args.phase == "buy":
+                try:
+                    run_with_retries(
+                        "tencent daily price fetch",
+                        fetch_tencent_daily_prices,
+                        args.prices,
+                        args.symbols,
+                        days=args.days,
+                    )
+                except Exception as exc:  # noqa: BLE001 - fall back to existing Sina source.
+                    print(f"Warning: Tencent daily price fetch failed, falling back to Sina: {exc}")
+                    run_with_retries("daily price fetch", fetch_sina_daily_prices, args.prices, args.symbols, days=args.days)
+            else:
+                run_with_retries("daily price fetch", fetch_sina_daily_prices, args.prices, args.symbols, days=args.days)
             if args.use_minute:
                 minute_symbols = args.symbols
                 max_symbols = None
@@ -815,18 +866,25 @@ def run_pending_candidate_reviews(
     email_config = load_email_config(email_config_file) if send_email else None
     webhook = load_feishu_webhook(feishu_webhook_file) if send_feishu else None
     for review in reviews:
+        notification_sent = True
         if email_config:
-            safe_notify("candidate review email", send_candidate_review_email, email_config, review)
+            notification_sent &= safe_notify(
+                "candidate review email", send_candidate_review_email, email_config, review
+            )
         if webhook:
-            safe_notify("candidate review Feishu message", send_feishu_candidate_review, webhook, review)
+            notification_sent &= safe_notify(
+                "candidate review Feishu message", send_feishu_candidate_review, webhook, review
+            )
         report_file = REPORT_DIR / f"candidate_review_{review['signal_date']}.json"
         report_file.write_text(json.dumps(review, indent=2, ensure_ascii=False, default=str))
-        mark_review_completed(CANDIDATE_REVIEW_HISTORY, review)
+        mark_review_completed(CANDIDATE_REVIEW_HISTORY, review, notification_sent=notification_sent)
         candidate_count = int(review.get("candidate_count", 10))
         print(
             f"Reviewed candidates {review['signal_date']} -> {review['result_date']}: "
             f"Top{candidate_count} hit rate {review['top10_hit_rate'] * 100:.2f}%"
         )
+        if not notification_sent:
+            print(f"Candidate review {review['signal_date']} remains pending for notification retry")
     return reviews
 
 

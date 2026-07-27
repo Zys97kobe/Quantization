@@ -19,7 +19,7 @@ class LogisticLimitUpModel:
     std: list[float]
 
     def predict_proba(self, frame: pd.DataFrame) -> np.ndarray:
-        x = frame[self.feature_columns].to_numpy(dtype=float)
+        x = _feature_matrix(frame, self.feature_columns)
         mean = np.asarray(self.mean)
         std = np.asarray(self.std)
         z = (x - mean) / std
@@ -56,8 +56,12 @@ def train_logistic(
     l2: float = 0.02,
 ) -> tuple[LogisticLimitUpModel, dict]:
     feature_columns = feature_columns or FEATURE_COLUMNS
+    frame = frame.copy()
+    for col in feature_columns:
+        if col not in frame.columns:
+            frame[col] = 0.0
     frame = frame.dropna(subset=feature_columns + [target]).copy()
-    x = frame[feature_columns].to_numpy(dtype=float)
+    x = _feature_matrix(frame, feature_columns)
     y = frame[target].to_numpy(dtype=float)
     if len(np.unique(y)) < 2:
         raise ValueError("Training target has only one class; provide a wider date range.")
@@ -85,6 +89,14 @@ def train_logistic(
     )
     metrics = classification_metrics(y, model.predict_proba(frame))
     return model, metrics
+
+
+def _feature_matrix(frame: pd.DataFrame, feature_columns: list[str]) -> np.ndarray:
+    work = frame.copy()
+    for col in feature_columns:
+        if col not in work.columns:
+            work[col] = 0.0
+    return work[feature_columns].to_numpy(dtype=float)
 
 
 def classification_metrics(y: np.ndarray, score: np.ndarray) -> dict:

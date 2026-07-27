@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-03",
+  "result_date": "2026-07-06",
+  "top10_hit_rate": 0.1,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "688689.SH",
+      "name": "银河微电",
+      "score": 0.8363709841324581,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "300671.SZ",
+      "name": "富满微",
+      "score": 0.6174811657305316,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "301165.SZ",
+      "name": "锐捷网络",
+      "score": 0.6164308915860782,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "300740.SZ",
+      "name": "水羊股份",
+      "score": 0.5927672602667344,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "603137.SH",
+      "name": "恒尚节能",
+      "score": 0.5776617254876252,
+      "hit_limit": true,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "600113.SH",
+      "name": "浙江东日",
+      "score": 0.546950065719968,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "301092.SZ",
+      "name": "争光股份",
+      "score": 0.5257088079078054,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "600641.SH",
+      "name": "先导基电",
+      "score": 0.5242971552704233,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "300932.SZ",
+      "name": "三友联众",
+      "score": 0.5064252492060966,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "688728.SH",
+      "name": "格科微",
+      "score": 0.4404985739817268,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

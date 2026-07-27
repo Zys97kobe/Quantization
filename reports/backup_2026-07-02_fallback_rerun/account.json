@@ -1,0 +1,39 @@
+{
+  "initial_cash": 10000.0,
+  "cash": 1522.7098712000043,
+  "positions": [
+    {
+      "symbol": "688728.SH",
+      "name": "格科微",
+      "board": "star",
+      "buy_date": "2026-07-01",
+      "shares": 100,
+      "buy_price": 25.2702,
+      "cost": 2532.02,
+      "score": 0.2904139548803615
+    },
+    {
+      "symbol": "301520.SZ",
+      "name": "万邦医药",
+      "board": "chinext",
+      "buy_date": "2026-07-01",
+      "shares": 100,
+      "buy_price": 31.0248,
+      "cost": 3107.48,
+      "score": 0.2269827688221272
+    },
+    {
+      "symbol": "600707.SH",
+      "name": "彩虹股份",
+      "board": "main",
+      "buy_date": "2026-07-01",
+      "shares": 200,
+      "buy_price": 17.674128,
+      "cost": 3539.8256,
+      "score": 0.2256089993632684
+    }
+  ],
+  "last_run_date": "2026-07-01",
+  "last_buy_date": "2026-07-01",
+  "last_sell_date": "2026-07-01"
+}

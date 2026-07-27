@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-01",
+  "result_date": "2026-07-02",
+  "top10_hit_rate": 0.0,
+  "top10_evaluated_count": 9,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "688596.SH",
+      "name": "正帆科技",
+      "score": 0.599914135047836,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "300540.SZ",
+      "name": "蜀道装备",
+      "score": 0.4317248340960738,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "688503.SH",
+      "name": "聚和材料",
+      "score": 0.3394817557603746,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "688548.SH",
+      "name": "广钢气体",
+      "score": 0.328225480385181,
+      "hit_limit": null,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "688689.SH",
+      "name": "银河微电",
+      "score": 0.3265389769787465,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "688432.SH",
+      "name": "有研硅",
+      "score": 0.3186468281155062,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "688233.SH",
+      "name": "神工股份",
+      "score": 0.311372163429209,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "300671.SZ",
+      "name": "富满微",
+      "score": 0.3080514812479967,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "688728.SH",
+      "name": "格科微",
+      "score": 0.2904139548803615,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "688048.SH",
+      "name": "长光华芯",
+      "score": 0.2511343278986008,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

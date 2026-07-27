@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-20",
+  "result_date": "2026-07-21",
+  "top10_hit_rate": 0.2,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "002432.SZ",
+      "name": "九安医疗",
+      "score": 0.9523864648498208,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "603580.SH",
+      "name": "艾艾精工",
+      "score": 0.9500417587734612,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "603137.SH",
+      "name": "恒尚节能",
+      "score": 0.8460294909476913,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "301520.SZ",
+      "name": "万邦医药",
+      "score": 0.8393249394581357,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "603118.SH",
+      "name": "共进股份",
+      "score": 0.7645606910940818,
+      "hit_limit": true,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "603159.SH",
+      "name": "上海亚虹",
+      "score": 0.6644687418273593,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "000571.SZ",
+      "name": "新大洲A",
+      "score": 0.6147370995987114,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "600162.SH",
+      "name": "香江控股",
+      "score": 0.5283153439537772,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "000722.SZ",
+      "name": "湖南发展",
+      "score": 0.5222467223359253,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "600881.SH",
+      "name": "亚泰集团",
+      "score": 0.494103593471639,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

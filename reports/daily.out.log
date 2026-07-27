@@ -353,3 +353,1781 @@ Sent daily Feishu message
   "learning_top5_hit_rate": 0.4,
   "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
 }
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355300 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349779,
+  "positive_rate": 0.022540727037537255,
+  "accuracy_at_0_5": 0.9773851867602029,
+  "precision_at_0_5": 0.3888888888888889,
+  "recall_at_0_5": 0.005751848808545604,
+  "top_decile_hit_rate": 0.12182075464708803
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-26",
+  "initial_cash": 10000.0,
+  "cash": 10015.047829200003,
+  "equity": 10015.047829200003,
+  "daily_pnl": -185.14996040000187,
+  "daily_return": -0.01815160492169853,
+  "total_return": 0.001504782920000336,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 1.441014252000007,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1355300 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1355300 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349779,
+  "positive_rate": 0.022439228940441362,
+  "accuracy_at_0_5": 0.9774896483053892,
+  "precision_at_0_5": 0.3918918918918919,
+  "recall_at_0_5": 0.005744849445324881,
+  "top_decile_hit_rate": 0.12106507034531809
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-26",
+  "initial_cash": 10000.0,
+  "cash": 454.4174292000039,
+  "equity": 9992.417429200003,
+  "daily_pnl": -207.78036040000188,
+  "daily_return": -0.020370228566729577,
+  "total_return": -0.000758257079999769,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 3,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 1.441014252000007,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-06-25 -> 2026-06-26: Top10 hit rate 10.00%
+Skipping sell-morning: no minute bars for 2026-06-27 (market closed)
+Skipping sell-force: no minute bars for 2026-06-27 (market closed)
+Skipping buy: no minute bars for 2026-06-27 (market closed)
+Skipping sell-morning: no minute bars for 2026-06-28 (market closed)
+Skipping sell-force: no minute bars for 2026-06-28 (market closed)
+Skipping buy: no minute bars for 2026-06-28 (market closed)
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355439 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349918,
+  "positive_rate": 0.02247025374874622,
+  "accuracy_at_0_5": 0.9774660386779048,
+  "precision_at_0_5": 0.4009216589861751,
+  "recall_at_0_5": 0.005736326772821679,
+  "top_decile_hit_rate": 0.12103769880955027
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-29",
+  "initial_cash": 10000.0,
+  "cash": 9880.132310400004,
+  "equity": 9880.132310400004,
+  "daily_pnl": -112.28511880000042,
+  "daily_return": -0.011237032439405405,
+  "total_return": -0.011986768959999616,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 1.587459765360006,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-06-29",
+  "initial_cash": 10000.0,
+  "cash": 9880.132310400004,
+  "equity": 9880.132310400004,
+  "daily_pnl": -112.28511880000042,
+  "daily_return": -0.011237032439405405,
+  "total_return": -0.011986768959999616,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Wrote 1355190 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1355190 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349670,
+  "positive_rate": 0.02245734142419999,
+  "accuracy_at_0_5": 0.9774796802181274,
+  "precision_at_0_5": 0.40229885057471265,
+  "recall_at_0_5": 0.005773672055427252,
+  "top_decile_hit_rate": 0.12094808360562212
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-29",
+  "initial_cash": 10000.0,
+  "cash": 147.36431040000298,
+  "equity": 9857.364310400004,
+  "daily_pnl": -135.05311880000045,
+  "daily_return": -0.013515560149173315,
+  "total_return": -0.014263568959999584,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 3,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 2.044833014400005,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: candidate review Feishu message failed, continuing workflow: Feishu webhook returned error: {'code': 11232, 'data': {}, 'msg': 'frequency limited psm[lark.oapi.app_platform_runtime]appID[1500]'}
+Reviewed candidates 2026-06-26 -> 2026-06-29: Top10 hit rate 20.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355329 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349808,
+  "positive_rate": 0.022556541374773302,
+  "accuracy_at_0_5": 0.9773790050140464,
+  "precision_at_0_5": 0.3990719257540603,
+  "recall_at_0_5": 0.005649160836864059,
+  "top_decile_hit_rate": 0.121217958216032
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-30",
+  "initial_cash": 10000.0,
+  "cash": 3797.607774400003,
+  "equity": 10103.607774400003,
+  "daily_pnl": 246.24346399999922,
+  "daily_return": 0.024980659763198593,
+  "total_return": 0.010360777440000302,
+  "open_positions": 2,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.34,
+  "optimization_total_return": 1.909148713440008,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1355578 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 302 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1355080 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1010529,
+  "positive_rate": 0.022588169166842316,
+  "accuracy_at_0_5": 0.9773583934751007,
+  "precision_at_0_5": 0.4,
+  "recall_at_0_5": 0.0047314465959870326,
+  "top_decile_hit_rate": 0.12072002533349167
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-30",
+  "initial_cash": 10000.0,
+  "cash": 282.6136920000049,
+  "equity": 10050.613692000004,
+  "daily_pnl": 193.24938160000056,
+  "daily_return": 0.01960456928594117,
+  "total_return": 0.005061369200000554,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 3,
+  "phase": "full",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 1.8730375017600056,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1355080 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 302 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1355080 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349560,
+  "positive_rate": 0.022586620824565043,
+  "accuracy_at_0_5": 0.9773459497910431,
+  "precision_at_0_5": 0.394919168591224,
+  "recall_at_0_5": 0.005609868118889837,
+  "top_decile_hit_rate": 0.12137289190550994
+}
+Sent daily Feishu message
+{
+  "date": "2026-06-30",
+  "initial_cash": 10000.0,
+  "cash": 282.6136920000049,
+  "equity": 10050.613692000004,
+  "daily_pnl": 193.24938160000056,
+  "daily_return": 0.01960456928594117,
+  "total_return": 0.005061369200000554,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 3,
+  "phase": "buy",
+  "skipped": "buy_already_ran",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.34,
+  "optimization_total_return": 1.909148713440008,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-06-29 -> 2026-06-30: Top10 hit rate 10.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355468 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349947,
+  "positive_rate": 0.022683853514249078,
+  "accuracy_at_0_5": 0.9772531810508116,
+  "precision_at_0_5": 0.3990498812351544,
+  "recall_at_0_5": 0.0054862517144536604,
+  "top_decile_hit_rate": 0.1218646754670578
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-01",
+  "initial_cash": 10000.0,
+  "cash": 6234.855080000005,
+  "equity": 10663.855080000005,
+  "daily_pnl": 613.2413880000004,
+  "daily_return": 0.061015317750011885,
+  "total_return": 0.06638550800000043,
+  "open_positions": 1,
+  "opened_positions": 0,
+  "closed_trades": 2,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 1.9429120123600079,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355717 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350195,
+  "positive_rate": 0.0226804276419332,
+  "accuracy_at_0_5": 0.9772558778546803,
+  "precision_at_0_5": 0.3981042654028436,
+  "recall_at_0_5": 0.005486072559840642,
+  "top_decile_hit_rate": 0.12184951747531829
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-01",
+  "initial_cash": 10000.0,
+  "cash": 10702.035471200004,
+  "equity": 10702.035471200004,
+  "daily_pnl": 651.4217792,
+  "daily_return": 0.06481412968031124,
+  "total_return": 0.07020354712000043,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 1.9136299970000081,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1355468 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1355468 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349947,
+  "positive_rate": 0.022566811882244266,
+  "accuracy_at_0_5": 0.9773672596035252,
+  "precision_at_0_5": 0.3937947494033413,
+  "recall_at_0_5": 0.0054162289915966385,
+  "top_decile_hit_rate": 0.12092389291375913
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-01",
+  "initial_cash": 10000.0,
+  "cash": 1522.7098712000043,
+  "equity": 10679.709871200004,
+  "daily_pnl": 629.0961791999998,
+  "daily_return": 0.06259281258623461,
+  "total_return": 0.06797098712000049,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 3,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 1.9081618659600093,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: candidate review Feishu message failed, continuing workflow: Feishu webhook returned error: {'code': 11232, 'data': {}, 'msg': 'frequency limited psm[lark.oapi.app_platform_runtime]appID[1500]'}
+Reviewed candidates 2026-06-30 -> 2026-07-01: Top10 hit rate 10.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Warning: minute bar fetch attempt 1/3 failed: No Sina minute data fetched. 301520.SZ: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz301520&scale=5&ma=no&datalen=80; 688728.SH: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sh688728&scale=5&ma=no&datalen=80; 600707.SH: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sh600707&scale=5&ma=no&datalen=80; retrying
+Warning: minute bar fetch attempt 2/3 failed: No Sina minute data fetched. 301520.SZ: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz301520&scale=5&ma=no&datalen=80; 688728.SH: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sh688728&scale=5&ma=no&datalen=80; 600707.SH: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sh600707&scale=5&ma=no&datalen=80; retrying
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Warning: minute bar fetch attempt 1/3 failed: No Sina minute data fetched. 301520.SZ: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz301520&scale=5&ma=no&datalen=80; 600707.SH: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sh600707&scale=5&ma=no&datalen=80; 688728.SH: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sh688728&scale=5&ma=no&datalen=80; retrying
+Warning: minute bar fetch attempt 2/3 failed: No Sina minute data fetched. 301520.SZ: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz301520&scale=5&ma=no&datalen=80; 688728.SH: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sh688728&scale=5&ma=no&datalen=80; 600707.SH: 456 Client Error:  for url: https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sh600707&scale=5&ma=no&datalen=80; retrying
+Wrote 95118 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 303 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Warning: minute bar fetch attempt 1/3 failed: No Sina minute data fetched. 000006.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000006&scale=5&ma=no&datalen=80 (Caused by SSLError(OSError(24, 'Too many open files'))); 000019.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000019&scale=5&ma=no&datalen=80 (Caused by NameResolutionError("HTTPSConnection(host='quotes.sina.cn', port=443): Failed to resolve 'quotes.sina.cn' ([Errno 8] nodename nor servname provided, or not known)")); 000029.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000029&scale=5&ma=no&datalen=80 (Caused by NameResolutionError("HTTPSConnection(host='quotes.sina.cn', port=443): Failed to resolve 'quotes.sina.cn' ([Errno 8] nodename nor servname provided, or not known)")); 000032.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000032&scale=5&ma=no&datalen=80 (Caused by NameResolutionError("HTTPSConnection(host='quotes.sina.cn', port=443): Failed to resolve 'quotes.sina.cn' ([Errno 8] nodename nor servname provided, or not known)")); 000025.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000025&scale=5&ma=no&datalen=80 (Caused by NameResolutionError("HTTPSConnection(host='quotes.sina.cn', port=443): Failed to resolve 'quotes.sina.cn' ([Errno 8] nodename nor servname provided, or not known)")); retrying
+Warning: minute bar fetch attempt 2/3 failed: No Sina minute data fetched. 000020.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000020&scale=5&ma=no&datalen=80 (Caused by NameResolutionError("HTTPSConnection(host='quotes.sina.cn', port=443): Failed to resolve 'quotes.sina.cn' ([Errno 8] nodename nor servname provided, or not known)")); 000021.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000021&scale=5&ma=no&datalen=80 (Caused by NameResolutionError("HTTPSConnection(host='quotes.sina.cn', port=443): Failed to resolve 'quotes.sina.cn' ([Errno 8] nodename nor servname provided, or not known)")); 000019.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000019&scale=5&ma=no&datalen=80 (Caused by NameResolutionError("HTTPSConnection(host='quotes.sina.cn', port=443): Failed to resolve 'quotes.sina.cn' ([Errno 8] nodename nor servname provided, or not known)")); 000017.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000017&scale=5&ma=no&datalen=80 (Caused by NameResolutionError("HTTPSConnection(host='quotes.sina.cn', port=443): Failed to resolve 'quotes.sina.cn' ([Errno 8] nodename nor servname provided, or not known)")); 000059.SZ: HTTPSConnectionPool(host='quotes.sina.cn', port=443): Max retries exceeded with url: /cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData?symbol=sz000059&scale=5&ma=no&datalen=80 (Caused by NameResolutionError("HTTPSConnection(host='quotes.sina.cn', port=443): Failed to resolve 'quotes.sina.cn' ([Errno 8] nodename nor servname provided, or not known)")); retrying
+Warning: candidate review Feishu message failed, continuing workflow: Feishu webhook returned error: {'code': 11232, 'data': {}, 'msg': 'frequency limited psm[lark.oapi.app_platform_runtime]appID[1500]'}
+Reviewed candidates 2026-07-01 -> 2026-07-02: Top10 hit rate 0.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355495 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349974,
+  "positive_rate": 0.02279821685454683,
+  "accuracy_at_0_5": 0.9771403004798611,
+  "precision_at_0_5": 0.39951573849878935,
+  "recall_at_0_5": 0.005361146310556585,
+  "top_decile_hit_rate": 0.12214345503974162
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-03",
+  "initial_cash": 10000.0,
+  "cash": 6881.081480400005,
+  "equity": 10061.081480400004,
+  "daily_pnl": -36.34274000000005,
+  "daily_return": -0.0035992089870381175,
+  "total_return": 0.006108148040000483,
+  "open_positions": 1,
+  "opened_positions": 0,
+  "closed_trades": 2,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 2.1465507472000067,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355993 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350470,
+  "positive_rate": 0.022801691263041757,
+  "accuracy_at_0_5": 0.9771361081697483,
+  "precision_at_0_5": 0.39855072463768115,
+  "recall_at_0_5": 0.005358360666385217,
+  "top_decile_hit_rate": 0.12211304212607463
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-03",
+  "initial_cash": 10000.0,
+  "cash": 9965.061817600004,
+  "equity": 9965.061817600004,
+  "daily_pnl": -132.36240279999947,
+  "daily_return": -0.01310853143444101,
+  "total_return": -0.003493818239999613,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-force",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 2.143059906520006,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1289305 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289305 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1284105,
+  "positive_rate": 0.024166248087189132,
+  "accuracy_at_0_5": 0.9757589916712418,
+  "precision_at_0_5": 0.402834008097166,
+  "recall_at_0_5": 0.0064127352410415055,
+  "top_decile_hit_rate": 0.12635308776575033
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-03",
+  "initial_cash": 10000.0,
+  "cash": 803.750617600005,
+  "equity": 9942.750617600006,
+  "daily_pnl": -154.67360279999775,
+  "daily_return": -0.015318124644848332,
+  "total_return": -0.005724938239999422,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.08809380102840725,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 2.3186822227480057,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-02 -> 2026-07-03: Top10 hit rate 0.00%
+Skipping sell-morning: no minute bars for 2026-07-04 (market closed)
+Skipping sell-force: no minute bars for 2026-07-04 (market closed)
+Skipping buy: no minute bars for 2026-07-04 (market closed)
+Skipping sell-morning: no minute bars for 2026-07-05 (market closed)
+Skipping sell-force: no minute bars for 2026-07-05 (market closed)
+Skipping buy: no minute bars for 2026-07-05 (market closed)
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355384 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1349864,
+  "positive_rate": 0.022899343933907416,
+  "accuracy_at_0_5": 0.9770480581747495,
+  "precision_at_0_5": 0.4148681055155875,
+  "recall_at_0_5": 0.005596713144188153,
+  "top_decile_hit_rate": 0.12253122546041811
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-06",
+  "initial_cash": 10000.0,
+  "cash": 10096.638345600006,
+  "equity": 10096.638345600006,
+  "daily_pnl": 153.8877279999997,
+  "daily_return": 0.015477379843722291,
+  "total_return": 0.00966383456000064,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 2.2063350365200063,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-07-06",
+  "initial_cash": 10000.0,
+  "cash": 10096.638345600006,
+  "equity": 10096.638345600006,
+  "daily_pnl": 153.8877279999997,
+  "daily_return": 0.015477379843722291,
+  "total_return": 0.00966383456000064,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Warning: stock pool refresh attempt 1/3 failed: HTTPSConnectionPool(host='vip.stock.finance.sina.com.cn', port=443): Read timed out. (read timeout=30); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1289138 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289138 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1283939,
+  "positive_rate": 0.024211430605348073,
+  "accuracy_at_0_5": 0.9757379439365889,
+  "precision_at_0_5": 0.42280285035629456,
+  "recall_at_0_5": 0.005726050312037573,
+  "top_decile_hit_rate": 0.12633087473616164
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-06",
+  "initial_cash": 10000.0,
+  "cash": 618.073545600007,
+  "equity": 10074.073545600007,
+  "daily_pnl": 131.3229280000014,
+  "daily_return": 0.013207907253304951,
+  "total_return": 0.007407354560000856,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.08888969583857302,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 2.2510097820120043,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: candidate review Feishu message failed, continuing workflow: Feishu webhook returned error: {'code': 11232, 'data': {}, 'msg': 'frequency limited psm[lark.oapi.app_platform_runtime]appID[1500]'}
+Reviewed candidates 2026-07-03 -> 2026-07-06: Top10 hit rate 10.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 91632 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 91264,
+  "positive_rate": 0.032104663394109396,
+  "accuracy_at_0_5": 0.9680049088359046,
+  "precision_at_0_5": 0.5833333333333334,
+  "recall_at_0_5": 0.011945392491467578,
+  "top_decile_hit_rate": 0.16184527722989261
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-07",
+  "initial_cash": 10000.0,
+  "cash": 9781.130221600006,
+  "equity": 9781.130221600006,
+  "daily_pnl": -292.94332400000167,
+  "daily_return": -0.029078934422505656,
+  "total_return": -0.021886977839999378,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.05,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 1.262498401400007,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-07-07",
+  "initial_cash": 10000.0,
+  "cash": 9781.130221600006,
+  "equity": 9781.130221600006,
+  "daily_pnl": -292.94332400000167,
+  "daily_return": -0.029078934422505656,
+  "total_return": -0.021886977839999378,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Wrote 1289221 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289221 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1284022,
+  "positive_rate": 0.02420129873164167,
+  "accuracy_at_0_5": 0.9757558671113111,
+  "precision_at_0_5": 0.4296675191815857,
+  "recall_at_0_5": 0.005406275140788415,
+  "top_decile_hit_rate": 0.12591704179062632
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-07",
+  "initial_cash": 10000.0,
+  "cash": 1193.277421600007,
+  "equity": 9759.277421600007,
+  "daily_pnl": -314.7961240000004,
+  "daily_return": -0.031248146301005718,
+  "total_return": -0.024072257839999334,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 2.2643759543800055,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-06 -> 2026-07-07: Top10 hit rate 0.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 82668 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 82336,
+  "positive_rate": 0.03244024485036922,
+  "accuracy_at_0_5": 0.9676933540614069,
+  "precision_at_0_5": 0.5901639344262295,
+  "recall_at_0_5": 0.013478098090602771,
+  "top_decile_hit_rate": 0.1639742499696344
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-08",
+  "initial_cash": 10000.0,
+  "cash": 5923.109520000006,
+  "equity": 9899.109520000005,
+  "daily_pnl": 139.83209839999654,
+  "daily_return": 0.014328120039964129,
+  "total_return": -0.010089047999999434,
+  "open_positions": 1,
+  "opened_positions": 0,
+  "closed_trades": 2,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.20547205720742331,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 0.4474821222000027,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 100098 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 99696,
+  "positive_rate": 0.03214772909645322,
+  "accuracy_at_0_5": 0.9679525758305247,
+  "precision_at_0_5": 0.5833333333333334,
+  "recall_at_0_5": 0.0109204368174727,
+  "top_decile_hit_rate": 0.15899287792155684
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-08",
+  "initial_cash": 10000.0,
+  "cash": 9821.030683200006,
+  "equity": 9821.030683200006,
+  "daily_pnl": 61.75326159999713,
+  "daily_return": 0.006327646907886838,
+  "total_return": -0.017896931679999395,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-force",
+  "optimized_threshold": 0.19704878229734873,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 0.8607284332400047,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1289052 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289052 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1283854,
+  "positive_rate": 0.024209139045405476,
+  "accuracy_at_0_5": 0.9757488000972073,
+  "precision_at_0_5": 0.43005181347150256,
+  "recall_at_0_5": 0.005340883497956951,
+  "top_decile_hit_rate": 0.12595708221365423
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-08",
+  "initial_cash": 10000.0,
+  "cash": 492.5858832000067,
+  "equity": 9798.585883200007,
+  "daily_pnl": 39.30846159999783,
+  "daily_return": 0.00402780450866139,
+  "total_return": -0.020141411679999277,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 2.1083145800200045,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: candidate review Feishu message failed, continuing workflow: Feishu webhook returned error: {'code': 11232, 'data': {}, 'msg': 'frequency limited psm[lark.oapi.app_platform_runtime]appID[1500]'}
+Reviewed candidates 2026-07-07 -> 2026-07-08: Top10 hit rate 0.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355792 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350272,
+  "positive_rate": 0.022919826523841124,
+  "accuracy_at_0_5": 0.9770320350270167,
+  "precision_at_0_5": 0.41895261845386533,
+  "recall_at_0_5": 0.005428460643660334,
+  "top_decile_hit_rate": 0.12256807897679724
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-09",
+  "initial_cash": 10000.0,
+  "cash": 6331.974126000006,
+  "equity": 9611.974126000006,
+  "daily_pnl": -186.6117572000021,
+  "daily_return": -0.019044764155198554,
+  "total_return": -0.03880258739999931,
+  "open_positions": 1,
+  "opened_positions": 0,
+  "closed_trades": 2,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 1.8331700796400088,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355784 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350264,
+  "positive_rate": 0.02291848112665375,
+  "accuracy_at_0_5": 0.9772177885213559,
+  "precision_at_0_5": 0.5295629820051414,
+  "recall_at_0_5": 0.053254055451431526,
+  "top_decile_hit_rate": 0.12957504480618548
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-09",
+  "initial_cash": 10000.0,
+  "cash": 9662.633462000007,
+  "equity": 9662.633462000007,
+  "daily_pnl": -135.95242120000148,
+  "daily_return": -0.013874698126909954,
+  "total_return": -0.03373665379999924,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-force",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 3.8649093418000096,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1289383 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289383 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1284183,
+  "positive_rate": 0.024218510913164244,
+  "accuracy_at_0_5": 0.9759317791934639,
+  "precision_at_0_5": 0.5309791332263243,
+  "recall_at_0_5": 0.05318156972444616,
+  "top_decile_hit_rate": 0.1345060661278014
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-09",
+  "initial_cash": 10000.0,
+  "cash": 1297.9590620000076,
+  "equity": 9640.959062000007,
+  "daily_pnl": -157.62682120000136,
+  "daily_return": -0.01608669078160121,
+  "total_return": -0.03590409379999926,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 4.143622242224009,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-08 -> 2026-07-09: Top10 hit rate 10.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355671 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350151,
+  "positive_rate": 0.022887069668503745,
+  "accuracy_at_0_5": 0.977246989410814,
+  "precision_at_0_5": 0.5292785506308638,
+  "recall_at_0_5": 0.05294327044432219,
+  "top_decile_hit_rate": 0.129237492130504
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-10",
+  "initial_cash": 10000.0,
+  "cash": 7613.727395600006,
+  "equity": 9933.727395600006,
+  "daily_pnl": 292.7683335999991,
+  "daily_return": 0.030367137928626844,
+  "total_return": -0.006627260439999394,
+  "open_positions": 1,
+  "opened_positions": 0,
+  "closed_trades": 2,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 4.41775829444001,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355920 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350399,
+  "positive_rate": 0.022885088036943155,
+  "accuracy_at_0_5": 0.9772489464225018,
+  "precision_at_0_5": 0.5292975072839107,
+  "recall_at_0_5": 0.05290577271550608,
+  "top_decile_hit_rate": 0.12919971267559743
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-10",
+  "initial_cash": 10000.0,
+  "cash": 9830.835785600006,
+  "equity": 9830.835785600006,
+  "daily_pnl": 189.8767235999985,
+  "daily_return": 0.019694796169024368,
+  "total_return": -0.016916421439999385,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-force",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 4.249271688280011,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1289463 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289463 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1284263,
+  "positive_rate": 0.024310441085665477,
+  "accuracy_at_0_5": 0.9758421756291351,
+  "precision_at_0_5": 0.530359355638166,
+  "recall_at_0_5": 0.054834886774927136,
+  "top_decile_hit_rate": 0.13488701664771932
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-10",
+  "initial_cash": 10000.0,
+  "cash": 671.526185600007,
+  "equity": 9808.526185600007,
+  "daily_pnl": 167.56712359999983,
+  "daily_return": 0.017380752529120084,
+  "total_return": -0.019147381439999278,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 4.066617054564013,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-09 -> 2026-07-10: Top10 hit rate 20.00%
+Skipping sell-morning: no minute bars for 2026-07-11 (market closed)
+Skipping sell-force: no minute bars for 2026-07-11 (market closed)
+Skipping buy: no minute bars for 2026-07-11 (market closed)
+Skipping sell-morning: no minute bars for 2026-07-12 (market closed)
+Skipping sell-force: no minute bars for 2026-07-12 (market closed)
+Skipping buy: no minute bars for 2026-07-12 (market closed)
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355558 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350039,
+  "positive_rate": 0.02297118823974715,
+  "accuracy_at_0_5": 0.9771636226805299,
+  "precision_at_0_5": 0.5293359123146357,
+  "recall_at_0_5": 0.05294724622726686,
+  "top_decile_hit_rate": 0.12959712006399857
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-13",
+  "initial_cash": 10000.0,
+  "cash": 9506.010430000008,
+  "equity": 9506.010430000008,
+  "daily_pnl": -302.5157556000013,
+  "daily_return": -0.030842121423311032,
+  "total_return": -0.0493989569999993,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 4.683979116880012,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-07-13",
+  "initial_cash": 10000.0,
+  "cash": 9506.010430000008,
+  "equity": 9506.010430000008,
+  "daily_pnl": -302.5157556000013,
+  "daily_return": -0.030842121423311032,
+  "total_return": -0.0493989569999993,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1289048 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289048 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1283849,
+  "positive_rate": 0.024256746704635825,
+  "accuracy_at_0_5": 0.975900592670945,
+  "precision_at_0_5": 0.5325177076625885,
+  "recall_at_0_5": 0.053111553528996214,
+  "top_decile_hit_rate": 0.13414444167497508
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-13",
+  "initial_cash": 10000.0,
+  "cash": 7901.732030000007,
+  "equity": 9499.732030000006,
+  "daily_pnl": -308.79415560000234,
+  "daily_return": -0.03148221758874906,
+  "total_return": -0.050026796999999346,
+  "open_positions": 1,
+  "opened_positions": 1,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.19291474653035956,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.116594971044018,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-10 -> 2026-07-13: Top10 hit rate 10.00%
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355944 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350423,
+  "positive_rate": 0.02295354862883704,
+  "accuracy_at_0_5": 0.9771864075182369,
+  "precision_at_0_5": 0.5306122448979592,
+  "recall_at_0_5": 0.052843823595831854,
+  "top_decile_hit_rate": 0.12939678026095586
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-14",
+  "initial_cash": 10000.0,
+  "cash": 7901.732030000007,
+  "equity": 9609.732030000006,
+  "daily_pnl": 110.0,
+  "daily_return": 0.011579273989268508,
+  "total_return": -0.039026796999999336,
+  "open_positions": 1,
+  "opened_positions": 0,
+  "closed_trades": 0,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.0898227343997417,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.751774864640011,
+  "learning_top5_hit_rate": 0.6,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1289630 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289630 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1284429,
+  "positive_rate": 0.024311970533209697,
+  "accuracy_at_0_5": 0.9758242767797987,
+  "precision_at_0_5": 0.5279642058165548,
+  "recall_at_0_5": 0.05290293656130912,
+  "top_decile_hit_rate": 0.13446536179754287
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-14",
+  "initial_cash": 10000.0,
+  "cash": 1010.2352300000084,
+  "equity": 9599.23523000001,
+  "daily_pnl": 99.50320000000283,
+  "daily_return": 0.0104743165055365,
+  "total_return": -0.040076476999999056,
+  "open_positions": 4,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.4,
+  "optimization_total_return": 3.6568553908440142,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: candidate review Feishu message failed, continuing workflow: Feishu webhook returned error: {'code': 11232, 'data': {}, 'msg': 'frequency limited psm[lark.oapi.app_platform_runtime]appID[1500]'}
+Reviewed candidates 2026-07-13 -> 2026-07-14: Top10 hit rate 10.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355584 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350064,
+  "positive_rate": 0.0229774292181704,
+  "accuracy_at_0_5": 0.9771684897901136,
+  "precision_at_0_5": 0.5319493999351281,
+  "recall_at_0_5": 0.05286741239805293,
+  "top_decile_hit_rate": 0.12934239959705496
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-15",
+  "initial_cash": 10000.0,
+  "cash": 7677.539606400009,
+  "equity": 9494.539606400009,
+  "daily_pnl": -129.4213235999996,
+  "daily_return": -0.01344782304722007,
+  "total_return": -0.05054603935999913,
+  "open_positions": 1,
+  "opened_positions": 0,
+  "closed_trades": 2,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.754649000880015,
+  "learning_top5_hit_rate": 0.6,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356331 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350808,
+  "positive_rate": 0.022981060224695146,
+  "accuracy_at_0_5": 0.9771618172234692,
+  "precision_at_0_5": 0.5312601230968578,
+  "recall_at_0_5": 0.05282994555938537,
+  "top_decile_hit_rate": 0.1293751850755108
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-15",
+  "initial_cash": 10000.0,
+  "cash": 9513.14444360001,
+  "equity": 9513.14444360001,
+  "daily_pnl": -110.81648639999912,
+  "daily_return": -0.011514644251574183,
+  "total_return": -0.0486855556399991,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-force",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.272805807940015,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1289713 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289713 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1284512,
+  "positive_rate": 0.024339982810592662,
+  "accuracy_at_0_5": 0.9758094902967042,
+  "precision_at_0_5": 0.5307889672867223,
+  "recall_at_0_5": 0.052934591396129854,
+  "top_decile_hit_rate": 0.1343547344901947
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-15",
+  "initial_cash": 10000.0,
+  "cash": 268.76684360000945,
+  "equity": 9490.76684360001,
+  "daily_pnl": -133.19408639999892,
+  "daily_return": -0.013839840723459671,
+  "total_return": -0.05092331563999908,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.19513221823667515,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.324198480324008,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: candidate review Feishu message failed, continuing workflow: Feishu webhook returned error: {'code': 11232, 'data': {}, 'msg': 'frequency limited psm[lark.oapi.app_platform_runtime]appID[1500]'}
+Reviewed candidates 2026-07-14 -> 2026-07-15: Top10 hit rate 30.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356221 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350698,
+  "positive_rate": 0.023008103958101662,
+  "accuracy_at_0_5": 0.9771370061997574,
+  "precision_at_0_5": 0.5318595578673602,
+  "recall_at_0_5": 0.05264343405090582,
+  "top_decile_hit_rate": 0.12937831774870623
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-16",
+  "initial_cash": 10000.0,
+  "cash": 10049.02036680001,
+  "equity": 10049.02036680001,
+  "daily_pnl": 558.2535232000009,
+  "daily_return": 0.05882069725234614,
+  "total_return": 0.0049020366800009985,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.05,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.694273217320013,
+  "learning_top5_hit_rate": 0.6,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-07-16",
+  "initial_cash": 10000.0,
+  "cash": 10049.02036680001,
+  "equity": 10049.02036680001,
+  "daily_pnl": 558.2535232000009,
+  "daily_return": 0.05882069725234614,
+  "total_return": 0.0049020366800009985,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1289794 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289794 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1284593,
+  "positive_rate": 0.02434389724994609,
+  "accuracy_at_0_5": 0.9758156863691457,
+  "precision_at_0_5": 0.5332252836304701,
+  "recall_at_0_5": 0.052602967510872345,
+  "top_decile_hit_rate": 0.13422959854895336
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-16",
+  "initial_cash": 10000.0,
+  "cash": 477.38116680000996,
+  "equity": 10026.38116680001,
+  "daily_pnl": 535.6143232000013,
+  "daily_return": 0.05643530517886305,
+  "total_return": 0.0026381166800011346,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.05,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.250410451636013,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-15 -> 2026-07-16: Top10 hit rate 30.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356358 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350835,
+  "positive_rate": 0.023002069090599517,
+  "accuracy_at_0_5": 0.9771519097447134,
+  "precision_at_0_5": 0.5337881741390513,
+  "recall_at_0_5": 0.052877188465499485,
+  "top_decile_hit_rate": 0.1293352975577978
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-17",
+  "initial_cash": 10000.0,
+  "cash": 10890.81074360001,
+  "equity": 10890.81074360001,
+  "daily_pnl": 864.4295767999993,
+  "daily_return": 0.0862155111020867,
+  "total_return": 0.08908107436000101,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.555844102320015,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-07-17",
+  "initial_cash": 10000.0,
+  "cash": 10890.81074360001,
+  "equity": 10890.81074360001,
+  "daily_pnl": 864.4295767999993,
+  "daily_return": 0.0862155111020867,
+  "total_return": 0.08908107436000101,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1289873 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289873 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1284671,
+  "positive_rate": 0.024308169173274715,
+  "accuracy_at_0_5": 0.975849847937721,
+  "precision_at_0_5": 0.5328585302686953,
+  "recall_at_0_5": 0.05270910721147688,
+  "top_decile_hit_rate": 0.1338787392871321
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-17",
+  "initial_cash": 10000.0,
+  "cash": 8812.153143600011,
+  "equity": 10884.153143600011,
+  "daily_pnl": 857.7719768000006,
+  "daily_return": 0.08555150283337618,
+  "total_return": 0.08841531436000105,
+  "open_positions": 1,
+  "opened_positions": 1,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 5.029401738284013,
+  "learning_top5_hit_rate": 0.6,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-16 -> 2026-07-17: Top10 hit rate 30.00%
+Skipping sell-morning: no minute bars for 2026-07-18 (market closed)
+Skipping sell-force: no minute bars for 2026-07-18 (market closed)
+Skipping buy: no minute bars for 2026-07-18 (market closed)
+Skipping sell-morning: no minute bars for 2026-07-19 (market closed)
+Skipping sell-force: no minute bars for 2026-07-19 (market closed)
+Skipping buy: no minute bars for 2026-07-19 (market closed)
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356497 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350972,
+  "positive_rate": 0.022971608589963374,
+  "accuracy_at_0_5": 0.9771816144228007,
+  "precision_at_0_5": 0.5338345864661654,
+  "recall_at_0_5": 0.05261970741767094,
+  "top_decile_hit_rate": 0.12909983197258265
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-20",
+  "initial_cash": 10000.0,
+  "cash": 10801.55784240001,
+  "equity": 10801.55784240001,
+  "daily_pnl": -82.5953012000009,
+  "daily_return": -0.007588583154819697,
+  "total_return": 0.08015578424000114,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.09022574996510925,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 5.331876647440015,
+  "learning_top5_hit_rate": 0.8,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-07-20",
+  "initial_cash": 10000.0,
+  "cash": 10801.55784240001,
+  "equity": 10801.55784240001,
+  "daily_pnl": -82.5953012000009,
+  "daily_return": -0.007588583154819697,
+  "total_return": 0.08015578424000114,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Wrote 1288960 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1288960 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1283762,
+  "positive_rate": 0.024264622258642957,
+  "accuracy_at_0_5": 0.9758568955927968,
+  "precision_at_0_5": 0.5254237288135594,
+  "recall_at_0_5": 0.05174959871589085,
+  "top_decile_hit_rate": 0.13381784757275503
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-20",
+  "initial_cash": 10000.0,
+  "cash": 184.082642400012,
+  "equity": 10778.082642400012,
+  "daily_pnl": -106.07050119999985,
+  "daily_return": -0.00974540690493411,
+  "total_return": 0.07780826424000109,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.026209839370008085,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 5.269017473556005,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-17 -> 2026-07-20: Top10 hit rate 40.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1355640 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350119,
+  "positive_rate": 0.022932052656099204,
+  "accuracy_at_0_5": 0.9771931214952163,
+  "precision_at_0_5": 0.527970870572658,
+  "recall_at_0_5": 0.05151642388811731,
+  "top_decile_hit_rate": 0.1289450489219397
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-21",
+  "initial_cash": 10000.0,
+  "cash": 9962.338764800013,
+  "equity": 9962.338764800013,
+  "daily_pnl": -815.7438775999981,
+  "daily_return": -0.0756854354030405,
+  "total_return": -0.00376612351999861,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.09016007050595622,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 5.027676084640013,
+  "learning_top5_hit_rate": 0.8,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-07-21",
+  "initial_cash": 10000.0,
+  "cash": 9962.338764800013,
+  "equity": 9962.338764800013,
+  "daily_pnl": -815.7438775999981,
+  "daily_return": -0.0756854354030405,
+  "total_return": -0.00376612351999861,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1289041 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289041 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1283843,
+  "positive_rate": 0.024303594754187235,
+  "accuracy_at_0_5": 0.9757968848215864,
+  "precision_at_0_5": 0.5205610455849538,
+  "recall_at_0_5": 0.0523363886930325,
+  "top_decile_hit_rate": 0.13417559820538386
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-21",
+  "initial_cash": 10000.0,
+  "cash": 64.4387648000145,
+  "equity": 9939.438764800016,
+  "daily_pnl": -838.6438775999959,
+  "daily_return": -0.07781011757145431,
+  "total_return": -0.006056123519998402,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.19604882879625463,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.383781567820009,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: candidate review Feishu message failed, continuing workflow: Feishu webhook returned error: {'code': 11232, 'data': {}, 'msg': 'frequency limited psm[lark.oapi.app_platform_runtime]appID[1500]'}
+Reviewed candidates 2026-07-20 -> 2026-07-21: Top10 hit rate 11.11%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356028 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350506,
+  "positive_rate": 0.022957321181838512,
+  "accuracy_at_0_5": 0.9771655957100523,
+  "precision_at_0_5": 0.5276851234156104,
+  "recall_at_0_5": 0.051025674106566894,
+  "top_decile_hit_rate": 0.1290114772306553
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-22",
+  "initial_cash": 10000.0,
+  "cash": 9372.313496800016,
+  "equity": 10684.313496800016,
+  "daily_pnl": 744.8747320000002,
+  "daily_return": 0.07494132713387539,
+  "total_return": 0.06843134968000153,
+  "open_positions": 1,
+  "opened_positions": 0,
+  "closed_trades": 2,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.18246698513332069,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 5.041637462920012,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 1 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356028 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350506,
+  "positive_rate": 0.022957321181838512,
+  "accuracy_at_0_5": 0.9771648552468483,
+  "precision_at_0_5": 0.5275275275275275,
+  "recall_at_0_5": 0.05099342020384467,
+  "top_decile_hit_rate": 0.1289966679007775
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-22",
+  "initial_cash": 10000.0,
+  "cash": 10653.639612000015,
+  "equity": 10653.639612000015,
+  "daily_pnl": 714.2008471999998,
+  "daily_return": 0.07185524898340372,
+  "total_return": 0.06536396120000143,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-force",
+  "optimized_threshold": 0.18245709506419386,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 3.981509469920013,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1286372 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1286372 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1281185,
+  "positive_rate": 0.024270499576563884,
+  "accuracy_at_0_5": 0.9758481405885957,
+  "precision_at_0_5": 0.525065963060686,
+  "recall_at_0_5": 0.05119794179128477,
+  "top_decile_hit_rate": 0.13347070669226807
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-22",
+  "initial_cash": 10000.0,
+  "cash": 63.18601200001581,
+  "equity": 10630.186012000016,
+  "daily_pnl": 690.7472472000009,
+  "daily_return": 0.0694955986495178,
+  "total_return": 0.06301860120000158,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.19353975129507892,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.81782058634401,
+  "learning_top5_hit_rate": 0.4,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: candidate review Feishu message failed, continuing workflow: Feishu webhook returned error: {'code': 11232, 'data': {}, 'msg': 'frequency limited psm[lark.oapi.app_platform_runtime]appID[1500]'}
+Reviewed candidates 2026-07-21 -> 2026-07-22: Top10 hit rate 40.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356166 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350644,
+  "positive_rate": 0.022960158265242357,
+  "accuracy_at_0_5": 0.9771708903308348,
+  "precision_at_0_5": 0.5295492487479132,
+  "recall_at_0_5": 0.05114314275579633,
+  "top_decile_hit_rate": 0.12899070070485102
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-23",
+  "initial_cash": 10000.0,
+  "cash": 5612.957636800014,
+  "equity": 11180.957636800014,
+  "daily_pnl": 550.7716247999979,
+  "daily_return": 0.05181204018238745,
+  "total_return": 0.11809576368000152,
+  "open_positions": 2,
+  "opened_positions": 0,
+  "closed_trades": 1,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.095212427200015,
+  "learning_top5_hit_rate": 0.6,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Wrote 2 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356166 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350644,
+  "positive_rate": 0.022960158265242357,
+  "accuracy_at_0_5": 0.9771708903308348,
+  "precision_at_0_5": 0.5295492487479132,
+  "recall_at_0_5": 0.05114314275579633,
+  "top_decile_hit_rate": 0.12898329680743945
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-23",
+  "initial_cash": 10000.0,
+  "cash": 11043.877416000014,
+  "equity": 11043.877416000014,
+  "daily_pnl": 413.6914039999974,
+  "daily_return": 0.03891666651298451,
+  "total_return": 0.10438774160000142,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 2,
+  "phase": "sell-force",
+  "optimized_threshold": 0.001,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.095212427200015,
+  "learning_top5_hit_rate": 0.6,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1288953 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1288953 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1283756,
+  "positive_rate": 0.024392485799482146,
+  "accuracy_at_0_5": 0.9757453908686697,
+  "precision_at_0_5": 0.5285024154589372,
+  "recall_at_0_5": 0.05240467522513891,
+  "top_decile_hit_rate": 0.1345744888023369
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-23",
+  "initial_cash": 10000.0,
+  "cash": 80.1254160000143,
+  "equity": 11020.125416000014,
+  "daily_pnl": 389.939403999997,
+  "daily_return": 0.03668227475603993,
+  "total_return": 0.10201254160000128,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.034999317704571785,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 3.801135527152012,
+  "learning_top5_hit_rate": 0.2,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-22 -> 2026-07-23: Top10 hit rate 20.00%
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356305 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350782,
+  "positive_rate": 0.023051832197941637,
+  "accuracy_at_0_5": 0.9770806836336285,
+  "precision_at_0_5": 0.5298432810936979,
+  "recall_at_0_5": 0.05103089472670049,
+  "top_decile_hit_rate": 0.1293771006381498
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-24",
+  "initial_cash": 10000.0,
+  "cash": 10676.317166000015,
+  "equity": 10676.317166000015,
+  "daily_pnl": -343.8082499999982,
+  "daily_return": -0.031198215720923315,
+  "total_return": 0.06763171660000156,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.09212283829686471,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 4.575395084860015,
+  "learning_top5_hit_rate": 0.8,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Skipping minute fetch for sell-force: no open positions
+Sent daily Feishu message
+{
+  "date": "2026-07-24",
+  "initial_cash": 10000.0,
+  "cash": 10676.317166000015,
+  "equity": 10676.317166000015,
+  "daily_pnl": -343.8082499999982,
+  "daily_return": -0.031198215720923315,
+  "total_return": 0.06763171660000156,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-force",
+  "skipped": "no_positions",
+  "note": "sell-force \u65e0\u6301\u4ed3\uff0c\u672c\u9636\u6bb5\u65e0\u9700\u5356\u51fa"
+}
+Warning: stock pool refresh attempt 1/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh attempt 2/3 failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer')); retrying
+Warning: stock pool refresh failed after 3 attempts, using existing /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/stock_pool.csv: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Wrote 1289283 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features_daily_prefilter.csv
+Wrote 300 symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/minute_stock_pool.csv
+Wrote 1289283 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1284085,
+  "positive_rate": 0.024391687466172412,
+  "accuracy_at_0_5": 0.9757383662296499,
+  "precision_at_0_5": 0.5276948590381426,
+  "recall_at_0_5": 0.05079659014718559,
+  "top_decile_hit_rate": 0.13392467759018128
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-24",
+  "initial_cash": 10000.0,
+  "cash": 1198.7531660000163,
+  "equity": 10653.753166000017,
+  "daily_pnl": -366.3722499999967,
+  "daily_return": -0.03324574232776556,
+  "total_return": 0.06537531660000173,
+  "open_positions": 3,
+  "opened_positions": 3,
+  "closed_trades": 0,
+  "phase": "buy",
+  "optimized_threshold": 0.19475840785202111,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 3.3695003554920078,
+  "learning_top5_hit_rate": 0.0,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}
+Reviewed candidates 2026-07-23 -> 2026-07-24: Top10 hit rate 10.00%
+Skipping sell-morning: no minute bars for 2026-07-25 (market closed)
+Skipping sell-force: no minute bars for 2026-07-25 (market closed)
+Skipping buy: no minute bars for 2026-07-25 (market closed)
+Skipping sell-morning: no minute bars for 2026-07-26 (market closed)
+Skipping sell-force: no minute bars for 2026-07-26 (market closed)
+Skipping buy: no minute bars for 2026-07-26 (market closed)
+Wrote 3 position symbols for minute fetch to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/config/position_stock_pool.csv
+Wrote 1356445 feature rows to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/processed/features.csv
+Wrote model to /Users/baibaibaibaibai/git_repo/git_hub/Quantization/models/limitup_logistic.json
+{
+  "rows": 1350921,
+  "positive_rate": 0.02304872009540158,
+  "accuracy_at_0_5": 0.9770800809225706,
+  "precision_at_0_5": 0.5290581162324649,
+  "recall_at_0_5": 0.05087195298198285,
+  "top_decile_hit_rate": 0.1293488881651023
+}
+Sent daily Feishu message
+{
+  "date": "2026-07-27",
+  "initial_cash": 10000.0,
+  "cash": 10967.022284400015,
+  "equity": 10967.022284400015,
+  "daily_pnl": 313.26911839999775,
+  "daily_return": 0.029404578228802308,
+  "total_return": 0.09670222844000143,
+  "open_positions": 0,
+  "opened_positions": 0,
+  "closed_trades": 3,
+  "phase": "sell-morning",
+  "optimized_threshold": 0.1849354416353238,
+  "optimized_max_position_pct": 0.5,
+  "optimization_total_return": 5.209548149360015,
+  "learning_top5_hit_rate": 0.8,
+  "prediction_accuracy_file": "/Users/baibaibaibaibai/git_repo/git_hub/Quantization/data/paper/prediction_accuracy.csv"
+}

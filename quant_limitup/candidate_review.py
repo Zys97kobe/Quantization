@@ -52,7 +52,11 @@ def load_completed_signals(path: Path) -> set[str]:
     frame = pd.read_csv(path)
     if frame.empty or "signal_date" not in frame.columns:
         return set()
-    return set(frame["signal_date"].astype(str))
+    if "notification_sent" not in frame.columns:
+        return set(frame["signal_date"].astype(str))
+    status = frame["notification_sent"]
+    explicitly_failed = status.astype(str).str.strip().str.lower().isin({"false", "0", "no"})
+    return set(frame.loc[~explicitly_failed, "signal_date"].astype(str))
 
 
 def pending_candidate_pool(
@@ -152,7 +156,7 @@ def build_pending_reviews(
     return reviews
 
 
-def mark_review_completed(path: Path, review: dict) -> None:
+def mark_review_completed(path: Path, review: dict, notification_sent: bool = True) -> None:
     candidate_count = int(review.get("candidate_count", 10))
     records = review.get("evaluated_candidates") or []
     hit_count = sum(
@@ -168,6 +172,7 @@ def mark_review_completed(path: Path, review: dict) -> None:
         "top10_hit_rate": review["top10_hit_rate"],
         "hit_rate_pct": review["top10_hit_rate"] * 100,
         "top10_evaluated_count": review["top10_evaluated_count"],
+        "notification_sent": bool(notification_sent),
     }])
     existing = pd.read_csv(path) if path.exists() else pd.DataFrame()
     if not existing.empty and "signal_date" in existing.columns:
@@ -182,6 +187,7 @@ def mark_review_completed(path: Path, review: dict) -> None:
         "top10_evaluated_count",
         "top10_hit_rate",
         "hit_rate_pct",
+        "notification_sent",
     ]
     combined["hit_count"] = pd.to_numeric(combined["hit_count"], errors="coerce").astype("Int64")
     combined["candidate_count"] = pd.to_numeric(combined["candidate_count"], errors="coerce").astype("Int64")

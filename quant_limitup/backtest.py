@@ -34,8 +34,15 @@ def rank_candidates(frame: pd.DataFrame, model: LogisticLimitUpModel, date: str 
         "ret_5",
         "volume_ratio_5",
         "market_limit_hits",
+        "market_limit_hit_rate",
+        "market_failed_limit_hits",
+        "board_limit_hits",
+        "limit_hits_5",
+        "failed_limit_hits_5",
+        "consecutive_limit_hits",
         "suggest_reason",
     ]
+    cols = [col for col in cols if col in day.columns]
     return day.sort_values("score", ascending=False)[cols].reset_index(drop=True)
 
 
@@ -159,4 +166,10 @@ def _reason(row: pd.Series) -> str:
         reasons.append("换手活跃")
     if row["market_limit_hits"] >= 10:
         reasons.append("市场情绪强")
+    if row.get("board_limit_hits", 0) >= 5:
+        reasons.append("板块情绪强")
+    if row.get("limit_hits_5", 0) >= 1:
+        reasons.append("近5日触板记忆")
+    if row.get("failed_limit_hits_5", 0) >= 2:
+        reasons.append("近期炸板偏多")
     return "，".join(reasons) or "模型综合评分"

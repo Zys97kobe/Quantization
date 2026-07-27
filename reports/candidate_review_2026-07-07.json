@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-07",
+  "result_date": "2026-07-08",
+  "top10_hit_rate": 0.0,
+  "top10_evaluated_count": 8,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "688689.SH",
+      "name": "银河微电",
+      "score": 0.5309935887373718,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "603757.SH",
+      "name": "大元泵业",
+      "score": 0.3628051481222115,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "301379.SZ",
+      "name": "天山电子",
+      "score": 0.3606495924013251,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "688432.SH",
+      "name": "有研硅",
+      "score": 0.3511082265342526,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "300985.SZ",
+      "name": "致远新能",
+      "score": 0.3212188860710066,
+      "hit_limit": null,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "600246.SH",
+      "name": "万通发展",
+      "score": 0.3065206204028353,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "603903.SH",
+      "name": "中持股份",
+      "score": 0.2718339303497132,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "603067.SH",
+      "name": "振华股份",
+      "score": 0.265045189045884,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "688206.SH",
+      "name": "概伦电子",
+      "score": 0.2577308930136278,
+      "hit_limit": null,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "300580.SZ",
+      "name": "贝斯特",
+      "score": 0.2536234616585517,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

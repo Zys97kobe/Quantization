@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-06",
+  "result_date": "2026-07-07",
+  "top10_hit_rate": 0.0,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "002653.SZ",
+      "name": "海思科",
+      "score": 0.7613064357941256,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "300873.SZ",
+      "name": "海晨股份",
+      "score": 0.6807507096507558,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "603466.SH",
+      "name": "风语筑",
+      "score": 0.6323898790603685,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "300163.SZ",
+      "name": "先锋新材",
+      "score": 0.6251444451562661,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "300345.SZ",
+      "name": "华民股份",
+      "score": 0.5779761773662346,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "603559.SH",
+      "name": "中通国脉",
+      "score": 0.5718380863313789,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "002294.SZ",
+      "name": "信立泰",
+      "score": 0.5310931751040525,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "605178.SH",
+      "name": "时空科技",
+      "score": 0.5287834143595981,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "301607.SZ",
+      "name": "富特科技",
+      "score": 0.5159607998864817,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "603286.SH",
+      "name": "日盈电子",
+      "score": 0.5124403853222869,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

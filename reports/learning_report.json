@@ -1,379 +1,379 @@
 {
-  "date": "2026-06-25",
-  "latest_labeled_signal_date": "2026-06-24",
-  "latest_result_date": "2026-06-25",
+  "date": "2026-07-24",
+  "latest_labeled_signal_date": "2026-07-23",
+  "latest_result_date": "2026-07-24",
   "evaluation_source": "daily",
-  "labeled_rows": 1223195,
-  "positive_rows": 23053,
-  "positive_rate": 0.018846545317794793,
-  "actual_limit_up_count": 125,
-  "top3_hit_rate": 0.3333333333333333,
-  "top5_hit_rate": 0.2,
+  "labeled_rows": 1227879,
+  "positive_rows": 23750,
+  "positive_rate": 0.01934229675725377,
+  "actual_limit_up_count": 52,
+  "top3_hit_rate": 1.0,
+  "top5_hit_rate": 0.8,
   "top10_hit_rate": 0.4,
   "top20_hit_rate": 0.35,
   "top10_evaluated_count": 10,
   "actual_limit_ups": [
     {
-      "symbol": "603065.SH",
-      "name": "宿迁联盛",
-      "score": 0.92709630808051
+      "symbol": "003001.SZ",
+      "name": "中岩大地",
+      "score": 0.9926061645724791
     },
     {
-      "symbol": "603407.SH",
-      "name": "长裕集团",
-      "score": 0.321040569000939
+      "symbol": "002879.SZ",
+      "name": "长缆科技",
+      "score": 0.9897557735226191
     },
     {
-      "symbol": "600176.SH",
-      "name": "中国巨石",
-      "score": 0.28701045053023694
+      "symbol": "000668.SZ",
+      "name": "荣丰控股",
+      "score": 0.8637841294400666
     },
     {
-      "symbol": "603986.SH",
-      "name": "兆易创新",
-      "score": 0.27055014937031246
+      "symbol": "001258.SZ",
+      "name": "立新能源",
+      "score": 0.7024577729638409
     },
     {
-      "symbol": "600909.SH",
-      "name": "华安证券",
-      "score": 0.2456740976676284
+      "symbol": "605288.SH",
+      "name": "凯迪股份",
+      "score": 0.37129452986063594
     },
     {
-      "symbol": "600667.SH",
-      "name": "太极实业",
-      "score": 0.23535983004102218
+      "symbol": "603221.SH",
+      "name": "爱丽家居",
+      "score": 0.3618709976882614
     },
     {
-      "symbol": "603989.SH",
-      "name": "艾华集团",
-      "score": 0.22794660996253116
+      "symbol": "002412.SZ",
+      "name": "汉森制药",
+      "score": 0.3342391076634367
     },
     {
-      "symbol": "600206.SH",
-      "name": "有研新材",
-      "score": 0.22353900856725706
+      "symbol": "000595.SZ",
+      "name": "新能股份",
+      "score": 0.2981069843079157
     },
     {
-      "symbol": "002674.SZ",
-      "name": "兴业科技",
-      "score": 0.20461709221366065
+      "symbol": "600962.SH",
+      "name": "国投中鲁",
+      "score": 0.2605646318876398
     },
     {
-      "symbol": "600584.SH",
-      "name": "长电科技",
-      "score": 0.2007287115325314
+      "symbol": "603580.SH",
+      "name": "艾艾精工",
+      "score": 0.25347025642923715
     },
     {
-      "symbol": "000823.SZ",
-      "name": "超声电子",
-      "score": 0.1985290895531002
+      "symbol": "600984.SH",
+      "name": "建设机械",
+      "score": 0.25285721002603734
     },
     {
-      "symbol": "002068.SZ",
-      "name": "黑猫股份",
-      "score": 0.19765478864089187
+      "symbol": "002083.SZ",
+      "name": "孚日股份",
+      "score": 0.23699081001037656
     },
     {
-      "symbol": "600141.SH",
-      "name": "兴发集团",
-      "score": 0.1954524401267926
+      "symbol": "300214.SZ",
+      "name": "日科化学",
+      "score": 0.21973079915065533
     },
     {
-      "symbol": "603324.SH",
-      "name": "盛剑科技",
-      "score": 0.18606540493845827
+      "symbol": "601678.SH",
+      "name": "滨化股份",
+      "score": 0.200163111779061
     },
     {
-      "symbol": "002080.SZ",
-      "name": "中材科技",
-      "score": 0.17638350741418618
+      "symbol": "000011.SZ",
+      "name": "深物业A",
+      "score": 0.1934300727990392
     },
     {
-      "symbol": "600531.SH",
-      "name": "豫光金铅",
-      "score": 0.15718367928636598
+      "symbol": "301234.SZ",
+      "name": "五洲医疗",
+      "score": 0.1877132707555256
     },
     {
-      "symbol": "002990.SZ",
-      "name": "盛视科技",
-      "score": 0.15216568037263672
+      "symbol": "002762.SZ",
+      "name": "金发拉比",
+      "score": 0.1859146533516493
     },
     {
-      "symbol": "600888.SH",
-      "name": "新疆众和",
-      "score": 0.15141019517090115
+      "symbol": "000533.SZ",
+      "name": "顺钠股份",
+      "score": 0.1796424068953883
     },
     {
-      "symbol": "603067.SH",
-      "name": "振华股份",
-      "score": 0.13274102325329157
+      "symbol": "601606.SH",
+      "name": "长城军工",
+      "score": 0.17869525270158074
     },
     {
-      "symbol": "000962.SZ",
-      "name": "东方钽业",
-      "score": 0.13067752960777446
+      "symbol": "603956.SH",
+      "name": "威派格",
+      "score": 0.17675595339707018
     },
     {
-      "symbol": "603929.SH",
-      "name": "亚翔集成",
-      "score": 0.12807375363929394
+      "symbol": "002498.SZ",
+      "name": "汉缆股份",
+      "score": 0.17010472759852446
     },
     {
-      "symbol": "605366.SH",
-      "name": "宏柏新材",
-      "score": 0.1268915279813258
+      "symbol": "002218.SZ",
+      "name": "拓日新能",
+      "score": 0.169849711119325
     },
     {
-      "symbol": "001309.SZ",
-      "name": "德明利",
-      "score": 0.12522020070236178
+      "symbol": "002298.SZ",
+      "name": "中电鑫龙",
+      "score": 0.1663753646127785
     },
     {
-      "symbol": "002046.SZ",
-      "name": "国机精工",
-      "score": 0.1214484194733094
+      "symbol": "600698.SH",
+      "name": "湖南天雁",
+      "score": 0.16519118252687115
     },
     {
-      "symbol": "600172.SH",
-      "name": "黄河旋风",
-      "score": 0.11926738114863691
+      "symbol": "002156.SZ",
+      "name": "通富微电",
+      "score": 0.1564399767401156
     },
     {
-      "symbol": "603713.SH",
-      "name": "密尔克卫",
-      "score": 0.11290362105987149
+      "symbol": "002300.SZ",
+      "name": "太阳电缆",
+      "score": 0.1558667908857979
     },
     {
-      "symbol": "605178.SH",
-      "name": "时空科技",
-      "score": 0.11273638897416412
+      "symbol": "003043.SZ",
+      "name": "华亚智能",
+      "score": 0.10039057436925422
     },
     {
-      "symbol": "603115.SH",
-      "name": "海星股份",
-      "score": 0.11273283628938158
+      "symbol": "001229.SZ",
+      "name": "魅视科技",
+      "score": 0.09476034436758927
     },
     {
-      "symbol": "603698.SH",
-      "name": "航天工程",
-      "score": 0.10746009173801825
+      "symbol": "002388.SZ",
+      "name": "新亚制程",
+      "score": 0.0791475552533837
     },
     {
-      "symbol": "000783.SZ",
-      "name": "长江证券",
-      "score": 0.10498827958717745
+      "symbol": "603068.SH",
+      "name": "博通集成",
+      "score": 0.07405335998422694
     },
     {
-      "symbol": "002484.SZ",
-      "name": "江海股份",
-      "score": 0.10463880554041807
+      "symbol": "603690.SH",
+      "name": "至纯科技",
+      "score": 0.06039222587774838
     },
     {
-      "symbol": "002141.SZ",
-      "name": "贤丰控股",
-      "score": 0.09873239691020372
-    },
-    {
-      "symbol": "603678.SH",
-      "name": "火炬电子",
-      "score": 0.09529536999653487
-    },
-    {
-      "symbol": "002254.SZ",
-      "name": "泰和新材",
-      "score": 0.09369234079637746
-    },
-    {
-      "symbol": "000967.SZ",
-      "name": "盈峰环境",
-      "score": 0.0918084411832808
-    },
-    {
-      "symbol": "600078.SH",
-      "name": "澄星股份",
-      "score": 0.09023915531553704
-    },
-    {
-      "symbol": "002025.SZ",
-      "name": "航天电器",
-      "score": 0.08759747968777394
-    },
-    {
-      "symbol": "600769.SH",
-      "name": "祥龙电业",
-      "score": 0.08629188542012323
-    },
-    {
-      "symbol": "002842.SZ",
-      "name": "翔鹭钨业",
-      "score": 0.08603430890745704
-    },
-    {
-      "symbol": "000818.SZ",
-      "name": "航锦科技",
-      "score": 0.08160639860628327
-    },
-    {
-      "symbol": "300195.SZ",
-      "name": "长荣股份",
-      "score": 0.07735619287940697
-    },
-    {
-      "symbol": "605376.SH",
-      "name": "XD博迁新",
-      "score": 0.07708725127960009
-    },
-    {
-      "symbol": "603223.SH",
-      "name": "恒通股份",
-      "score": 0.07627915002071285
-    },
-    {
-      "symbol": "603163.SH",
-      "name": "圣晖集成",
-      "score": 0.06996461005719913
-    },
-    {
-      "symbol": "001696.SZ",
-      "name": "宗申动力",
-      "score": 0.06906377450063346
-    },
-    {
-      "symbol": "605598.SH",
-      "name": "上海港湾",
-      "score": 0.06899591201152451
+      "symbol": "603726.SH",
+      "name": "朗迪集团",
+      "score": 0.05305359673209737
     },
     {
       "symbol": "002303.SZ",
       "name": "美盈森",
-      "score": 0.06893649849516921
+      "score": 0.051760870941640384
     },
     {
-      "symbol": "002515.SZ",
-      "name": "金字火腿",
-      "score": 0.06694017501000521
+      "symbol": "600539.SH",
+      "name": "狮头股份",
+      "score": 0.05136809083958918
     },
     {
-      "symbol": "605589.SH",
-      "name": "圣泉集团",
-      "score": 0.06572980256933689
+      "symbol": "002208.SZ",
+      "name": "合肥城建",
+      "score": 0.047019436529280374
     },
     {
-      "symbol": "002654.SZ",
-      "name": "万润科技",
-      "score": 0.06537601924341636
+      "symbol": "605198.SH",
+      "name": "安德利",
+      "score": 0.04452282607467294
+    },
+    {
+      "symbol": "603976.SH",
+      "name": "正川股份",
+      "score": 0.040161716502717146
+    },
+    {
+      "symbol": "002374.SZ",
+      "name": "中锐股份",
+      "score": 0.03975378603317486
+    },
+    {
+      "symbol": "002265.SZ",
+      "name": "建设工业",
+      "score": 0.03972468703105379
+    },
+    {
+      "symbol": "000417.SZ",
+      "name": "合百集团",
+      "score": 0.038086939018331815
+    },
+    {
+      "symbol": "002326.SZ",
+      "name": "永太科技",
+      "score": 0.0371878297154288
+    },
+    {
+      "symbol": "000779.SZ",
+      "name": "甘咨询",
+      "score": 0.03687627784967614
+    },
+    {
+      "symbol": "000670.SZ",
+      "name": "盈方微",
+      "score": 0.036758008340525464
+    },
+    {
+      "symbol": "002012.SZ",
+      "name": "凯恩股份",
+      "score": 0.03496213583421908
+    },
+    {
+      "symbol": "600967.SH",
+      "name": "内蒙一机",
+      "score": 0.034894336760429454
+    },
+    {
+      "symbol": "300480.SZ",
+      "name": "光力科技",
+      "score": 0.034797761165493164
+    },
+    {
+      "symbol": "603926.SH",
+      "name": "铁流股份",
+      "score": 0.032760309205635094
+    },
+    {
+      "symbol": "002189.SZ",
+      "name": "中光学",
+      "score": 0.030532273714072782
+    },
+    {
+      "symbol": "600617.SH",
+      "name": "国新能源",
+      "score": 0.029233209995799116
+    },
+    {
+      "symbol": "600178.SH",
+      "name": "东安动力",
+      "score": 0.028139632145996137
     }
   ],
   "evaluated_candidates": [
     {
       "candidate_rank": 1,
-      "symbol": "603065.SH",
-      "name": "宿迁联盛",
-      "score": 0.92709630808051,
+      "symbol": "003001.SZ",
+      "name": "中岩大地",
+      "score": 0.9926061645724791,
       "hit_limit": true,
       "was_bought": false,
       "in_top10": true
     },
     {
       "candidate_rank": 2,
-      "symbol": "301396.SZ",
-      "name": "宏景科技",
-      "score": 0.45175767524763155,
-      "hit_limit": false,
+      "symbol": "002879.SZ",
+      "name": "长缆科技",
+      "score": 0.9897557735226191,
+      "hit_limit": true,
       "was_bought": false,
       "in_top10": true
     },
     {
       "candidate_rank": 3,
-      "symbol": "300522.SZ",
-      "name": "世名科技",
-      "score": 0.4093190867783996,
-      "hit_limit": false,
+      "symbol": "000668.SZ",
+      "name": "荣丰控股",
+      "score": 0.8637841294400666,
+      "hit_limit": true,
       "was_bought": false,
       "in_top10": true
     },
     {
       "candidate_rank": 4,
-      "symbol": "301310.SZ",
-      "name": "鑫宏业",
-      "score": 0.344901576335607,
-      "hit_limit": false,
+      "symbol": "001258.SZ",
+      "name": "立新能源",
+      "score": 0.7024577729638409,
+      "hit_limit": true,
       "was_bought": false,
       "in_top10": true
     },
     {
       "candidate_rank": 5,
-      "symbol": "600353.SH",
-      "name": "旭光电子",
-      "score": 0.33382735105032063,
+      "symbol": "600396.SH",
+      "name": "华电辽能",
+      "score": 0.6450227106728147,
       "hit_limit": false,
       "was_bought": true,
       "in_top10": true
     },
     {
       "candidate_rank": 6,
-      "symbol": "002167.SZ",
-      "name": "东方锆业",
-      "score": 0.33176261983562233,
+      "symbol": "002197.SZ",
+      "name": "证通电子",
+      "score": 0.5732085984381204,
       "hit_limit": false,
       "was_bought": false,
       "in_top10": true
     },
     {
       "candidate_rank": 7,
-      "symbol": "603407.SH",
-      "name": "长裕集团",
-      "score": 0.321040569000939,
-      "hit_limit": true,
+      "symbol": "000815.SZ",
+      "name": "美利云",
+      "score": 0.5478870343091876,
+      "hit_limit": false,
       "was_bought": false,
       "in_top10": true
     },
     {
       "candidate_rank": 8,
-      "symbol": "600176.SH",
-      "name": "中国巨石",
-      "score": 0.28701045053023694,
-      "hit_limit": true,
+      "symbol": "600722.SH",
+      "name": "金牛化工",
+      "score": 0.543130201707314,
+      "hit_limit": false,
       "was_bought": false,
       "in_top10": true
     },
     {
       "candidate_rank": 9,
-      "symbol": "600397.SH",
-      "name": "江钨装备",
-      "score": 0.2740910143461364,
+      "symbol": "000603.SZ",
+      "name": "盛达资源",
+      "score": 0.5007433662572641,
       "hit_limit": false,
       "was_bought": false,
       "in_top10": true
     },
     {
       "candidate_rank": 10,
-      "symbol": "603986.SH",
-      "name": "兆易创新",
-      "score": 0.27055014937031246,
-      "hit_limit": true,
+      "symbol": "002900.SZ",
+      "name": "哈三联",
+      "score": 0.46910374003513344,
+      "hit_limit": false,
       "was_bought": false,
       "in_top10": true
     },
     {
-      "candidate_rank": 72,
-      "symbol": "300085.SZ",
-      "name": "银之杰",
-      "score": 0.15611886074005038,
+      "candidate_rank": 55,
+      "symbol": "002596.SZ",
+      "name": "海南瑞泽",
+      "score": 0.21693635119552573,
       "hit_limit": false,
       "was_bought": true,
       "in_top10": false
     },
     {
-      "candidate_rank": 176,
-      "symbol": "002141.SZ",
-      "name": "贤丰控股",
-      "score": 0.09873239691020372,
-      "hit_limit": true,
+      "candidate_rank": 80,
+      "symbol": "002566.SZ",
+      "name": "益盛药业",
+      "score": 0.19152746746267538,
+      "hit_limit": false,
       "was_bought": true,
       "in_top10": false
     }
   ],
-  "today_candidate_count": 4970,
-  "today_top_score": 0.6911361686366281
+  "today_candidate_count": 4988,
+  "today_top_score": 0.7856327555644922
 }

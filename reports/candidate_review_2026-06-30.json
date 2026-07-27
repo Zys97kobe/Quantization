@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-06-30",
+  "result_date": "2026-07-01",
+  "top10_hit_rate": 0.1,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "688432.SH",
+      "name": "有研硅",
+      "score": 0.3686834118452413,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "688233.SH",
+      "name": "神工股份",
+      "score": 0.2779433442183754,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "600667.SH",
+      "name": "XD太极实",
+      "score": 0.2220779559394296,
+      "hit_limit": true,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "603986.SH",
+      "name": "兆易创新",
+      "score": 0.2169384344695188,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "688596.SH",
+      "name": "正帆科技",
+      "score": 0.2031863284122533,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "688120.SH",
+      "name": "华海清科",
+      "score": 0.1937965896224571,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "688376.SH",
+      "name": "美埃科技",
+      "score": 0.1902058581533845,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "600206.SH",
+      "name": "有研新材",
+      "score": 0.1854932635750616,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "002674.SZ",
+      "name": "兴业科技",
+      "score": 0.1833356027507769,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "002859.SZ",
+      "name": "洁美科技",
+      "score": 0.1561427093723793,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

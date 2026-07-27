@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from time import sleep
 
 import pandas as pd
 import requests
@@ -29,11 +30,7 @@ def send_feishu_daily(
 ) -> None:
     text = _daily_text(summary, rank, buys, sells, positions, learning)
     payload = {"msg_type": "text", "content": {"text": text}}
-    response = requests.post(webhook, json=payload, timeout=30)
-    response.raise_for_status()
-    data = response.json()
-    if data.get("code") not in (0, None):
-        raise RuntimeError(f"Feishu webhook returned error: {data}")
+    _post_feishu(webhook, payload)
 
 
 def send_feishu_trades(webhook: str, date: str, action: str, trades: pd.DataFrame) -> None:
@@ -43,20 +40,25 @@ def send_feishu_trades(webhook: str, date: str, action: str, trades: pd.DataFram
     lines = [f"A股模拟盘{title} {date}", ""]
     lines.extend(_trade_lines(trades, action))
     payload = {"msg_type": "text", "content": {"text": "\n".join(lines)}}
-    response = requests.post(webhook, json=payload, timeout=30)
-    response.raise_for_status()
-    data = response.json()
-    if data.get("code") not in (0, None):
-        raise RuntimeError(f"Feishu webhook returned error: {data}")
+    _post_feishu(webhook, payload)
 
 
 def send_feishu_candidate_review(webhook: str, review: dict) -> None:
     payload = {"msg_type": "text", "content": {"text": candidate_review_text(review)}}
-    response = requests.post(webhook, json=payload, timeout=30)
-    response.raise_for_status()
-    data = response.json()
-    if data.get("code") not in (0, None):
-        raise RuntimeError(f"Feishu webhook returned error: {data}")
+    _post_feishu(webhook, payload)
+
+
+def _post_feishu(webhook: str, payload: dict, retry_delays: tuple[int, ...] = (5, 15, 30)) -> None:
+    """Post a Feishu webhook message, retrying the platform's transient rate limit."""
+    for attempt in range(len(retry_delays) + 1):
+        response = requests.post(webhook, json=payload, timeout=30)
+        response.raise_for_status()
+        data = response.json()
+        if data.get("code") in (0, None):
+            return
+        if data.get("code") != 11232 or attempt >= len(retry_delays):
+            raise RuntimeError(f"Feishu webhook returned error: {data}")
+        sleep(retry_delays[attempt])
 
 
 def candidate_review_text(review: dict) -> str:

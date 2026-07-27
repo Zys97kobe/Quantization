@@ -7,7 +7,13 @@ import pandas as pd
 
 from quant_limitup.accuracy import write_prediction_accuracy
 from quant_limitup.backtest import rank_candidates, run_backtest
-from quant_limitup.candidate_review import build_pending_reviews, load_rank_history, upsert_rank_history
+from quant_limitup.candidate_review import (
+    build_pending_reviews,
+    load_completed_signals,
+    load_rank_history,
+    mark_review_completed,
+    upsert_rank_history,
+)
 from quant_limitup.data import limit_up_price, read_prices, write_sample_prices
 from quant_limitup.features import build_feature_frame
 from quant_limitup.model import train_logistic
@@ -22,7 +28,7 @@ from quant_limitup.paper import (
 from quant_limitup.config import TradingConfig
 from quant_limitup.strategy import build_learning_report, optimize_threshold
 from quant_limitup.messaging import _daily_text
-from quant_limitup.providers import sina_minute_market_is_current
+from quant_limitup.providers import fetch_sina_minute_bars, sina_minute_market_is_current
 from quant_limitup.cli import append_daily_summary_once, main, minute_data_is_current, safe_notify, safe_update_sina_stock_pool
 
 class PipelineTest(unittest.TestCase):
@@ -35,7 +41,17 @@ class PipelineTest(unittest.TestCase):
         features = build_feature_frame(prices)
 
         self.assertFalse(features.empty)
-        self.assertTrue({"target_limit_up_next", "volume_ratio_5", "market_limit_hits"}.issubset(features.columns))
+        self.assertTrue({
+            "target_limit_up_next",
+            "volume_ratio_5",
+            "market_limit_hits",
+            "curve_slope_5",
+            "curve_accel_5",
+            "pct_chg_lag_1",
+            "pct_chg_lag_5",
+            "limit_gap_lag_1",
+            "limit_hit_lag_5",
+        }.issubset(features.columns))
         latest_rows = features[features["date"] == features["date"].max()]
         self.assertTrue(latest_rows["target_limit_up_next"].isna().all())
         for _, symbol_rows in features.groupby("symbol"):
@@ -141,6 +157,10 @@ class PipelineTest(unittest.TestCase):
         latest = features.iloc[-1]
         signal_date = pd.to_datetime(latest["date"])
         trade_date = signal_date + pd.offsets.BDay(1)
+        expected_limit = limit_up_price(float(latest["close"]), latest.board, 0)
+        running_high = min(expected_limit * 0.8, 22.0)
+        buy_price = running_high * 0.90
+        profitable_pullback_close = running_high * 0.96
         state_file = root / "account.json"
         save_account(
             PaperAccount(
@@ -153,8 +173,8 @@ class PipelineTest(unittest.TestCase):
                         latest.board,
                         signal_date.strftime("%Y-%m-%d"),
                         100,
-                        20.0,
-                        2_000.0,
+                        buy_price,
+                        buy_price * 100,
                         0.5,
                     )
                 ],
@@ -166,18 +186,18 @@ class PipelineTest(unittest.TestCase):
                 {
                     "datetime": f"{trade_date:%Y-%m-%d} 09:35:00",
                     "symbol": latest.symbol,
-                    "open": 22.0,
-                    "high": 22.0,
-                    "low": 22.0,
-                    "close": 22.0,
+                    "open": running_high,
+                    "high": running_high,
+                    "low": running_high,
+                    "close": running_high,
                 },
                 {
                     "datetime": f"{trade_date:%Y-%m-%d} 09:40:00",
                     "symbol": latest.symbol,
-                    "open": 21.2,
-                    "high": 21.2,
-                    "low": 21.0,
-                    "close": 21.0,
+                    "open": profitable_pullback_close,
+                    "high": profitable_pullback_close,
+                    "low": profitable_pullback_close,
+                    "close": profitable_pullback_close,
                 },
             ]
         )
@@ -337,6 +357,79 @@ class PipelineTest(unittest.TestCase):
         with patch("quant_limitup.providers._fetch_one_sina_minute", return_value=current):
             self.assertTrue(sina_minute_market_is_current(symbols, "2026-06-22"))
 
+    def test_market_probe_uses_tencent_fallback(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        symbols = Path(tmp.name) / "symbols.csv"
+        pd.DataFrame([{
+            "symbol": "000001.SZ", "name": "平安银行", "board": "main", "is_st": 0,
+        }]).to_csv(symbols, index=False)
+        current = pd.DataFrame([{"datetime": "2026-06-22 10:25:00"}])
+
+        with (
+            patch("quant_limitup.providers._fetch_one_sina_minute", side_effect=RuntimeError("sina failed")),
+            patch("quant_limitup.providers._fetch_one_tencent_minute", return_value=current),
+        ):
+            self.assertTrue(sina_minute_market_is_current(symbols, "2026-06-22"))
+
+    def test_minute_fetch_uses_tencent_fallback_when_sina_fails(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        symbols = root / "symbols.csv"
+        out = root / "minute.csv"
+        pd.DataFrame([{
+            "symbol": "000001.SZ", "name": "平安银行", "board": "main", "is_st": 0,
+        }]).to_csv(symbols, index=False)
+        fallback = pd.DataFrame([{
+            "datetime": pd.Timestamp("2026-06-22 10:25:00"),
+            "symbol": "000001.SZ",
+            "open": 10.0,
+            "high": 10.2,
+            "low": 9.9,
+            "close": 10.1,
+            "volume": 1000.0,
+            "amount": 10050.0,
+        }])
+
+        with (
+            patch("quant_limitup.providers._fetch_one_sina_minute", side_effect=RuntimeError("sina failed")),
+            patch("quant_limitup.providers._fetch_one_tencent_minute", return_value=fallback),
+        ):
+            result = fetch_sina_minute_bars(out, symbols, workers=1)
+
+        self.assertEqual(len(result), 1)
+        self.assertTrue(out.exists())
+
+    def test_buy_phase_uses_tencent_daily_before_sina(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        symbols = root / "symbols.csv"
+        prices = root / "daily.csv"
+        pd.DataFrame([{"symbol": "000001.SZ", "name": "平安银行", "board": "main", "is_st": 0}]).to_csv(symbols, index=False)
+
+        with (
+            patch("quant_limitup.cli.fetch_tencent_daily_prices", return_value=pd.DataFrame()) as fetch_tencent,
+            patch("quant_limitup.cli.fetch_sina_daily_prices") as fetch_sina,
+            patch("quant_limitup.cli.run_from_prices") as run_from_prices,
+        ):
+            main([
+                "daily",
+                "--provider",
+                "sina",
+                "--phase",
+                "buy",
+                "--symbols",
+                str(symbols),
+                "--prices",
+                str(prices),
+            ])
+
+        fetch_tencent.assert_called_once()
+        fetch_sina.assert_not_called()
+        run_from_prices.assert_called_once_with(prices)
+
     def test_closed_market_skips_before_fetch_and_model_prefilter(self) -> None:
         with (
             patch("quant_limitup.cli.sina_minute_market_is_current", return_value=False),
@@ -383,6 +476,24 @@ class PipelineTest(unittest.TestCase):
             raise RuntimeError("frequency limited")
 
         self.assertFalse(safe_notify("feishu", fail_notify))
+
+    def test_failed_review_notification_remains_pending(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        path = Path(tmp.name) / "candidate_reviews.csv"
+        review = {
+            "signal_date": "2026-07-21",
+            "result_date": "2026-07-22",
+            "candidate_count": 10,
+            "top10_evaluated_count": 10,
+            "top10_hit_rate": 0.4,
+            "evaluated_candidates": [],
+        }
+
+        mark_review_completed(path, review, notification_sent=False)
+        self.assertNotIn("2026-07-21", load_completed_signals(path))
+        mark_review_completed(path, review, notification_sent=True)
+        self.assertIn("2026-07-21", load_completed_signals(path))
 
     def test_reviews_follow_next_trading_day_across_market_closure(self) -> None:
         history = pd.DataFrame([

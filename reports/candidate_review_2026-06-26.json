@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-06-26",
+  "result_date": "2026-06-29",
+  "top10_hit_rate": 0.2,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "688403.SH",
+      "name": "汇成股份",
+      "score": 0.2391911660036192,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "688669.SH",
+      "name": "聚石化学",
+      "score": 0.2178556103301977,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "300223.SZ",
+      "name": "北京君正",
+      "score": 0.2060697789740573,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "603989.SH",
+      "name": "艾华集团",
+      "score": 0.1683916318356953,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "301310.SZ",
+      "name": "鑫宏业",
+      "score": 0.1682375197191126,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "000811.SZ",
+      "name": "冰轮环境",
+      "score": 0.1594445052685032,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "600176.SH",
+      "name": "中国巨石",
+      "score": 0.1497817036633887,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "000962.SZ",
+      "name": "东方钽业",
+      "score": 0.1464915508005289,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "603407.SH",
+      "name": "长裕集团",
+      "score": 0.1399652551521321,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "600667.SH",
+      "name": "太极实业",
+      "score": 0.1388966027036574,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    }
+  ]
+}

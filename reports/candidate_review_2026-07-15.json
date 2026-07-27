@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-15",
+  "result_date": "2026-07-16",
+  "top10_hit_rate": 0.3,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "301259.SZ",
+      "name": "艾布鲁",
+      "score": 0.8743463110903111,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "603580.SH",
+      "name": "艾艾精工",
+      "score": 0.772695211975052,
+      "hit_limit": true,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "002636.SZ",
+      "name": "金安国纪",
+      "score": 0.7211879653268459,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "002350.SZ",
+      "name": "北京科锐",
+      "score": 0.7182515091689241,
+      "hit_limit": true,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "300566.SZ",
+      "name": "激智科技",
+      "score": 0.7146231212372262,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "688192.SH",
+      "name": "迪哲医药",
+      "score": 0.6973772348407284,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "603137.SH",
+      "name": "恒尚节能",
+      "score": 0.6785276736368134,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "603989.SH",
+      "name": "艾华集团",
+      "score": 0.6760537701439846,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "688610.SH",
+      "name": "埃科光电",
+      "score": 0.6395028494371988,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "001270.SZ",
+      "name": "铖昌科技",
+      "score": 0.6314263349185226,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

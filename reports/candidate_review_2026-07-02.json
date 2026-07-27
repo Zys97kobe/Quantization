@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-02",
+  "result_date": "2026-07-03",
+  "top10_hit_rate": 0.0,
+  "top10_evaluated_count": 10,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "688233.SH",
+      "name": "神工股份",
+      "score": 0.9929098944887694,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "300518.SZ",
+      "name": "新迅达",
+      "score": 0.9686291115490806,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "688286.SH",
+      "name": "DR敏芯股",
+      "score": 0.9681188084447462,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "688728.SH",
+      "name": "格科微",
+      "score": 0.9237864726678214,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "300873.SZ",
+      "name": "海晨股份",
+      "score": 0.9174305378408054,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "688503.SH",
+      "name": "聚和材料",
+      "score": 0.9166046042934376,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "688596.SH",
+      "name": "正帆科技",
+      "score": 0.9152420917873294,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "300487.SZ",
+      "name": "蓝晓科技",
+      "score": 0.8994870779781482,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "688689.SH",
+      "name": "银河微电",
+      "score": 0.8992358767236628,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "688548.SH",
+      "name": "广钢气体",
+      "score": 0.8741124412254315,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

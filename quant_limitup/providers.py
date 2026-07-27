@@ -154,6 +154,53 @@ def fetch_sina_daily_prices(
     return data
 
 
+def fetch_tencent_daily_prices(
+    out_file: Path,
+    symbols_file: Path,
+    days: int = 260,
+    pause_seconds: float = 0.04,
+    workers: int = 96,
+) -> pd.DataFrame:
+    pool = read_symbol_pool(symbols_file)
+    rows: list[pd.DataFrame] = []
+    failures: list[tuple[str, str]] = []
+    items = list(pool.itertuples(index=False))
+    if workers <= 1:
+        for item in items:
+            try:
+                frame = _fetch_one_tencent_daily(item.symbol, item.name, item.board, item.is_st, days)
+                if not frame.empty:
+                    rows.append(frame)
+                sleep(pause_seconds)
+            except Exception as exc:  # noqa: BLE001 - external provider errors are collected.
+                failures.append((item.symbol, str(exc)))
+    else:
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = {
+                executor.submit(_fetch_one_tencent_daily, item.symbol, item.name, item.board, item.is_st, days): item
+                for item in items
+            }
+            for future in as_completed(futures):
+                item = futures[future]
+                try:
+                    frame = future.result()
+                    if not frame.empty:
+                        rows.append(frame)
+                except Exception as exc:  # noqa: BLE001
+                    failures.append((item.symbol, str(exc)))
+
+    if not rows:
+        detail = "; ".join(f"{symbol}: {err}" for symbol, err in failures[:5])
+        raise RuntimeError(f"No Tencent daily data fetched. {detail}")
+
+    data = pd.concat(rows, ignore_index=True).sort_values(["symbol", "date"])
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    data.to_csv(out_file, index=False)
+    if failures:
+        pd.DataFrame(failures, columns=["symbol", "error"]).to_csv(out_file.with_suffix(".failures.csv"), index=False)
+    return data
+
+
 def fetch_sina_candidate_daily_prices(candidates: pd.DataFrame, days: int = 5) -> pd.DataFrame:
     """Fetch recent daily bars for review candidates without writing market data files."""
     if candidates.empty:
@@ -223,6 +270,15 @@ def fetch_sina_minute_bars(
                     failures.append((item.symbol, str(exc)))
 
     if not rows:
+        for symbol, _ in failures:
+            try:
+                frame = _fetch_one_tencent_minute(symbol, scale=scale, bars=bars)
+                if not frame.empty:
+                    rows.append(frame)
+            except Exception as exc:  # noqa: BLE001
+                pass
+            sleep(pause_seconds)
+    if not rows:
         detail = "; ".join(f"{symbol}: {err}" for symbol, err in failures[:5])
         if failures:
             pd.DataFrame(failures, columns=["symbol", "error"]).to_csv(out_file.with_suffix(".failures.csv"), index=False)
@@ -263,6 +319,16 @@ def sina_minute_market_is_current(
             dates = pd.to_datetime(frame["datetime"], errors="coerce").dropna().dt.normalize()
             if bool((dates == expected).any()):
                 return True
+    for item in sample.itertuples(index=False):
+        try:
+            frame = _fetch_one_tencent_minute(item.symbol, scale=scale, bars=bars)
+        except Exception:  # noqa: BLE001
+            continue
+        if frame.empty or "datetime" not in frame.columns:
+            continue
+        dates = pd.to_datetime(frame["datetime"], errors="coerce").dropna().dt.normalize()
+        if bool((dates == expected).any()):
+            return True
     return False
 
 
@@ -497,6 +563,70 @@ def _fetch_one_sina(symbol: str, name: str, board: str, is_st: int, days: int) -
     return frame[cols].dropna().copy()
 
 
+def _fetch_one_tencent_daily(symbol: str, name: str, board: str, is_st: int, days: int) -> pd.DataFrame:
+    code = _to_tencent_symbol(symbol)
+    url = "https://ifzq.gtimg.cn/appstock/app/fqkline/get"
+    response = requests.get(
+        url,
+        params={"param": f"{code},day,,,{days},qfq"},
+        timeout=6,
+        headers={"User-Agent": "Mozilla/5.0"},
+    )
+    response.raise_for_status()
+    payload = response.json()
+    data = (payload.get("data") or {}).get(code) or {}
+    records = data.get("qfqday") or data.get("day") or []
+    rows = []
+    for item in records:
+        if len(item) < 6:
+            continue
+        date = pd.to_datetime(str(item[0]), errors="coerce")
+        open_price = pd.to_numeric(item[1], errors="coerce")
+        close = pd.to_numeric(item[2], errors="coerce")
+        high = pd.to_numeric(item[3], errors="coerce")
+        low = pd.to_numeric(item[4], errors="coerce")
+        volume = pd.to_numeric(item[5], errors="coerce")
+        if pd.isna(date) or pd.isna(open_price) or pd.isna(close) or pd.isna(high) or pd.isna(low) or pd.isna(volume):
+            continue
+        volume_value = float(volume)
+        amount = volume_value * (float(open_price) + float(close)) / 2
+        rows.append(
+            {
+                "date": date.strftime("%Y-%m-%d"),
+                "symbol": symbol,
+                "name": name,
+                "board": board,
+                "is_st": int(is_st),
+                "open": float(open_price),
+                "high": float(high),
+                "low": float(low),
+                "close": float(close),
+                "volume": volume_value,
+                "amount": amount,
+                "turnover": 0.0,
+                "free_float_mkt_cap": float(close) * max(volume_value, 1.0) * 100,
+            }
+        )
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "date",
+            "symbol",
+            "name",
+            "board",
+            "is_st",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "amount",
+            "turnover",
+            "free_float_mkt_cap",
+        ],
+    ).dropna()
+
+
 def _fetch_one_sina_minute(symbol: str, scale: int, bars: int) -> pd.DataFrame:
     sina_symbol = _to_sina_symbol(symbol)
     url = "https://quotes.sina.cn/cn/api/jsonp.php/var%20_data=/CN_MarketData.getKLineData"
@@ -518,6 +648,54 @@ def _fetch_one_sina_minute(symbol: str, scale: int, bars: int) -> pd.DataFrame:
     avg_price = (frame["open"] + frame["close"]) / 2
     frame["amount"] = frame["volume"] * avg_price
     return frame[["datetime", "symbol", "open", "high", "low", "close", "volume", "amount"]].dropna()
+
+
+def _fetch_one_tencent_minute(symbol: str, scale: int, bars: int) -> pd.DataFrame:
+    if scale != 5:
+        raise RuntimeError(f"Tencent minute fallback only supports 5-minute bars, got scale={scale}")
+    code = _to_tencent_symbol(symbol)
+    url = "https://ifzq.gtimg.cn/appstock/app/kline/mkline"
+    response = requests.get(
+        url,
+        params={"param": f"{code},m5,,{bars}"},
+        timeout=20,
+        headers={"User-Agent": "Mozilla/5.0"},
+    )
+    response.raise_for_status()
+    payload = response.json()
+    records = ((payload.get("data") or {}).get(code) or {}).get("m5") or []
+    rows = []
+    for item in records:
+        if len(item) < 6:
+            continue
+        dt = pd.to_datetime(str(item[0]), format="%Y%m%d%H%M", errors="coerce")
+        if pd.isna(dt):
+            continue
+        open_price = pd.to_numeric(item[1], errors="coerce")
+        close = pd.to_numeric(item[2], errors="coerce")
+        high = pd.to_numeric(item[3], errors="coerce")
+        low = pd.to_numeric(item[4], errors="coerce")
+        volume = pd.to_numeric(item[5], errors="coerce")
+        if pd.isna(open_price) or pd.isna(close) or pd.isna(high) or pd.isna(low) or pd.isna(volume):
+            continue
+        rows.append(
+            {
+                "datetime": dt,
+                "symbol": symbol,
+                "open": float(open_price),
+                "high": float(high),
+                "low": float(low),
+                "close": float(close),
+                "volume": float(volume),
+                "amount": float(volume) * (float(open_price) + float(close)) / 2,
+            }
+        )
+    return pd.DataFrame(rows, columns=["datetime", "symbol", "open", "high", "low", "close", "volume", "amount"])
+
+
+def _to_tencent_symbol(symbol: str) -> str:
+    code, exchange = symbol.split(".")
+    return ("sh" if exchange.upper() == "SH" else "sz") + code
 
 
 def _to_exchange_symbol(raw_code: str) -> str:
