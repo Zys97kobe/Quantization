@@ -97,6 +97,7 @@ def build_feature_frame(prices: pd.DataFrame, minute_bars: pd.DataFrame | None =
         "symbol",
         "name",
         "board",
+        "prev_close",
         "open",
         "high",
         "low",

@@ -174,7 +174,7 @@ def _settle_positions(
             remaining.append(pos)
             continue
         row = day_by_symbol.loc[pos.symbol]
-        decision = _sell_decision(pos, row, current_date, minute_bars, sell_mode)
+        decision = _sell_decision(pos, row, current_date, minute_bars, sell_mode, config)
         if decision is None:
             remaining.append(pos)
             continue
@@ -229,7 +229,9 @@ def _build_intraday_snapshot(
 ) -> pd.DataFrame:
     latest_date = pd.to_datetime(frame["date"]).max()
     snapshot = frame[frame["date"] == latest_date].copy()
+    prior_close = snapshot["close"].astype(float).copy()
     snapshot["date"] = current_date
+    snapshot["prev_close"] = prior_close
     snapshot["limit_up_price"] = [
         limit_up_price(float(close), board, int(str(name).upper().startswith(("ST", "*ST"))))
         for close, board, name in zip(snapshot["close"], snapshot["board"], snapshot["name"])
@@ -292,6 +294,7 @@ def _build_missing_position_intraday_rows(
             row = history.iloc[-1].copy()
             prev_close = float(row["close"])
         row["date"] = current_date.normalize()
+        row["prev_close"] = prev_close
         row["open"] = float(bars.iloc[0]["open"])
         row["high"] = float(bars["high"].max())
         row["low"] = float(bars["low"].min())
@@ -432,6 +435,7 @@ def _sell_decision(
     current_date: pd.Timestamp,
     minute_bars: pd.DataFrame | None,
     sell_mode: str,
+    config: TradingConfig,
 ) -> tuple[float, bool, str] | None:
     limit_price = float(row["limit_up_price"])
     if sell_mode == "morning":
@@ -439,13 +443,25 @@ def _sell_decision(
         morning = bars[(bars["time"] >= "09:30") & (bars["time"] <= "10:30")] if not bars.empty else bars
         if morning.empty:
             return None
+        prev_close = pd.to_numeric(pd.Series([row.get("prev_close")]), errors="coerce").iloc[0]
+        if pd.isna(prev_close) or float(prev_close) <= 0:
+            prev_close = pos.buy_price
+        opening_drop = float(morning.iloc[0]["open"]) / float(prev_close) - 1
+        if opening_drop <= config.morning_opening_defer_return:
+            return None
         if float(morning["high"].max()) >= limit_price * 0.999:
             return limit_price, True, "morning_limit_hit"
         running_high = morning["high"].cummax()
         pullback = morning["close"] / running_high - 1
-        hit_pullback = morning[(pullback <= -0.03) & (morning["close"] < pos.buy_price)]
-        if not hit_pullback.empty:
-            return float(hit_pullback.iloc[0]["close"]), False, "morning_pullback"
+        hit_pullback = morning[pullback <= config.morning_pullback_threshold]
+        for candidate in hit_pullback.itertuples(index=False):
+            raw_sell_price = float(candidate.close)
+            pnl = _estimated_sell_pnl(pos, raw_sell_price, config)
+            return_pct = pnl / max(pos.cost, 1)
+            if return_pct < config.morning_force_defer_return:
+                return None
+            if pnl < -config.morning_pullback_min_loss:
+                return raw_sell_price, False, "morning_pullback"
         return None
 
     if sell_mode == "force":
@@ -460,6 +476,14 @@ def _sell_decision(
 
     hit_limit = float(row["high"]) >= limit_price * 0.999
     return (limit_price if hit_limit else float(row["close"])), hit_limit, "eod_settle"
+
+
+def _estimated_sell_pnl(pos: Position, raw_sell_price: float, config: TradingConfig) -> float:
+    sell_price = raw_sell_price * (1 - config.sell_slippage_bps / 10_000)
+    gross_sell = pos.shares * sell_price
+    sell_fee = max(gross_sell * config.commission_bps / 10_000, config.min_commission)
+    stamp_tax = gross_sell * config.stamp_tax_bps / 10_000
+    return gross_sell - sell_fee - stamp_tax - pos.cost
 
 
 def _position_minutes(symbol: str, current_date: pd.Timestamp, minute_bars: pd.DataFrame | None) -> pd.DataFrame:

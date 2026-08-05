@@ -219,6 +219,229 @@ class PipelineTest(unittest.TestCase):
         self.assertEqual(summary["closed_trades"], 0)
         self.assertEqual(len(account.positions), 1)
 
+    def test_opening_drop_over_six_percent_defers_sale_until_force(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        price_file = root / "daily_prices.csv"
+        write_sample_prices(price_file, symbols=24, days=90)
+        features = build_feature_frame(read_prices(price_file))
+        model, _ = train_logistic(features, epochs=50)
+        latest = features.iloc[-1]
+        signal_date = pd.to_datetime(latest["date"])
+        trade_date = signal_date + pd.offsets.BDay(1)
+        prev_close = float(latest["close"])
+        state_file = root / "account.json"
+        trades_file = root / "trades.csv"
+        daily_file = root / "daily.csv"
+        save_account(
+            PaperAccount(
+                initial_cash=10_000,
+                cash=8_000,
+                positions=[
+                    Position(
+                        latest.symbol,
+                        latest["name"],
+                        latest.board,
+                        signal_date.strftime("%Y-%m-%d"),
+                        100,
+                        prev_close,
+                        prev_close * 100,
+                        0.5,
+                    )
+                ],
+            ),
+            state_file,
+        )
+        minute_bars = pd.DataFrame(
+            [
+                {
+                    "datetime": f"{trade_date:%Y-%m-%d} 09:35:00",
+                    "symbol": latest.symbol,
+                    "open": prev_close * 0.93,
+                    "high": prev_close * 0.93,
+                    "low": prev_close * 0.92,
+                    "close": prev_close * 0.92,
+                },
+                {
+                    "datetime": f"{trade_date:%Y-%m-%d} 09:40:00",
+                    "symbol": latest.symbol,
+                    "open": prev_close * 0.92,
+                    "high": prev_close * 0.92,
+                    "low": prev_close * 0.88,
+                    "close": prev_close * 0.88,
+                },
+                {
+                    "datetime": f"{trade_date:%Y-%m-%d} 14:50:00",
+                    "symbol": latest.symbol,
+                    "open": prev_close * 0.90,
+                    "high": prev_close * 0.91,
+                    "low": prev_close * 0.89,
+                    "close": prev_close * 0.90,
+                },
+            ]
+        )
+
+        account, _, morning = run_paper_day(
+            features,
+            model,
+            TradingConfig(),
+            state_file=state_file,
+            trades_file=trades_file,
+            daily_file=daily_file,
+            settle=True,
+            open_new=False,
+            minute_bars=minute_bars,
+            sell_mode="morning",
+        )
+
+        self.assertEqual(morning["closed_trades"], 0)
+        self.assertEqual(len(account.positions), 1)
+
+        account, _, force = run_paper_day(
+            features,
+            model,
+            TradingConfig(),
+            state_file=state_file,
+            trades_file=trades_file,
+            daily_file=daily_file,
+            settle=True,
+            open_new=False,
+            minute_bars=minute_bars,
+            sell_mode="force",
+        )
+
+        self.assertEqual(force["closed_trades"], 1)
+        self.assertFalse(account.positions)
+        trades = pd.read_csv(trades_file)
+        self.assertEqual(trades.iloc[-1]["reason"], "force_sell")
+
+    def test_morning_pullback_requires_loss_over_two_hundred(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        price_file = root / "daily_prices.csv"
+        write_sample_prices(price_file, symbols=24, days=90)
+        features = build_feature_frame(read_prices(price_file))
+        model, _ = train_logistic(features, epochs=50)
+        latest = features.iloc[-1]
+        signal_date = pd.to_datetime(latest["date"])
+        trade_date = signal_date + pd.offsets.BDay(1)
+        state_file = root / "account.json"
+        buy_price = 14.21136
+        save_account(
+            PaperAccount(
+                initial_cash=10_000,
+                cash=7_152.728,
+                positions=[
+                    Position(
+                        latest.symbol,
+                        latest["name"],
+                        latest.board,
+                        signal_date.strftime("%Y-%m-%d"),
+                        200,
+                        buy_price,
+                        buy_price * 200 + 5,
+                        0.5,
+                    )
+                ],
+            ),
+            state_file,
+        )
+        minute_bars = pd.DataFrame(
+            [{
+                "datetime": f"{trade_date:%Y-%m-%d} 09:35:00",
+                "symbol": latest.symbol,
+                "open": 14.69,
+                "high": 14.90,
+                "low": 14.10,
+                "close": 14.21,
+            }]
+        )
+
+        account, _, summary = run_paper_day(
+            features,
+            model,
+            TradingConfig(),
+            state_file=state_file,
+            trades_file=root / "trades.csv",
+            daily_file=root / "daily.csv",
+            settle=True,
+            open_new=False,
+            minute_bars=minute_bars,
+            sell_mode="morning",
+        )
+
+        self.assertEqual(summary["closed_trades"], 0)
+        self.assertEqual(len(account.positions), 1)
+
+    def test_large_pullback_loss_sells_unless_return_below_five_percent(self) -> None:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        price_file = root / "daily_prices.csv"
+        write_sample_prices(price_file, symbols=24, days=90)
+        features = build_feature_frame(read_prices(price_file))
+        model, _ = train_logistic(features, epochs=50)
+        latest = features.iloc[-1]
+        signal_date = pd.to_datetime(latest["date"])
+        trade_date = signal_date + pd.offsets.BDay(1)
+
+        base_price = float(latest["close"])
+
+        def run_case(close_ratio: float, suffix: str) -> tuple[PaperAccount, dict]:
+            state_file = root / f"account_{suffix}.json"
+            save_account(
+                PaperAccount(
+                    initial_cash=100_000,
+                    cash=100_000 - (base_price * 1_000 + 5),
+                    positions=[
+                        Position(
+                            latest.symbol,
+                            latest["name"],
+                            latest.board,
+                            signal_date.strftime("%Y-%m-%d"),
+                            1_000,
+                            base_price,
+                            base_price * 1_000 + 5,
+                            0.5,
+                        )
+                    ],
+                ),
+                state_file,
+            )
+            minute_bars = pd.DataFrame(
+                [{
+                    "datetime": f"{trade_date:%Y-%m-%d} 09:35:00",
+                    "symbol": latest.symbol,
+                    "open": base_price,
+                    "high": base_price * 1.01,
+                    "low": base_price * close_ratio,
+                    "close": base_price * close_ratio,
+                }]
+            )
+            account, _, summary = run_paper_day(
+                features,
+                model,
+                TradingConfig(),
+                state_file=state_file,
+                trades_file=root / f"trades_{suffix}.csv",
+                daily_file=root / f"daily_{suffix}.csv",
+                settle=True,
+                open_new=False,
+                minute_bars=minute_bars,
+                sell_mode="morning",
+            )
+            return account, summary
+
+        sold_account, sold_summary = run_case(0.97, "moderate")
+        deferred_account, deferred_summary = run_case(0.94, "severe")
+
+        self.assertEqual(sold_summary["closed_trades"], 1)
+        self.assertFalse(sold_account.positions)
+        self.assertEqual(deferred_summary["closed_trades"], 0)
+        self.assertEqual(len(deferred_account.positions), 1)
+
     def test_buy_uses_newer_minute_date(self) -> None:
         tmp = TemporaryDirectory()
         self.addCleanup(tmp.cleanup)

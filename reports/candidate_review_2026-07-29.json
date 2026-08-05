@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-29",
+  "result_date": "2026-07-30",
+  "top10_hit_rate": 0.1111111111111111,
+  "top10_evaluated_count": 9,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "603580.SH",
+      "name": "艾艾精工",
+      "score": 0.9916169131709912,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "603400.SH",
+      "name": "DR华之杰",
+      "score": 0.9675481448504616,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "300530.SZ",
+      "name": "领湃科技",
+      "score": 0.9652930893456886,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "002083.SZ",
+      "name": "孚日股份",
+      "score": 0.96301495011541,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "002141.SZ",
+      "name": "贤丰控股",
+      "score": 0.9464206515003876,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "002498.SZ",
+      "name": "汉缆股份",
+      "score": 0.945129901951739,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "688260.SH",
+      "name": "昀冢科技",
+      "score": 0.9440409015496872,
+      "hit_limit": true,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "002580.SZ",
+      "name": "圣阳股份",
+      "score": 0.9426032025934784,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "603399.SH",
+      "name": "永杉锂业",
+      "score": 0.9366298420350894,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "300333.SZ",
+      "name": "兆日科技",
+      "score": 0.929196411571293,
+      "hit_limit": null,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}

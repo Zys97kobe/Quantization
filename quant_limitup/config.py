@@ -24,6 +24,10 @@ class TradingConfig:
     weak_market_max_positions: int = 1
     weak_market_max_position_pct: float = 0.20
     weak_market_min_score: float = 0.15
+    morning_opening_defer_return: float = -0.06
+    morning_pullback_threshold: float = -0.03
+    morning_pullback_min_loss: float = 200.0
+    morning_force_defer_return: float = -0.05
     buy_slippage_bps: float = 8.0
     sell_slippage_bps: float = 8.0
     commission_bps: float = 2.5

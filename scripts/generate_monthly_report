@@ -1,0 +1,22 @@
+#!/bin/zsh
+set -euo pipefail
+
+PROJECT_ROOT="${0:A:h:h}"
+RUNTIME_ROOT="${CODEX_RUNTIME_ROOT:-$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies}"
+NODE_BIN="${CODEX_NODE_BIN:-$RUNTIME_ROOT/node/bin/node}"
+ARTIFACT_TOOL_MODULE="${ARTIFACT_TOOL_MODULE:-$RUNTIME_ROOT/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs}"
+
+if [[ ! -x "$NODE_BIN" ]]; then
+  print -u2 "未找到表格运行环境：$NODE_BIN"
+  print -u2 "可通过 CODEX_NODE_BIN 指定 Node.js 可执行文件。"
+  exit 1
+fi
+
+if [[ ! -f "$ARTIFACT_TOOL_MODULE" ]]; then
+  print -u2 "未找到表格组件：$ARTIFACT_TOOL_MODULE"
+  print -u2 "可通过 ARTIFACT_TOOL_MODULE 指定 artifact-tool 模块文件。"
+  exit 1
+fi
+
+export ARTIFACT_TOOL_MODULE
+exec "$NODE_BIN" "$PROJECT_ROOT/scripts/generate_monthly_report.mjs" "$@"

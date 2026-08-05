@@ -1,0 +1,99 @@
+{
+  "signal_date": "2026-07-31",
+  "result_date": "2026-08-03",
+  "top10_hit_rate": 0.1111111111111111,
+  "top10_evaluated_count": 9,
+  "candidate_count": 10,
+  "evaluated_candidates": [
+    {
+      "candidate_rank": 1,
+      "symbol": "603221.SH",
+      "name": "爱丽家居",
+      "score": 0.9579479030705113,
+      "hit_limit": null,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 2,
+      "symbol": "603696.SH",
+      "name": "安记食品",
+      "score": 0.8757715564227606,
+      "hit_limit": false,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 3,
+      "symbol": "688260.SH",
+      "name": "昀冢科技",
+      "score": 0.8011361716965775,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 4,
+      "symbol": "688146.SH",
+      "name": "中船特气",
+      "score": 0.7491074334069245,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 5,
+      "symbol": "603580.SH",
+      "name": "艾艾精工",
+      "score": 0.7221654065749645,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 6,
+      "symbol": "000533.SZ",
+      "name": "顺钠股份",
+      "score": 0.6945297501702993,
+      "hit_limit": true,
+      "was_bought": true,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 7,
+      "symbol": "000566.SZ",
+      "name": "海南海药",
+      "score": 0.6931832762081037,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 8,
+      "symbol": "603556.SH",
+      "name": "海兴电力",
+      "score": 0.6905859603296973,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 9,
+      "symbol": "600475.SH",
+      "name": "华光环能",
+      "score": 0.681796776459278,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    },
+    {
+      "candidate_rank": 10,
+      "symbol": "000428.SZ",
+      "name": "华天酒店",
+      "score": 0.6751899296044617,
+      "hit_limit": false,
+      "was_bought": false,
+      "in_top10": true
+    }
+  ]
+}
