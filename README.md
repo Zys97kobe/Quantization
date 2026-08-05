@@ -125,6 +125,24 @@ python3 -m quant_limitup.cli make-launchd --time 15:10 --provider sina --paper -
 - `data/paper/candidate_reviews.csv`：每次候选复盘的信号日、结果日、命中数量和命中率历史，同时用于防止重复推送。
 - `reports/rank_history.csv`：按信号日永久保存的原始候选排名。
 
+## 月度收益日历
+
+按指定月份生成“日历视图 + 每日明细”的 Excel。每个日期取
+`data/paper/daily_returns.csv` 中最后一条账户快照作为日终结果：
+
+```bash
+./scripts/generate_monthly_report --month 2026-07
+```
+
+不传 `--month` 时，默认生成上一个自然月：
+
+```bash
+./scripts/generate_monthly_report
+```
+
+文件默认写入 `reports/monthly/YYYY-MM每日收益日历.xlsx`。如需同时保存两张工作表的
+PNG 预览，可增加 `--preview`；其他参数可通过 `--help` 查看。
+
 启用 macOS 定时任务：
 
 ```bash
