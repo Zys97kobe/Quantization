@@ -11,6 +11,7 @@ from .config import DEFAULT_PAPER_DAILY, DEFAULT_PAPER_STATE, DEFAULT_PAPER_TRAD
 from .data import limit_up_price
 from .filters import filter_tradeable
 from .model import LogisticLimitUpModel
+from .execution import ExecutionQuotes, prepare_execution_quotes, scheduled_sell_decision
 
 
 @dataclass
@@ -77,16 +78,28 @@ def run_paper_day(
             skipped.append("sell_already_ran")
         else:
             _settle_positions(account, day, current_date, config, trade_rows, minute_bars, sell_mode)
-            if sell_mode in {"eod", "force"}:
+            if sell_mode in {"eod", "force"} and not any(pd.Timestamp(pos.buy_date) < current_date for pos in account.positions):
                 account.last_sell_date = current_date_str
+            elif sell_mode == "force":
+                skipped.append("missing_force_quote")
 
     rank = rank_candidates(work, model, current_date.strftime("%Y-%m-%d"))
     opened = 0
+    buy_risk = None
     if open_new:
+        buy_risk = _buy_risk_context(rank, config)
         if account.last_buy_date == current_date_str:
             skipped.append("buy_already_ran")
         else:
-            opened = _open_positions(account, rank, day, current_date, config, trade_rows)
+            opened = _open_positions(
+                account,
+                rank,
+                day,
+                current_date,
+                config,
+                trade_rows,
+                buy_risk=buy_risk,
+            )
             if opened > 0:
                 account.last_buy_date = current_date_str
 
@@ -113,8 +126,24 @@ def run_paper_day(
         "closed_trades": closed_in_phase,
         "phase": _phase_name(settle, open_new, sell_mode),
     }
+    if buy_risk is not None:
+        summary.update({
+            "market_regime": buy_risk["market_regime"],
+            "market_regime_reason": buy_risk["market_regime_reason"],
+            "market_symbol_count": buy_risk["market_symbol_count"],
+            "market_limit_hit_rate": buy_risk["market_limit_hit_rate"],
+            "market_avg_return": buy_risk["market_avg_return"],
+            "market_failed_limit_rate": buy_risk["market_failed_limit_rate"],
+            "actual_max_positions": buy_risk["max_positions"],
+            "actual_max_position_pct": buy_risk["max_position_pct"],
+            "actual_min_score": buy_risk["min_score"],
+            "market_coverage_ratio": _first_market_metric(rank, "market_coverage_ratio"),
+            "market_expected_symbols": _first_market_metric(rank, "market_expected_symbols"),
+        })
     if skipped:
         summary["skipped"] = ",".join(skipped)
+    if "missing_force_quote" in skipped:
+        summary["note"] = "部分持仓缺少有效14:30报价，保留持仓，待数据补齐后重试。"
     append_csv(daily_file, [summary])
     return account, rank, summary
 
@@ -318,9 +347,13 @@ def _open_positions(
     current_date: pd.Timestamp,
     config: TradingConfig,
     trade_rows: list[dict],
+    buy_risk: dict | None = None,
 ) -> int:
     existing_symbols = {pos.symbol for pos in account.positions}
-    max_positions, max_position_pct, min_score = _buy_risk_limits(rank, config)
+    risk = buy_risk or _buy_risk_context(rank, config)
+    max_positions = int(risk["max_positions"])
+    max_position_pct = float(risk["max_position_pct"])
+    min_score = float(risk["min_score"])
     candidates = filter_tradeable(rank[rank["score"] >= min_score])
     if candidates.empty:
         return 0
@@ -377,21 +410,90 @@ def _open_positions(
 
 
 def _buy_risk_limits(rank: pd.DataFrame, config: TradingConfig) -> tuple[int, float, float]:
+    risk = _buy_risk_context(rank, config)
+    return int(risk["max_positions"]), float(risk["max_position_pct"]), float(risk["min_score"])
+
+
+def _buy_risk_context(rank: pd.DataFrame, config: TradingConfig) -> dict:
     max_positions = config.max_positions_per_day
     max_position_pct = config.max_position_pct
     min_score = config.min_score_to_buy
-    if rank.empty or "market_limit_hits" not in rank.columns:
-        return max_positions, max_position_pct, min_score
 
-    market_limit_hits = pd.to_numeric(rank["market_limit_hits"], errors="coerce").dropna()
-    if market_limit_hits.empty:
-        return max_positions, max_position_pct, min_score
-    current_limit_hits = float(market_limit_hits.iloc[0])
-    if current_limit_hits < config.weak_market_limit_hits:
+    symbol_count = _first_market_metric(rank, "market_symbol_count")
+    limit_hit_rate = _first_market_metric(rank, "market_limit_hit_rate")
+    market_return = _first_market_metric(rank, "market_ret")
+    limit_hits = _first_market_metric(rank, "market_limit_hits")
+    failed_limit_hits = _first_market_metric(rank, "market_failed_limit_hits")
+    failed_limit_rate = None
+    if limit_hits is not None and limit_hits > 0 and failed_limit_hits is not None:
+        failed_limit_rate = failed_limit_hits / limit_hits
+
+    if "market_data_eligible" in rank.columns:
+        eligible = rank["market_data_eligible"].astype(str).str.lower().isin(["true", "1", "1.0"])
+        if rank.empty or not eligible.all():
+            reasons = rank.get("market_coverage_reason", pd.Series(dtype=str)).dropna().astype(str)
+            return {
+                "market_regime": "insufficient",
+                "market_regime_reason": reasons.iloc[0] if not reasons.empty else "行情覆盖校验未通过，暂停新增买入",
+                "market_symbol_count": int(symbol_count) if symbol_count is not None else None,
+                "market_limit_hit_rate": limit_hit_rate,
+                "market_avg_return": market_return,
+                "market_failed_limit_rate": failed_limit_rate,
+                "weak_signal_count": 0,
+                "max_positions": 0,
+                "max_position_pct": 0.0,
+                "min_score": min_score,
+            }
+
+    sufficient_coverage = (
+        symbol_count is not None
+        and symbol_count >= config.weak_market_min_symbol_count
+    )
+    signals: list[str] = []
+    if limit_hit_rate is not None and limit_hit_rate < config.weak_market_limit_hit_rate:
+        signals.append(f"涨停率{limit_hit_rate * 100:.2f}%偏低")
+    if market_return is not None and market_return <= config.weak_market_avg_return:
+        signals.append(f"市场平均涨幅{market_return * 100:.2f}%偏弱")
+    if failed_limit_rate is not None and failed_limit_rate >= config.weak_market_failed_limit_rate:
+        signals.append(f"炸板率{failed_limit_rate * 100:.2f}%偏高")
+
+    crash = market_return is not None and market_return <= config.weak_market_crash_return
+    is_weak = bool(crash or (sufficient_coverage and len(signals) >= config.weak_market_min_signals))
+    if is_weak:
         max_positions = min(max_positions, config.weak_market_max_positions)
         max_position_pct = min(max_position_pct, config.weak_market_max_position_pct)
         min_score = max(min_score, config.weak_market_min_score)
-    return max_positions, max_position_pct, min_score
+        regime = "weak"
+        reason = "；".join(signals) if signals else "市场平均跌幅达到极弱阈值"
+    elif not sufficient_coverage:
+        regime = "insufficient"
+        covered = "未知" if symbol_count is None else str(int(symbol_count))
+        reason = f"行情仅覆盖{covered}只，低于{config.weak_market_min_symbol_count}只，不启用弱市限仓"
+    else:
+        regime = "normal"
+        reason = "组合弱市信号不足"
+
+    return {
+        "market_regime": regime,
+        "market_regime_reason": reason,
+        "market_symbol_count": int(symbol_count) if symbol_count is not None else None,
+        "market_limit_hit_rate": limit_hit_rate,
+        "market_avg_return": market_return,
+        "market_failed_limit_rate": failed_limit_rate,
+        "weak_signal_count": len(signals),
+        "max_positions": max_positions,
+        "max_position_pct": max_position_pct,
+        "min_score": min_score,
+    }
+
+
+def _first_market_metric(rank: pd.DataFrame, column: str) -> float | None:
+    if rank.empty or column not in rank.columns:
+        return None
+    values = pd.to_numeric(rank[column], errors="coerce").dropna()
+    if values.empty:
+        return None
+    return float(values.iloc[0])
 
 
 def _mark_to_market(account: PaperAccount, day: pd.DataFrame) -> float:
@@ -437,45 +539,15 @@ def _sell_decision(
     sell_mode: str,
     config: TradingConfig,
 ) -> tuple[float, bool, str] | None:
-    limit_price = float(row["limit_up_price"])
-    if sell_mode == "morning":
-        bars = _position_minutes(pos.symbol, current_date, minute_bars)
-        morning = bars[(bars["time"] >= "09:30") & (bars["time"] <= "10:30")] if not bars.empty else bars
-        if morning.empty:
-            return None
-        prev_close = pd.to_numeric(pd.Series([row.get("prev_close")]), errors="coerce").iloc[0]
-        if pd.isna(prev_close) or float(prev_close) <= 0:
-            prev_close = pos.buy_price
-        opening_drop = float(morning.iloc[0]["open"]) / float(prev_close) - 1
-        if opening_drop <= config.morning_opening_defer_return:
-            return None
-        if float(morning["high"].max()) >= limit_price * 0.999:
-            return limit_price, True, "morning_limit_hit"
-        running_high = morning["high"].cummax()
-        pullback = morning["close"] / running_high - 1
-        hit_pullback = morning[pullback <= config.morning_pullback_threshold]
-        for candidate in hit_pullback.itertuples(index=False):
-            raw_sell_price = float(candidate.close)
-            pnl = _estimated_sell_pnl(pos, raw_sell_price, config)
-            return_pct = pnl / max(pos.cost, 1)
-            if return_pct < config.morning_force_defer_return:
-                return None
-            if pnl < -config.morning_pullback_min_loss:
-                return raw_sell_price, False, "morning_pullback"
+    if sell_mode in {"morning", "force"}:
+        quotes = prepare_execution_quotes(minute_bars)
+        return scheduled_sell_decision(pos, row, quotes.get(pos.symbol, current_date), sell_mode, config)
+    # Explicit end-of-day settlement is a close-price approximation. A daily
+    # high cannot establish an executable fill at a scheduled intraday time.
+    close = float(row["close"])
+    if not pd.notna(close) or close <= 0 or close == float("inf"):
         return None
-
-    if sell_mode == "force":
-        bars = _position_minutes(pos.symbol, current_date, minute_bars)
-        if not bars.empty:
-            before_force = bars[bars["time"] <= "14:50"]
-            price = float((before_force if not before_force.empty else bars).iloc[-1]["close"])
-            hit_limit = float(bars["high"].max()) >= limit_price * 0.999
-            return (limit_price if hit_limit else price), hit_limit, "force_sell"
-        hit_limit = float(row["high"]) >= limit_price * 0.999
-        return (limit_price if hit_limit else float(row["close"])), hit_limit, "force_sell_daily"
-
-    hit_limit = float(row["high"]) >= limit_price * 0.999
-    return (limit_price if hit_limit else float(row["close"])), hit_limit, "eod_settle"
+    return close, close >= float(row["limit_up_price"]) * 0.999, "eod_close"
 
 
 def _estimated_sell_pnl(pos: Position, raw_sell_price: float, config: TradingConfig) -> float:

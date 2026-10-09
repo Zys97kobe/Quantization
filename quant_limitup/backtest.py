@@ -33,9 +33,18 @@ def rank_candidates(frame: pd.DataFrame, model: LogisticLimitUpModel, date: str 
         "ret_3",
         "ret_5",
         "volume_ratio_5",
+        "market_ret",
         "market_limit_hits",
         "market_limit_hit_rate",
         "market_failed_limit_hits",
+        "market_symbol_count",
+        "market_data_eligible",
+        "market_coverage_ratio",
+        "market_expected_symbols",
+        "market_covered_symbols",
+        "market_coverage_reason",
+        "market_sh_coverage_ratio",
+        "market_sz_coverage_ratio",
         "board_limit_hits",
         "limit_hits_5",
         "failed_limit_hits_5",
@@ -50,75 +59,91 @@ def run_backtest(
     frame: pd.DataFrame,
     model: LogisticLimitUpModel,
     config: TradingConfig | None = None,
+    *,
+    scores: pd.Series | None = None,
+    minute_bars=None,
 ) -> tuple[pd.DataFrame, dict]:
+    """Replay sell-morning, sell-force and buy in order, without writing accounts.
+
+    A missing minute archive enables an explicitly labelled daily-close proxy
+    for research only. It is not an intraday execution backtest.
+    """
+    # Local import avoids the paper module's rank_candidates import cycle.
+    from .paper import PaperAccount, _open_positions, _settle_positions, _mark_to_market
+    from .execution import prepare_execution_quotes
+
     cfg = config or TradingConfig()
-    df = frame.dropna(subset=["next_high", "next_close", "next_limit_up_price"]).copy()
-    df = df.sort_values(["date", "symbol"])
-    df["score"] = model.predict_proba(df)
-    cash = cfg.initial_cash
-    equity_curve = []
-    trades = []
-
-    for date, day in df.groupby("date", sort=True):
-        picks = (
-            filter_tradeable(day[day["score"] >= cfg.min_score_to_buy])
-            .sort_values("score", ascending=False)
-        )
-        if picks.empty:
-            equity_curve.append({"date": date, "equity": cash})
-            continue
-
-        day_start_cash = cash
-        available_cash = cash
-        pending_proceeds = 0.0
-        opened = 0
-        for row in picks.itertuples(index=False):
-            if opened >= cfg.max_positions_per_day:
-                break
-            capital_per_trade = min(available_cash, day_start_cash * cfg.max_position_pct)
-            buy_price = row.close * (1 + cfg.buy_slippage_bps / 10_000)
-            shares = int(capital_per_trade / buy_price / 100) * 100
-            if shares <= 0:
-                continue
-            gross_buy = shares * buy_price
-            buy_fee = max(gross_buy * cfg.commission_bps / 10_000, cfg.min_commission)
-            cost = gross_buy + buy_fee
-            if cost > available_cash:
-                continue
-            available_cash -= cost
-
-            hit_limit = row.next_high >= row.next_limit_up_price * 0.999
-            raw_sell_price = row.next_limit_up_price if hit_limit else row.next_close
-            sell_price = raw_sell_price * (1 - cfg.sell_slippage_bps / 10_000)
-            gross_sell = shares * sell_price
-            sell_fee = max(gross_sell * cfg.commission_bps / 10_000, cfg.min_commission)
-            stamp_tax = gross_sell * cfg.stamp_tax_bps / 10_000
-            proceeds = gross_sell - sell_fee - stamp_tax
-            pending_proceeds += proceeds
-            pnl = gross_sell - sell_fee - stamp_tax - gross_buy - buy_fee
-            opened += 1
-
-            trades.append(
-                {
-                    "date": date,
-                    "symbol": row.symbol,
-                    "name": row.name,
-                    "score": row.score,
-                    "shares": shares,
-                    "buy_price": buy_price,
-                    "sell_price": sell_price,
-                    "hit_limit": bool(hit_limit),
-                    "pnl": pnl,
-                    "return_pct": pnl / max(gross_buy + buy_fee, 1),
-                    "cash_after": available_cash + pending_proceeds,
-                }
-            )
-        cash = available_cash + pending_proceeds
-        equity_curve.append({"date": date, "equity": cash})
-
+    df = frame.copy()
+    df["date"] = pd.to_datetime(df["date"]).dt.normalize().astype("datetime64[ns]")
+    if scores is not None:
+        if not frame.index.is_unique or not scores.index.is_unique or not frame.index.isin(scores.index).all():
+            raise ValueError("Precomputed scores must have a unique index covering every feature row.")
+        df["score"] = pd.to_numeric(scores.reindex(frame.index), errors="coerce")
+        if df["score"].isna().any() or not df["score"].between(0.0, 1.0).all():
+            raise ValueError("Precomputed scores must be finite probabilities between zero and one.")
+    if "target_end_date" not in df:
+        df["target_end_date"] = df.sort_values("date").groupby("symbol")["date"].shift(-1)
+    df["target_end_date"] = pd.to_datetime(df["target_end_date"], errors="coerce").dt.normalize().astype("datetime64[ns]")
+    df = df.dropna(subset=["next_close", "next_limit_up_price", "target_end_date"])
+    df = df[df.target_end_date > df.date].sort_values(["date", "symbol"])
+    if scores is None and not df.empty:
+        df["score"] = model.predict_proba(df)
+    quotes = prepare_execution_quotes(minute_bars)
+    intraday = minute_bars is not None
+    signals = {date: day for date, day in df.groupby("date", sort=True)}
+    # Outcomes provide quotes for final liquidation dates outside a selection
+    # slice. They never provide scores or entry decisions for those dates.
+    outcomes = df.copy()
+    outcomes["prev_close"] = outcomes["close"]
+    outcomes["date"] = outcomes["target_end_date"]
+    outcomes["close"] = outcomes["next_close"]
+    outcomes["limit_up_price"] = outcomes["next_limit_up_price"]
+    # Prefer outcome rows: their prior close and limit are available even in
+    # minimal externally scored fixtures that omit daily feature columns.
+    price_columns = ["date", "symbol", "name", "board", "close", "prev_close", "limit_up_price"]
+    observed = frame.assign(date=pd.to_datetime(frame["date"]).dt.normalize().astype("datetime64[ns]")).reindex(columns=price_columns)
+    prices = pd.concat([observed, outcomes[price_columns]], ignore_index=True)
+    prices = prices.drop_duplicates(["date", "symbol"], keep="last")
+    days = {date: day for date, day in prices.groupby("date", sort=True)}
+    dates = sorted(set(signals) | set(outcomes.date))
+    account = PaperAccount(initial_cash=cfg.initial_cash, cash=cfg.initial_cash)
+    trades, curve = [], []
+    missing_quotes = set()
+    for date in dates:
+        day = days[date]
+        held = {pos.symbol: pos for pos in account.positions}
+        sales = []
+        if intraday:
+            for pos in account.positions:
+                quote = quotes.get(pos.symbol, date)
+                if not quote.get("morning_valid"):
+                    missing_quotes.add((pos.symbol, date, "10:30"))
+            _settle_positions(account, day, date, cfg, sales, quotes, "morning")
+            for pos in account.positions:
+                if not quotes.get(pos.symbol, date).get("force_valid"):
+                    missing_quotes.add((pos.symbol, date, "14:30"))
+            _settle_positions(account, day, date, cfg, sales, quotes, "force")
+        else:
+            _settle_positions(account, day, date, cfg, sales, None, "eod")
+        for sale in sales:
+            pos = held[sale["symbol"]]
+            trades.append({
+                **sale, "date": pd.Timestamp(pos.buy_date), "sell_date": date,
+                "sell_time": "10:30" if sale["reason"].startswith("morning") else "14:30" if intraday else "15:00",
+                "shares": pos.shares, "buy_price": pos.buy_price, "sell_price": sale["price"],
+                "execution_source": "scheduled_minutes" if intraday else "daily_close_proxy",
+            })
+        if date in signals:
+            rank = filter_tradeable(signals[date]).sort_values("score", ascending=False)
+            _open_positions(account, rank, signals[date], date, cfg, [])
+        curve.append({"date": date, "equity": _mark_to_market(account, day)})
     trades_df = pd.DataFrame(trades)
-    curve = pd.DataFrame(equity_curve)
-    summary = _summary(trades_df, curve, cfg.initial_cash)
+    summary = _summary(trades_df, pd.DataFrame(curve), cfg.initial_cash)
+    summary.update({
+        "execution_mode": "scheduled_minutes" if intraday else "daily_close_proxy",
+        "execution_complete": bool(intraday and not missing_quotes and not account.positions),
+        "missing_execution_quotes": len(missing_quotes), "open_positions": len(account.positions),
+    })
     return trades_df, summary
 
 
@@ -132,7 +157,7 @@ def _summary(trades: pd.DataFrame, curve: pd.DataFrame, initial_cash: float) -> 
     if curve.empty:
         max_drawdown = 0.0
     else:
-        running_max = curve["equity"].cummax()
+        running_max = curve["equity"].cummax().clip(lower=initial_cash)
         drawdown = curve["equity"] / running_max - 1
         max_drawdown = float(drawdown.min())
     if trades.empty:

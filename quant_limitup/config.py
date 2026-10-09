@@ -20,7 +20,14 @@ class TradingConfig:
     max_positions_per_day: int = 3
     max_position_pct: float = 0.34
     min_score_to_buy: float = 0.005
-    weak_market_limit_hits: int = 80
+    min_market_coverage: float = 0.90
+    min_exchange_coverage: float = 0.85
+    weak_market_min_symbol_count: int = 1_000
+    weak_market_limit_hit_rate: float = 0.015
+    weak_market_avg_return: float = -0.005
+    weak_market_failed_limit_rate: float = 0.45
+    weak_market_min_signals: int = 2
+    weak_market_crash_return: float = -0.02
     weak_market_max_positions: int = 1
     weak_market_max_position_pct: float = 0.20
     weak_market_min_score: float = 0.15

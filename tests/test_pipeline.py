@@ -20,6 +20,7 @@ from quant_limitup.model import train_logistic
 from quant_limitup.paper import (
     PaperAccount,
     Position,
+    _buy_risk_context,
     _daily_trade_counts,
     _previous_equity,
     run_paper_day,
@@ -30,6 +31,22 @@ from quant_limitup.strategy import build_learning_report, optimize_threshold
 from quant_limitup.messaging import _daily_text
 from quant_limitup.providers import fetch_sina_minute_bars, sina_minute_market_is_current
 from quant_limitup.cli import append_daily_summary_once, main, minute_data_is_current, safe_notify, safe_update_sina_stock_pool
+
+def complete_morning_bars(bars):
+    """Expand the test's price regimes to an observed 5-minute morning."""
+    work = bars.copy()
+    work["datetime"] = pd.to_datetime(work["datetime"])
+    parts = []
+    for (_, date), group in work.groupby(["symbol", work.datetime.dt.normalize()]):
+        morning = group[group.datetime.dt.strftime("%H:%M") <= "10:30"].set_index("datetime")
+        times = pd.date_range(date + pd.Timedelta(hours=9, minutes=35), date + pd.Timedelta(hours=10, minutes=30), freq="5min")
+        if not morning.empty:
+            expanded = morning.reindex(morning.index.union(times)).sort_index().ffill().bfill().reindex(times)
+            expanded.index.name = "datetime"
+            parts.append(expanded.reset_index())
+        parts.append(group[group.datetime.dt.strftime("%H:%M") > "10:30"])
+    return pd.concat(parts, ignore_index=True)
+
 
 class PipelineTest(unittest.TestCase):
     def test_sample_pipeline_runs(self) -> None:
@@ -69,6 +86,7 @@ class PipelineTest(unittest.TestCase):
         rank = rank_candidates(features, model)
         self.assertFalse(rank.empty)
         self.assertTrue(rank["score"].is_monotonic_decreasing)
+        self.assertTrue({"market_ret", "market_symbol_count"}.issubset(rank.columns))
 
         trades, summary = run_backtest(features, model)
         self.assertIn("total_return", summary)
@@ -76,6 +94,48 @@ class PipelineTest(unittest.TestCase):
 
         _, optimized = optimize_threshold(features, model, TradingConfig())
         self.assertIn(optimized["max_position_pct"], {0.30, 0.34, 0.40, 0.50})
+
+    def test_market_regime_uses_rates_instead_of_absolute_limit_hit_count(self) -> None:
+        config = TradingConfig(max_position_pct=0.40)
+        normal = pd.DataFrame([{
+            "market_symbol_count": 5_500,
+            "market_limit_hits": 74,
+            "market_limit_hit_rate": 0.021,
+            "market_ret": 0.012,
+            "market_failed_limit_hits": 20,
+        }])
+        risk = _buy_risk_context(normal, config)
+        self.assertEqual(risk["market_regime"], "normal")
+        self.assertEqual(risk["max_positions"], 3)
+        self.assertEqual(risk["max_position_pct"], 0.40)
+
+        weak = normal.copy()
+        weak.loc[0, "market_limit_hit_rate"] = 0.010
+        weak.loc[0, "market_ret"] = -0.012
+        weak.loc[0, "market_failed_limit_hits"] = 40
+        risk = _buy_risk_context(weak, config)
+        self.assertEqual(risk["market_regime"], "weak")
+        self.assertEqual(risk["max_positions"], 1)
+        self.assertEqual(risk["max_position_pct"], 0.20)
+        self.assertEqual(risk["min_score"], 0.15)
+
+    def test_incomplete_market_snapshot_does_not_false_trigger_weak_mode(self) -> None:
+        config = TradingConfig(max_position_pct=0.40)
+        incomplete = pd.DataFrame([{
+            "market_symbol_count": 696,
+            "market_limit_hits": 29,
+            "market_limit_hit_rate": 0.0417,
+            "market_ret": 0.0075,
+            "market_failed_limit_hits": 8,
+        }])
+        risk = _buy_risk_context(incomplete, config)
+        self.assertEqual(risk["market_regime"], "insufficient")
+        self.assertEqual(risk["max_positions"], 3)
+
+        incomplete.loc[0, "market_ret"] = -0.03
+        risk = _buy_risk_context(incomplete, config)
+        self.assertEqual(risk["market_regime"], "weak")
+        self.assertEqual(risk["max_positions"], 1)
 
     def test_prediction_accuracy_file_upserts(self) -> None:
         tmp = TemporaryDirectory()
@@ -138,7 +198,7 @@ class PipelineTest(unittest.TestCase):
             daily_file=root / "daily.csv",
             settle=True,
             open_new=False,
-            minute_bars=minute_bars,
+            minute_bars=complete_morning_bars(minute_bars),
             sell_mode="morning",
         )
 
@@ -211,7 +271,7 @@ class PipelineTest(unittest.TestCase):
             daily_file=root / "daily.csv",
             settle=True,
             open_new=False,
-            minute_bars=minute_bars,
+            minute_bars=complete_morning_bars(minute_bars),
             sell_mode="morning",
         )
 
@@ -272,7 +332,7 @@ class PipelineTest(unittest.TestCase):
                     "close": prev_close * 0.88,
                 },
                 {
-                    "datetime": f"{trade_date:%Y-%m-%d} 14:50:00",
+                    "datetime": f"{trade_date:%Y-%m-%d} 14:30:00",
                     "symbol": latest.symbol,
                     "open": prev_close * 0.90,
                     "high": prev_close * 0.91,
@@ -291,7 +351,7 @@ class PipelineTest(unittest.TestCase):
             daily_file=daily_file,
             settle=True,
             open_new=False,
-            minute_bars=minute_bars,
+            minute_bars=complete_morning_bars(minute_bars),
             sell_mode="morning",
         )
 
@@ -307,7 +367,7 @@ class PipelineTest(unittest.TestCase):
             daily_file=daily_file,
             settle=True,
             open_new=False,
-            minute_bars=minute_bars,
+            minute_bars=complete_morning_bars(minute_bars),
             sell_mode="force",
         )
 
@@ -368,7 +428,7 @@ class PipelineTest(unittest.TestCase):
             daily_file=root / "daily.csv",
             settle=True,
             open_new=False,
-            minute_bars=minute_bars,
+            minute_bars=complete_morning_bars(minute_bars),
             sell_mode="morning",
         )
 
@@ -429,7 +489,7 @@ class PipelineTest(unittest.TestCase):
                 daily_file=root / f"daily_{suffix}.csv",
                 settle=True,
                 open_new=False,
-                minute_bars=minute_bars,
+                minute_bars=complete_morning_bars(minute_bars),
                 sell_mode="morning",
             )
             return account, summary
@@ -471,7 +531,7 @@ class PipelineTest(unittest.TestCase):
             daily_file=root / "daily.csv",
             settle=False,
             open_new=True,
-            minute_bars=minute_bars,
+            minute_bars=complete_morning_bars(minute_bars),
         )
 
         self.assertEqual(summary["date"], trade_date.strftime("%Y-%m-%d"))

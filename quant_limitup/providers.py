@@ -11,6 +11,8 @@ from time import sleep
 import pandas as pd
 import requests
 
+from .minute_history import update_minute_history
+
 
 def fetch_akshare_daily_prices(
     out_file: Path,
@@ -154,6 +156,164 @@ def fetch_sina_daily_prices(
     return data
 
 
+def fetch_sina_spot_prices(
+    symbols_file: Path,
+    expected_date: str | None = None,
+    observed_at: pd.Timestamp | None = None,
+    batch_size: int = 80,
+    workers: int = 8,
+    accept_closed_session: bool = False,
+) -> pd.DataFrame:
+    """Read fresh, dated Sina quotes for a pre-close paper-buy snapshot.
+
+    The historical K-line endpoint can publish today's bar after the buying
+    window. These quotes carry their own date and time, so stale responses are
+    excluded before the ordinary whole-market coverage gate is applied.
+    """
+    now = pd.Timestamp.now() if observed_at is None else pd.Timestamp(observed_at)
+    target = pd.Timestamp(expected_date).normalize() if expected_date else now.normalize()
+    if accept_closed_session and not target + pd.Timedelta(hours=15, minutes=40) <= now < target + pd.Timedelta(days=1):
+        raise ValueError("Closed-session Sina quotes require the same trading day after 15:40")
+    pool = read_symbol_pool(symbols_file)
+    pool = pool[pool["symbol"].str.endswith((".SH", ".SZ"))]
+    items = list(pool.itertuples(index=False))
+    batches = [items[i:i + batch_size] for i in range(0, len(items), batch_size)]
+
+    def fetch_batch(batch) -> list[dict]:
+        by_code = {_to_sina_symbol(item.symbol): item for item in batch}
+        url = "https://hq.sinajs.cn/list=" + ",".join(by_code)
+        response = requests.get(url, timeout=6, headers={
+            "Referer": "https://finance.sina.com.cn/", "User-Agent": "Mozilla/5.0",
+        })
+        response.raise_for_status()
+        response.encoding = "gbk"
+        checked_at = pd.Timestamp.now() if observed_at is None else now
+        rows = []
+        for code, body in re.findall(r'var hq_str_(\w+)="([^"]*)";', response.text):
+            item = by_code.get(code)
+            if item is None:
+                continue
+            fields = body.split(",")
+            if len(fields) < 32:
+                continue
+            stamp = pd.to_datetime(f"{fields[30]} {fields[31]}", errors="coerce")
+            if pd.isna(stamp) or stamp.normalize() != target:
+                continue
+            if accept_closed_session:
+                if not target + pd.Timedelta(hours=15) <= stamp <= target + pd.Timedelta(hours=15, minutes=40):
+                    continue
+            elif not checked_at - pd.Timedelta(minutes=10) <= stamp <= checked_at + pd.Timedelta(minutes=1):
+                continue
+            try:
+                open_price, prev_close, close, high, low, volume, amount = (
+                    float(fields[index]) for index in (1, 2, 3, 4, 5, 8, 9)
+                )
+            except ValueError:
+                continue
+            if not (prev_close > 0 and 0 < open_price <= high and 0 < low <= min(open_price, close)
+                    and 0 < close <= high and volume >= 0 and amount >= 0):
+                continue
+            rows.append({
+                "date": target.strftime("%Y-%m-%d"), "symbol": item.symbol,
+                "name": item.name, "board": item.board, "is_st": item.is_st,
+                "open": open_price, "high": high, "low": low, "close": close,
+                "volume": volume, "amount": amount, "turnover": 0.0,
+                "free_float_mkt_cap": 0.0,
+                "quote_prev_close": prev_close,
+            })
+        return rows
+
+    rows = []
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = [executor.submit(fetch_batch, batch) for batch in batches]
+        for future in as_completed(futures):
+            try:
+                rows.extend(future.result())
+            except Exception:  # noqa: BLE001 - coverage gate rejects partial snapshots.
+                continue
+    if not rows:
+        raise RuntimeError("No fresh Sina spot quotes fetched")
+    return pd.DataFrame(rows).drop_duplicates("symbol", keep="last")
+
+
+def fetch_tencent_spot_prices(
+    symbols_file: Path,
+    expected_date: str | None = None,
+    observed_at: pd.Timestamp | None = None,
+    batch_size: int = 80,
+    workers: int = 6,
+) -> pd.DataFrame:
+    """Read timestamped Tencent quotes without using its delayed daily K-line API."""
+    now = pd.Timestamp.now() if observed_at is None else pd.Timestamp(observed_at)
+    target = pd.Timestamp(expected_date).normalize() if expected_date else now.normalize()
+    pool = read_symbol_pool(symbols_file)
+    pool = pool[pool["symbol"].str.endswith((".SH", ".SZ"))]
+    items = list(pool.itertuples(index=False))
+    batches = [items[i:i + batch_size] for i in range(0, len(items), batch_size)]
+
+    def fetch_batch(batch) -> list[dict]:
+        by_code = {_to_tencent_symbol(item.symbol): item for item in batch}
+        response = requests.get(
+            "https://qt.gtimg.cn/q=" + ",".join(by_code), timeout=6,
+            headers={"Referer": "https://gu.qq.com/", "User-Agent": "Mozilla/5.0"},
+        )
+        response.raise_for_status()
+        response.encoding = "gbk"
+        checked_at = pd.Timestamp.now() if observed_at is None else now
+        rows = []
+        for code, body in re.findall(r'v_(\w+)="([^"]*)";', response.text):
+            item = by_code.get(code)
+            if item is None:
+                continue
+            fields = body.split("~")
+            if len(fields) < 38:
+                continue
+            stamp = pd.to_datetime(fields[30], format="%Y%m%d%H%M%S", errors="coerce")
+            if pd.isna(stamp) or stamp.normalize() != target:
+                continue
+            if not checked_at - pd.Timedelta(minutes=10) <= stamp <= checked_at + pd.Timedelta(minutes=1):
+                continue
+            try:
+                close, prev_close, open_price, high, low, raw_volume = (
+                    float(fields[index]) for index in (3, 4, 5, 33, 34, 6)
+                )
+                amount = float(fields[35].split("/")[2])
+            except (ValueError, IndexError):
+                continue
+            if not (prev_close > 0 and 0 < open_price <= high and 0 < low <= min(open_price, close)
+                    and 0 < close <= high and raw_volume > 0 and amount >= 0):
+                continue
+            # Tencent reports most A shares in lots and STAR shares in shares.
+            # Infer the unit from the independently reported transaction amount.
+            ratio = amount / (raw_volume * close)
+            if 0.5 <= ratio <= 2:
+                volume = raw_volume
+            elif 50 <= ratio <= 200:
+                volume = raw_volume * 100
+            else:
+                continue
+            rows.append({
+                "date": target.strftime("%Y-%m-%d"), "symbol": item.symbol,
+                "name": item.name, "board": item.board, "is_st": item.is_st,
+                "open": open_price, "high": high, "low": low, "close": close,
+                "volume": volume, "amount": amount, "turnover": 0.0,
+                "free_float_mkt_cap": 0.0, "quote_prev_close": prev_close,
+            })
+        return rows
+
+    rows = []
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = [executor.submit(fetch_batch, batch) for batch in batches]
+        for future in as_completed(futures):
+            try:
+                rows.extend(future.result())
+            except Exception:  # noqa: BLE001 - whole-market coverage rejects partial results.
+                continue
+    if not rows:
+        raise RuntimeError("No fresh Tencent spot quotes fetched")
+    return pd.DataFrame(rows).drop_duplicates("symbol", keep="last")
+
+
 def fetch_tencent_daily_prices(
     out_file: Path,
     symbols_file: Path,
@@ -284,6 +444,7 @@ def fetch_sina_minute_bars(
             pd.DataFrame(failures, columns=["symbol", "error"]).to_csv(out_file.with_suffix(".failures.csv"), index=False)
         raise RuntimeError(f"No Sina minute data fetched. {detail}")
     data = pd.concat(rows, ignore_index=True).sort_values(["symbol", "datetime"])
+    update_minute_history(out_file, data)
     data.to_csv(out_file, index=False)
     if failures:
         pd.DataFrame(failures, columns=["symbol", "error"]).to_csv(out_file.with_suffix(".failures.csv"), index=False)

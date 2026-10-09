@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 from .config import EmailConfig
-from .messaging import candidate_review_text
+from .messaging import blocked_buy_text, candidate_review_text
 
 
 def load_email_config(path: Path) -> EmailConfig:
@@ -45,7 +45,9 @@ def send_daily_email(
     positions: pd.DataFrame | None = None,
     learning: dict | None = None,
 ) -> None:
-    top = rank.head(10)[["symbol", "name", "score", "close", "suggest_reason"]].copy()
+    top = pd.DataFrame()
+    if summary.get("skipped") != "buy_data_coverage":
+        top = rank.head(10)[["symbol", "name", "score", "close", "suggest_reason"]].copy()
     subject = _report_title(summary)
     body = _build_body(summary, top, buys, sells, positions, learning)
 
@@ -101,6 +103,8 @@ def _build_body(
     positions: pd.DataFrame | None,
     learning: dict | None,
 ) -> str:
+    if summary.get("skipped") == "buy_data_coverage":
+        return blocked_buy_text(summary)
     show_strategy = summary.get("phase") in {"buy", "full"}
     show_evaluation = (
         summary.get("phase") == "sell-morning"
@@ -122,6 +126,10 @@ def _build_body(
         lines.extend([
             f"优化阈值: {summary.get('optimized_threshold', 0):.4f}",
             f"优化单只仓位上限: {summary.get('optimized_max_position_pct', 0) * 100:.0f}%",
+            f"市场状态: {_market_regime_label(summary.get('market_regime'))}",
+            f"市场判断: {summary.get('market_regime_reason', '无')}",
+            f"实际买入限制: 最多{summary.get('actual_max_positions', 0)}只，"
+            f"单只{summary.get('actual_max_position_pct', 0) * 100:.0f}%",
             "",
             "今日买入:",
         ])
@@ -156,7 +164,13 @@ def _build_body(
     return "\n".join(lines)
 
 
+def _market_regime_label(value: str | None) -> str:
+    return {"weak": "弱市", "normal": "正常", "insufficient": "数据覆盖不足"}.get(value, "未知")
+
+
 def _report_title(summary: dict) -> str:
+    if summary.get("skipped") == "buy_data_coverage":
+        return f"Buy 暂停买入 - {summary['date']}"
     prefix = {
         "sell-morning": "Sell Morining",
         "sell-force": "Sell Force",

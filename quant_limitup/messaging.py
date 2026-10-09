@@ -92,6 +92,52 @@ def candidate_review_text(review: dict) -> str:
     return "\n".join(lines)
 
 
+def blocked_buy_text(summary: dict) -> str:
+    report = summary["data_quality"]
+    labels = {
+        "stale_price_snapshot": "行情日期过期",
+        "future_price_snapshot": "行情日期晚于运行日期",
+        "missing_price_snapshot": "缺少行情快照",
+        "total_coverage_below_threshold": "总体覆盖率不足",
+        "SH_coverage_below_threshold": "沪市覆盖率不足",
+        "SZ_coverage_below_threshold": "深市覆盖率不足",
+        "empty_tradeable_pool": "可交易股票池为空",
+        "no_valid_price_rows": "没有有效行情",
+        "unsupported_pool_exchange": "股票池包含不支持的交易所",
+    }
+    lines = [
+        f"Buy 暂停买入 - {summary['date']}",
+        f"阶段: {summary['phase']}",
+        "行情校验未通过，本次新增买入 0 只，未生成新候选。",
+        f"要求行情日期: {report.get('expected_date') or summary['date']}",
+        "",
+    ]
+    for attempt in report.get("attempts") or [report]:
+        source = {"tencent": "腾讯", "sina": "新浪"}.get(attempt.get("provider"), "行情")
+        lines.append(
+            f"{source}: 行情日期 {attempt.get('date') or '无'}，"
+            f"总体覆盖 {attempt.get('coverage_ratio', 0):.2%} "
+            f"({attempt.get('covered_symbols', 0)}/{attempt.get('expected_symbols', 0)})"
+        )
+        for exchange, data in attempt.get("exchanges", {}).items():
+            name = {"SH": "沪市", "SZ": "深市"}.get(exchange, exchange)
+            lines.append(f"  {name}覆盖: {data.get('coverage_ratio', 0):.2%}")
+        reasons = [labels.get(reason, "数据源抓取失败" if "fetch failed:" in reason else reason)
+                   for reason in attempt.get("reasons", [])]
+        if reasons:
+            lines.append("  原因: " + "；".join(reasons))
+    if "closed_trades" in summary:
+        lines.append(f"本次已结算持仓: {summary['closed_trades']} 笔")
+    if summary.get("settlement_skipped"):
+        reason = {
+            "no_sellable_positions": "没有可卖持仓",
+            "missing_valid_current_prices": "持仓缺少有效当日报价，保留账户等待重试",
+            "missing_previous_close": "持仓缺少前收盘价，保留账户等待重试",
+        }.get(summary["settlement_skipped"], summary["settlement_skipped"])
+        lines.append(f"持仓结算: {reason}")
+    return "\n".join(lines)
+
+
 def _daily_text(
     summary: dict,
     rank: pd.DataFrame,
@@ -100,6 +146,8 @@ def _daily_text(
     positions: pd.DataFrame | None,
     learning: dict | None,
 ) -> str:
+    if summary.get("skipped") == "buy_data_coverage":
+        return blocked_buy_text(summary)
     show_strategy = summary.get("phase") in {"buy", "full"}
     show_evaluation = (
         summary.get("phase") == "sell-morning"
@@ -121,6 +169,10 @@ def _daily_text(
         lines.extend([
             f"优化阈值: {summary.get('optimized_threshold', 0):.4f}",
             f"优化单只仓位上限: {summary.get('optimized_max_position_pct', 0) * 100:.0f}%",
+            f"市场状态: {_market_regime_label(summary.get('market_regime'))}",
+            f"市场判断: {summary.get('market_regime_reason', '无')}",
+            f"实际买入限制: 最多{summary.get('actual_max_positions', 0)}只，"
+            f"单只{summary.get('actual_max_position_pct', 0) * 100:.0f}%",
             "",
             "今日买入:",
         ])
@@ -155,6 +207,10 @@ def _daily_text(
     lines.append("")
     lines.append("说明: 当前为虚拟交易记录，不代表真实交易建议。")
     return "\n".join(lines)
+
+
+def _market_regime_label(value: str | None) -> str:
+    return {"weak": "弱市", "normal": "正常", "insufficient": "数据覆盖不足"}.get(value, "未知")
 
 
 def _report_title(summary: dict) -> str:

@@ -1,8 +1,18 @@
 {
-  "rows": 1351658,
-  "positive_rate": 0.02327511841013037,
-  "accuracy_at_0_5": 0.9768491733855753,
-  "precision_at_0_5": 0.527796161482462,
-  "recall_at_0_5": 0.050699300699300696,
-  "top_decile_hit_rate": 0.13095845818074206
+  "rows": 1356807,
+  "positive_rate": 0.022914091687321777,
+  "accuracy_at_0_5": 0.9771308668071436,
+  "precision_at_0_5": 0.510912343470483,
+  "recall_at_0_5": 0.04593116757799936,
+  "top_decile_hit_rate": 0.12911998820754716,
+  "tail_features": {
+    "enabled": false,
+    "reason": "insufficient_complete_history",
+    "available_rows": 0,
+    "available_dates": 0,
+    "min_rows": 1000,
+    "min_dates": 20,
+    "cutoff": "14:55",
+    "missing_policy": "zero_standardized_contribution"
+  }
 }

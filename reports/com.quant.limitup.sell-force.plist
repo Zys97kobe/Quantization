@@ -36,7 +36,7 @@
     <key>Hour</key>
     <integer>14</integer>
     <key>Minute</key>
-    <integer>50</integer>
+    <integer>30</integer>
   </dict>
   <key>StandardOutPath</key>
   <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/reports/daily.out.log</string>

@@ -56,7 +56,9 @@ def build_feature_frame(prices: pd.DataFrame, minute_bars: pd.DataFrame | None =
         .reset_index()
     )
     market["market_limit_hit_rate"] = market["market_limit_hits"] / market["market_symbol_count"].clip(lower=1)
-    df = df.merge(market.drop(columns=["market_symbol_count"]), on="date", how="left")
+    # Keep the covered symbol count so market-regime decisions can distinguish
+    # a genuinely weak market from an incomplete intraday data snapshot.
+    df = df.merge(market, on="date", how="left")
     board_heat = (
         df.groupby(["date", "board"])
         .agg(board_limit_hits=("limit_hit", "sum"), board_symbol_count=("symbol", "nunique"))
@@ -77,6 +79,7 @@ def build_feature_frame(prices: pd.DataFrame, minute_bars: pd.DataFrame | None =
     # values onto the current row.
     df = df.sort_values(["symbol", "date"]).reset_index(drop=True)
     grp = df.groupby("symbol", group_keys=False)
+    df["target_end_date"] = grp["date"].shift(-1)
     df["next_open"] = grp["open"].shift(-1)
     df["next_high"] = grp["high"].shift(-1)
     df["next_close"] = grp["close"].shift(-1)
@@ -97,6 +100,7 @@ def build_feature_frame(prices: pd.DataFrame, minute_bars: pd.DataFrame | None =
         "symbol",
         "name",
         "board",
+        "market_symbol_count",
         "prev_close",
         "open",
         "high",
@@ -104,6 +108,7 @@ def build_feature_frame(prices: pd.DataFrame, minute_bars: pd.DataFrame | None =
         "close",
         "limit_up_price",
         "next_open",
+        "target_end_date",
         "next_high",
         "next_close",
         "next_limit_up_price",

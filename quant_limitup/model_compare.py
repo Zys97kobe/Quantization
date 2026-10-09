@@ -10,6 +10,7 @@ import pandas as pd
 from .config import FEATURE_COLUMNS, TradingConfig
 from .filters import filter_tradeable
 from .model import train_logistic
+from .paper import _buy_risk_limits
 
 
 class ProbabilityModel(Protocol):
@@ -140,14 +141,7 @@ def _ensure_feature_columns(frame: pd.DataFrame, columns: list[str]) -> pd.DataF
 def _buyable_picks(ranked: pd.DataFrame, config: TradingConfig) -> pd.DataFrame:
     if ranked.empty:
         return ranked
-    market_limit_hits = float(pd.to_numeric(ranked.get("market_limit_hits", pd.Series([999])), errors="coerce").iloc[0])
-    max_positions = config.max_positions_per_day
-    max_position_pct = config.max_position_pct
-    min_score = config.min_score_to_buy
-    if market_limit_hits < config.weak_market_limit_hits:
-        max_positions = min(max_positions, config.weak_market_max_positions)
-        max_position_pct = min(max_position_pct, config.weak_market_max_position_pct)
-        min_score = max(min_score, config.weak_market_min_score)
+    max_positions, max_position_pct, min_score = _buy_risk_limits(ranked, config)
     cash = config.initial_cash
     picks = []
     for row in ranked[ranked["score"] >= min_score].itertuples(index=False):

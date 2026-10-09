@@ -3,9 +3,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from dataclasses import replace
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from time import sleep
 
+import numpy as np
 import pandas as pd
 
 from .accuracy import write_prediction_accuracy
@@ -34,7 +37,8 @@ from .config import (
     TradingConfig,
     ensure_dirs,
 )
-from .data import read_prices, write_sample_prices
+from .data import limit_up_price, read_prices, write_sample_prices
+from .coverage import assess_price_coverage, historical_coverage_by_date
 from .emailing import (
     load_email_config,
     send_candidate_review_email,
@@ -46,13 +50,16 @@ from .intraday_features import normalize_minute_bars
 from .messaging import load_feishu_webhook, send_feishu_candidate_review, send_feishu_daily
 from .model import LogisticLimitUpModel, train_logistic
 from .model_compare import compare_models
+from .minute_history import read_minute_history
 from .paper import _daily_trade_counts, _previous_equity, load_account, reset_account, run_paper_day
 from .providers import (
     fetch_akshare_daily_prices,
     fetch_sina_candidate_daily_prices,
     fetch_sina_daily_prices,
+    fetch_sina_spot_prices,
     fetch_sina_minute_bars,
     fetch_tencent_daily_prices,
+    fetch_tencent_spot_prices,
     fetch_tushare_daily_prices,
     sina_minute_market_is_current,
     update_sina_stock_pool,
@@ -100,6 +107,7 @@ def main(argv: list[str] | None = None) -> None:
     bt = sub.add_parser("backtest", help="Run simple next-day paper-trading backtest")
     bt.add_argument("--features", type=Path, default=DEFAULT_FEATURE_FILE)
     bt.add_argument("--model", type=Path, default=DEFAULT_MODEL_FILE)
+    bt.add_argument("--minute-bars-file", type=Path, default=None, help="Minute snapshot/archive for scheduled execution replay")
 
     compare = sub.add_parser("compare-models", help="Compare Logistic and optional GBDT on recent TopN hit rates")
     compare.add_argument("--features", type=Path, default=DEFAULT_FEATURE_FILE)
@@ -133,6 +141,11 @@ def main(argv: list[str] | None = None) -> None:
     fetch_sina.add_argument("--out", type=Path, default=DEFAULT_PRICE_FILE)
     fetch_sina.add_argument("--symbols", type=Path, default=DEFAULT_SYMBOL_POOL_FILE)
     fetch_sina.add_argument("--days", type=int, default=260)
+
+    close_refresh = sub.add_parser("refresh-close", help="Refresh accepted prices from settled Sina closing quotes without trading")
+    close_refresh.add_argument("--prices", type=Path, default=DEFAULT_PRICE_FILE)
+    close_refresh.add_argument("--symbols", type=Path, default=DEFAULT_SYMBOL_POOL_FILE)
+    close_refresh.add_argument("--date", type=str, default=None)
 
     fetch_min = sub.add_parser("fetch-sina-minute", help="Fetch Sina intraday minute bars")
     fetch_min.add_argument("--out", type=Path, default=MINUTE_FILE)
@@ -187,6 +200,7 @@ def main(argv: list[str] | None = None) -> None:
 
     paper = sub.add_parser("paper-daily", help="Run persistent paper trading from existing prices")
     paper.add_argument("--prices", type=Path, default=DEFAULT_PRICE_FILE)
+    paper.add_argument("--symbols", type=Path, default=DEFAULT_SYMBOL_POOL_FILE)
     paper.add_argument("--minute-bars-file", type=Path, default=None)
     paper.add_argument("--phase", type=str, default="full", choices=["full", "buy", "sell-morning", "sell-force"])
     paper.add_argument("--send-email", action="store_true")
@@ -228,6 +242,15 @@ def main(argv: list[str] | None = None) -> None:
         build_dataset(args.prices, args.out)
         return
 
+    if args.cmd == "refresh-close":
+        prices = fetch_validated_buy_prices(
+            args.prices, args.symbols, expected_date=args.date,
+            prefer_live=True, post_close=True,
+        )
+        report = assess_buy_prices(prices, args.symbols, args.date)
+        print(json.dumps({"provider": "sina_close", **report}, ensure_ascii=False, indent=2))
+        return
+
     if args.cmd == "train":
         train_model(args.features, args.model, args.train_end)
         return
@@ -237,7 +260,7 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     if args.cmd == "backtest":
-        backtest_to_files(args.features, args.model)
+        backtest_to_files(args.features, args.model, args.minute_bars_file)
         return
 
     if args.cmd == "compare-models":
@@ -310,6 +333,7 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.cmd == "daily":
         no_position_sell_phase = False
+        paper_minute_file = MINUTE_FILE if args.use_minute else None
         if args.provider == "akshare":
             fetch_akshare_daily_prices(
                 args.prices,
@@ -332,7 +356,7 @@ def main(argv: list[str] | None = None) -> None:
                     send_feishu=args.send_feishu,
                     feishu_webhook_file=args.feishu_webhook_file,
                 )
-            if args.paper and args.use_minute and not sina_minute_market_is_current(
+            if args.paper and args.phase in {"sell-morning", "sell-force"} and args.use_minute and not sina_minute_market_is_current(
                 args.symbols,
                 scale=args.minute_scale,
                 bars=min(args.minute_bars, 2),
@@ -341,7 +365,21 @@ def main(argv: list[str] | None = None) -> None:
                 return
             if args.refresh_stock_pool:
                 safe_update_sina_stock_pool(args.symbols)
-            if args.phase == "buy":
+            if args.paper and args.phase in {"buy", "full"}:
+                try:
+                    fetch_validated_buy_prices(
+                        args.prices, args.symbols, days=args.days,
+                        prefer_live=args.phase == "buy",
+                    )
+                except BuyCoverageError as exc:
+                    summary = settle_after_blocked_buy(exc.prices, exc.report, args.phase)
+                    report_blocked_buy(
+                        exc.report, args.phase, summary,
+                        send_email=args.send_email, email_config_file=args.email_config,
+                        send_feishu=args.send_feishu, feishu_webhook_file=args.feishu_webhook_file,
+                    )
+                    return
+            elif args.phase == "buy":
                 try:
                     run_with_retries(
                         "tencent daily price fetch",
@@ -375,15 +413,21 @@ def main(argv: list[str] | None = None) -> None:
                         top_n=args.minute_top_n,
                     )
                 if not no_position_sell_phase:
-                    run_with_retries(
-                        "minute bar fetch",
-                        fetch_sina_minute_bars,
-                        MINUTE_FILE,
-                        minute_symbols,
-                        scale=args.minute_scale,
-                        bars=args.minute_bars,
-                        max_symbols=max_symbols,
-                    )
+                    try:
+                        run_with_retries(
+                            "minute bar fetch",
+                            fetch_sina_minute_bars,
+                            MINUTE_FILE,
+                            minute_symbols,
+                            scale=args.minute_scale,
+                            bars=args.minute_bars,
+                            max_symbols=max_symbols,
+                        )
+                    except Exception:  # noqa: BLE001 - daily coverage still gates new buys.
+                        if args.phase not in {"buy", "full"}:
+                            raise
+                        paper_minute_file = None
+                        print("Minute data unavailable; using the daily-only model for this buy run")
         if args.paper:
             if args.use_minute and args.phase in {"sell-morning", "sell-force"} and no_position_sell_phase:
                 send_no_position_sell_report(
@@ -394,17 +438,22 @@ def main(argv: list[str] | None = None) -> None:
                     args.feishu_webhook_file,
                 )
                 return
-            if args.use_minute and not minute_data_is_current(MINUTE_FILE):
-                print(f"Skipping {args.phase}: no minute bars for {pd.Timestamp.now():%Y-%m-%d} (market closed)")
-                return
+            if paper_minute_file is not None and not minute_data_is_current(paper_minute_file):
+                if args.phase in {"buy", "full"}:
+                    paper_minute_file = None
+                    print("No current minute snapshot; using the daily-only model for this buy run")
+                else:
+                    print(f"Skipping {args.phase}: no minute bars for {pd.Timestamp.now():%Y-%m-%d} (market closed)")
+                    return
             run_paper_from_prices(
                 args.prices,
-                MINUTE_FILE if args.use_minute else None,
+                paper_minute_file,
                 args.send_email,
                 args.email_config,
                 args.send_feishu,
                 args.feishu_webhook_file,
                 args.phase,
+                symbols_file=args.symbols,
             )
         else:
             run_from_prices(args.prices)
@@ -438,6 +487,7 @@ def main(argv: list[str] | None = None) -> None:
             args.send_feishu,
             args.feishu_webhook_file,
             args.phase,
+            symbols_file=args.symbols,
         )
         return
 
@@ -484,12 +534,261 @@ def main(argv: list[str] | None = None) -> None:
         return
 
 
-def build_dataset(price_file: Path, out_file: Path, minute_file: Path | None = None) -> pd.DataFrame:
+class BuyCoverageError(RuntimeError):
+    def __init__(self, report: dict, prices: pd.DataFrame | None = None):
+        self.report = report
+        # Unpublished, single-source data may still cover every held stock.
+        self.prices = prices
+        super().__init__("; ".join(report["reasons"]))
+
+
+def assess_buy_prices(
+    prices: pd.DataFrame,
+    symbols_file: Path,
+    expected_date: str | None = None,
+    config: TradingConfig | None = None,
+) -> dict:
+    cfg = config or TradingConfig()
+    expected_date = expected_date or pd.Timestamp.now().strftime("%Y-%m-%d")
+    # A missing universe must never silently become the successfully fetched set.
+    pool = pd.read_csv(symbols_file) if symbols_file.exists() else pd.DataFrame(columns=["symbol", "name"])
+    return assess_price_coverage(
+        prices, pool, expected_date=expected_date,
+        min_total_coverage=cfg.min_market_coverage,
+        min_exchange_coverage=cfg.min_exchange_coverage,
+    )
+
+
+def fetch_validated_buy_prices(
+    price_file: Path,
+    symbols_file: Path,
+    days: int = 260,
+    expected_date: str | None = None,
+    prefer_live: bool = False,
+    post_close: bool = False,
+) -> pd.DataFrame:
+    """Try whole-source snapshots; publish only after coverage validation.
+
+    Do not splice adjusted Tencent and unadjusted Sina histories together.
+    A failed/partial response leaves the last accepted daily file intact.
+    """
+    price_file.parent.mkdir(parents=True, exist_ok=True)
+    attempts = []
+    settlement_prices = None
+    settlement_provider = None
+    settlement_covered = -1
+    report = assess_buy_prices(pd.DataFrame(), symbols_file, expected_date)
+    with TemporaryDirectory(prefix="daily-fetch-", dir=price_file.parent) as tmp:
+        if prefer_live:
+            spot_sources = [
+                ("sina_close", fetch_sina_spot_prices),
+            ] if post_close else [
+                ("sina_spot", fetch_sina_spot_prices),
+                ("tencent_spot", fetch_tencent_spot_prices),
+            ]
+            for spot_provider, fetcher in spot_sources:
+                staged = Path(tmp) / f"{spot_provider}.csv"
+                try:
+                    spot = fetcher(
+                        symbols_file, expected_date=expected_date,
+                        **({"accept_closed_session": True} if post_close else {}),
+                    )
+                    if not price_file.exists():
+                        raise RuntimeError("No accepted historical prices for live snapshot")
+                    history = read_prices(price_file)
+                    target = pd.Timestamp(expected_date).normalize() if expected_date else pd.Timestamp.now().normalize()
+                    history = history[history["date"] < target].copy()
+                    if history.empty:
+                        raise RuntimeError("No earlier historical prices for live snapshot")
+                    last = history.groupby("symbol", sort=False).tail(1).set_index("symbol")
+                    prior_close = spot["symbol"].map(last["close"])
+                    continuous = np.isclose(
+                        pd.to_numeric(spot["quote_prev_close"], errors="coerce"),
+                        prior_close, rtol=0.005, atol=0.02,
+                    )
+                    spot = spot.loc[continuous].copy()
+                    spot["free_float_mkt_cap"] = spot["symbol"].map(last["free_float_mkt_cap"])
+                    spot["free_float_mkt_cap"] = spot["free_float_mkt_cap"].fillna(
+                        spot["close"] * spot["volume"] * 100
+                    )
+                    spot["date"] = pd.to_datetime(target).as_unit("ns")
+                    prices = pd.concat([history, spot], ignore_index=True)
+                    report = assess_buy_prices(prices, symbols_file, expected_date)
+                except Exception as exc:  # noqa: BLE001 - try the independent spot source next.
+                    report = assess_buy_prices(pd.DataFrame(), symbols_file, expected_date)
+                    report["reasons"].append(f"{spot_provider} fetch failed: {type(exc).__name__}")
+                attempts.append({"provider": spot_provider, **report})
+                if report["eligible"]:
+                    prices.to_csv(staged, index=False)
+                    staged.replace(price_file)
+                    report.update({"provider": spot_provider, "attempts": attempts})
+                    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+                    (REPORT_DIR / "data_quality.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
+                    return prices
+            report["attempts"] = attempts
+            REPORT_DIR.mkdir(parents=True, exist_ok=True)
+            (REPORT_DIR / "data_quality.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
+            raise BuyCoverageError(report)
+        for provider, fetcher in (("tencent", fetch_tencent_daily_prices), ("sina", fetch_sina_daily_prices)):
+            staged = Path(tmp) / f"{provider}.csv"
+            try:
+                prices = fetcher(staged, symbols_file, days=days)
+                report = assess_buy_prices(prices, symbols_file, expected_date)
+                if report["date"] == report["expected_date"] and report["covered_symbols"] > settlement_covered:
+                    settlement_prices = prices.copy()
+                    settlement_provider = provider
+                    settlement_covered = report["covered_symbols"]
+            except Exception as exc:  # noqa: BLE001 - try the independent fallback provider.
+                report = assess_buy_prices(pd.DataFrame(), symbols_file, expected_date)
+                report["reasons"].append(f"{provider} fetch failed: {type(exc).__name__}")
+            attempts.append({"provider": provider, **report})
+            if report["eligible"]:
+                # Write the checked in-memory response, not an unchecked provider file.
+                prices.to_csv(staged, index=False)
+                staged.replace(price_file)
+                failures = staged.with_suffix(".failures.csv")
+                if failures.exists():
+                    failures.replace(price_file.with_suffix(".failures.csv"))
+                elif price_file.with_suffix(".failures.csv").exists():
+                    price_file.with_suffix(".failures.csv").unlink()
+                report.update({"provider": provider, "attempts": attempts})
+                REPORT_DIR.mkdir(parents=True, exist_ok=True)
+                (REPORT_DIR / "data_quality.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
+                return prices
+    report["attempts"] = attempts
+    report["settlement_price_provider"] = settlement_provider
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    (REPORT_DIR / "data_quality.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
+    raise BuyCoverageError(report, settlement_prices)
+
+
+def settle_after_blocked_buy(prices: pd.DataFrame | None, report: dict, phase: str) -> dict | None:
+    """Settle full runs only when every sellable holding has valid daily prices.
+
+    Coverage failure must not stop exits when their own quotes are complete.
+    Conversely, a partial settlement would mark the entire day sold and prevent
+    a same-day retry. Leave account files untouched if any held quote is missing.
+    Minute-only snapshots are deliberately insufficient here: synthesizing a
+    whole daily snapshot can otherwise reuse yesterday's prices for missing bars.
+    """
+    if phase != "full":
+        return None
+    current = pd.Timestamp(report["expected_date"]).normalize()
+    config = TradingConfig(initial_cash=10_000.0)
+    account = load_account(DEFAULT_PAPER_STATE, config.initial_cash)
+    positions = [pos for pos in account.positions if pd.Timestamp(pos.buy_date).normalize() < current]
+    if not positions:
+        return {"settlement_skipped": "no_sellable_positions"}
+
+    columns = {"date", "symbol", "open", "high", "low", "close"}
+    valid = pd.DataFrame(columns=sorted(columns))
+    if prices is not None and columns.issubset(prices.columns):
+        valid = prices.copy()
+        valid["date"] = pd.to_datetime(valid["date"], errors="coerce").dt.normalize()
+        valid = valid.drop_duplicates(["date", "symbol"], keep="last")
+        ohlc_columns = ["open", "high", "low", "close"]
+        valid[ohlc_columns] = valid[ohlc_columns].apply(pd.to_numeric, errors="coerce")
+        ohlc = valid[ohlc_columns]
+        usable = np.isfinite(ohlc).all(axis=1) & ohlc.gt(0).all(axis=1)
+        usable &= valid["high"].ge(ohlc.max(axis=1)) & valid["low"].le(ohlc.min(axis=1))
+        valid = valid[usable & valid["date"].le(current)].copy()
+
+    day = valid[valid["date"] == current].set_index("symbol")
+    missing = sorted({pos.symbol for pos in positions} - set(day.index))
+    if missing:
+        return {"settlement_skipped": "missing_valid_current_prices", "settlement_missing_symbols": missing}
+
+    rows = []
+    missing_history = []
+    for pos in positions:
+        history = valid[(valid["symbol"] == pos.symbol) & (valid["date"] < current)].sort_values("date")
+        if history.empty:
+            missing_history.append(pos.symbol)
+            continue
+        row = day.loc[pos.symbol].copy()
+        is_st = int(
+            str(row.get("is_st", 0)).strip().lower() in {"true", "1", "1.0"}
+            or "ST" in str(row.get("name", pos.name)).upper()
+        )
+        row["symbol"], row["name"], row["board"] = pos.symbol, pos.name, pos.board
+        row["prev_close"] = float(history.iloc[-1]["close"])
+        row["limit_up_price"] = limit_up_price(row["prev_close"], pos.board, is_st)
+        # run_paper_day also builds an unused neutral rank; it needs these
+        # display fields, but settlement does not need trained model features.
+        for column in ("volume_ratio_5", "ret_3", "turnover", "market_limit_hits"):
+            row[column] = 0.0
+        rows.append(row)
+    if missing_history:
+        return {"settlement_skipped": "missing_previous_close", "settlement_missing_symbols": sorted(missing_history)}
+
+    neutral = LogisticLimitUpModel([], [], -35.0, [], [])
+    _, _, summary = run_paper_day(
+        pd.DataFrame(rows), neutral, config,
+        state_file=DEFAULT_PAPER_STATE, trades_file=DEFAULT_PAPER_TRADES, daily_file=DEFAULT_PAPER_DAILY,
+        settle=True, open_new=False, date=str(current.date()),
+    )
+    return summary
+
+
+def report_blocked_buy(
+    report: dict, phase: str, summary: dict | None = None, *,
+    send_email: bool = False, email_config_file: Path = DEFAULT_EMAIL_CONFIG_FILE,
+    send_feishu: bool = False, feishu_webhook_file: Path = DEFAULT_FEISHU_WEBHOOK_FILE,
+) -> tuple[pd.DataFrame, dict]:
+    result = dict(summary or {})
+    result.update({
+        "date": report.get("expected_date") or report.get("date"),
+        "phase": phase,
+        "skipped": "buy_data_coverage",
+        "opened_positions": 0,
+        "market_regime": "insufficient",
+        "market_regime_reason": "；".join(report["reasons"]),
+        "actual_max_positions": 0,
+        "actual_max_position_pct": 0.0,
+        "data_quality": report,
+        "note": "行情校验未通过，暂停新增买入；未生成新的选票结果。",
+    })
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    (REPORT_DIR / "data_quality.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
+    (REPORT_DIR / "paper_daily_summary.json").write_text(json.dumps(result, indent=2, ensure_ascii=False))
+    # Persist the blocked decision first. Notification/configuration failures
+    # must not resume buying or prevent the other enabled channel from sending.
+    notifications = {}
+    if send_email:
+        def notify_email():
+            send_daily_email(load_email_config(email_config_file), result, pd.DataFrame())
+        notifications["email"] = "sent" if safe_notify(
+            "blocked buy email", notify_email, success_message="Sent blocked buy email",
+        ) else "failed"
+    if send_feishu:
+        def notify_feishu():
+            send_feishu_daily(load_feishu_webhook(feishu_webhook_file), result, pd.DataFrame())
+        notifications["feishu"] = "sent" if safe_notify(
+            "blocked buy Feishu message", notify_feishu, success_message="Sent blocked buy Feishu message",
+        ) else "failed"
+    if notifications:
+        result["notification_status"] = notifications
+        (REPORT_DIR / "paper_daily_summary.json").write_text(json.dumps(result, indent=2, ensure_ascii=False))
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    return pd.DataFrame(), result
+
+
+def build_dataset(
+    price_file: Path,
+    out_file: Path,
+    minute_file: Path | None = None,
+    symbols_file: Path | None = None,
+) -> pd.DataFrame:
     prices = read_prices(price_file)
     minute_bars = None
-    if minute_file and minute_file.exists():
-        minute_bars = normalize_minute_bars(pd.read_csv(minute_file))
+    if minute_file is not None:
+        history = read_minute_history(minute_file)
+        if not history.empty:
+            minute_bars = normalize_minute_bars(history)
     features = build_feature_frame(prices, minute_bars)
+    if symbols_file is not None:
+        coverage = historical_coverage_by_date(prices, pd.read_csv(symbols_file))
+        features = features.merge(coverage, on="date", how="left")
     out_file.parent.mkdir(parents=True, exist_ok=True)
     features.to_csv(out_file, index=False)
     print(f"Wrote {len(features)} feature rows to {out_file}")
@@ -498,8 +797,7 @@ def build_dataset(price_file: Path, out_file: Path, minute_file: Path | None = N
 
 def train_model(feature_file: Path, model_file: Path, train_end: str | None) -> LogisticLimitUpModel:
     frame = pd.read_csv(feature_file, parse_dates=["date"])
-    train_frame = frame.dropna(subset=["target_limit_up_next"])
-    train_frame = train_frame if train_end is None else train_frame[train_frame["date"] <= pd.to_datetime(train_end)]
+    train_frame = eligible_training_rows(frame, train_end)
     model, metrics = train_logistic(train_frame)
     model.save(model_file)
     metrics_file = model_file.with_suffix(".metrics.json")
@@ -507,6 +805,22 @@ def train_model(feature_file: Path, model_file: Path, train_end: str | None) -> 
     print(f"Wrote model to {model_file}")
     print(json.dumps(metrics, indent=2))
     return model
+
+
+def eligible_training_rows(frame: pd.DataFrame, train_end: str | None = None) -> pd.DataFrame:
+    train_frame = frame.dropna(subset=["target_limit_up_next"])
+    train_frame = train_frame if train_end is None else train_frame[train_frame["date"] <= pd.to_datetime(train_end)]
+    if "market_data_eligible" in train_frame:
+        eligible = frame["market_data_eligible"].astype(str).str.lower().isin(["true", "1", "1.0"])
+        complete_dates = eligible.groupby(frame["date"]).all()
+        complete_dates = complete_dates[complete_dates].index
+        train_frame = train_frame[train_frame["date"].isin(complete_dates)]
+        if "target_end_date" in train_frame:
+            train_frame = train_frame[pd.to_datetime(train_frame["target_end_date"], errors="coerce").isin(complete_dates)]
+    if "target_end_date" in train_frame:
+        available_by = pd.to_datetime(train_end) if train_end else frame["date"].max()
+        train_frame = train_frame[pd.to_datetime(train_frame["target_end_date"], errors="coerce") <= available_by]
+    return train_frame
 
 
 def rank_to_file(feature_file: Path, model_file: Path, out_file: Path, date: str | None) -> pd.DataFrame:
@@ -520,10 +834,11 @@ def rank_to_file(feature_file: Path, model_file: Path, out_file: Path, date: str
     return rank
 
 
-def backtest_to_files(feature_file: Path, model_file: Path) -> tuple[pd.DataFrame, dict]:
+def backtest_to_files(feature_file: Path, model_file: Path, minute_file: Path | None = None) -> tuple[pd.DataFrame, dict]:
     frame = pd.read_csv(feature_file, parse_dates=["date"])
     model = LogisticLimitUpModel.load(model_file)
-    trades, summary = run_backtest(frame, model)
+    history = read_minute_history(minute_file) if minute_file is not None else None
+    trades, summary = run_backtest(frame, model, minute_bars=history)
     trades_file = REPORT_DIR / "backtest_trades.csv"
     summary_file = REPORT_DIR / "backtest_summary.json"
     trades.to_csv(trades_file, index=False)
@@ -550,8 +865,8 @@ def build_minute_symbol_pool(
     top_n: int = 300,
 ) -> Path:
     feature_file = PROCESSED_DIR / "features_daily_prefilter.csv"
-    features = build_dataset(price_file, feature_file, None)
-    train_frame = features.dropna(subset=["target_limit_up_next"])
+    features = build_dataset(price_file, feature_file, None, symbols_file=full_symbols_file)
+    train_frame = eligible_training_rows(features)
     if train_frame["target_limit_up_next"].nunique() < 2:
         pool = pd.read_csv(full_symbols_file).head(top_n)
     else:
@@ -720,14 +1035,54 @@ def run_paper_from_prices(
     send_feishu: bool,
     feishu_webhook_file: Path,
     phase: str = "full",
+    *,
+    symbols_file: Path = DEFAULT_SYMBOL_POOL_FILE,
+    expected_date: str | None = None,
 ) -> tuple[pd.DataFrame, dict]:
-    build_dataset(price_file, DEFAULT_FEATURE_FILE, minute_file)
-    model = train_model(DEFAULT_FEATURE_FILE, DEFAULT_MODEL_FILE, None)
-    frame = pd.read_csv(DEFAULT_FEATURE_FILE, parse_dates=["date"])
+    if phase in {"buy", "full"}:
+        prices = read_prices(price_file)
+        coverage = assess_buy_prices(prices, symbols_file, expected_date)
+        if not coverage["eligible"]:
+            summary = settle_after_blocked_buy(prices, coverage, phase)
+            return report_blocked_buy(
+                coverage, phase, summary,
+                send_email=send_email, email_config_file=email_config_file,
+                send_feishu=send_feishu, feishu_webhook_file=feishu_webhook_file,
+            )
+        REPORT_DIR.mkdir(parents=True, exist_ok=True)
+        quality_file = REPORT_DIR / "data_quality.json"
+        if quality_file.exists():
+            try:
+                prior_quality = json.loads(quality_file.read_text())
+                if (prior_quality.get("date") == coverage["date"]
+                        and prior_quality.get("covered_symbols") == coverage["covered_symbols"]
+                        and prior_quality.get("eligible")):
+                    coverage.update({key: prior_quality[key] for key in ("provider", "attempts") if key in prior_quality})
+            except (OSError, ValueError, TypeError):
+                pass
+        quality_file.write_text(json.dumps(coverage, indent=2, ensure_ascii=False))
     base_config = TradingConfig(initial_cash=10_000.0)
-    initialize_factor_params(frame, 22, DEFAULT_FACTOR_PARAMS)
-    threshold, best = optimize_threshold(frame, model, base_config, REPORT_DIR / "strategy_optimization.json")
     minute_bars = normalize_minute_bars(pd.read_csv(minute_file)) if minute_file and minute_file.exists() else None
+    if phase in {"sell-morning", "sell-force"}:
+        # Selling does not require model fitting or parameter selection, and its
+        # partial intraday snapshot must not replace the accepted training data.
+        frame = build_feature_frame(read_prices(price_file), minute_bars)
+        model = LogisticLimitUpModel.load(DEFAULT_MODEL_FILE) if DEFAULT_MODEL_FILE.exists() else LogisticLimitUpModel([], [], -35.0, [], [])
+        threshold = base_config.min_score_to_buy
+        best = {"status": "not_run_sell_phase", "max_position_pct": base_config.max_position_pct}
+    else:
+        built = build_dataset(price_file, DEFAULT_FEATURE_FILE, minute_file, symbols_file=symbols_file)
+        if phase == "buy":
+            built = mask_unfinished_buy_outcomes(built)
+            built.to_csv(DEFAULT_FEATURE_FILE, index=False)
+        model = train_model(DEFAULT_FEATURE_FILE, DEFAULT_MODEL_FILE, None)
+        frame = pd.read_csv(DEFAULT_FEATURE_FILE, parse_dates=["date"])
+        initialize_factor_params(frame, 22, DEFAULT_FACTOR_PARAMS)
+        execution_history = read_minute_history(minute_file or MINUTE_FILE)
+        threshold, best = optimize_threshold(
+            frame, model, base_config, REPORT_DIR / "strategy_optimization.json",
+            minute_bars=execution_history,
+        )
     latest_labeled = frame.loc[frame["target_limit_up_next"].notna(), "date"].max()
     bought_symbols = load_buy_symbols(latest_labeled)
     candidate_rank = load_rank_snapshot(latest_labeled)
@@ -738,16 +1093,10 @@ def run_paper_from_prices(
         candidate_rank=candidate_rank,
     )
     DEFAULT_LEARNING_REPORT.write_text(json.dumps(learning, indent=2, ensure_ascii=False, default=str))
-    config = TradingConfig(
-        initial_cash=10_000.0,
-        max_positions_per_day=base_config.max_positions_per_day,
+    config = replace(
+        base_config,
         max_position_pct=float(best.get("max_position_pct", base_config.max_position_pct)),
         min_score_to_buy=threshold,
-        buy_slippage_bps=base_config.buy_slippage_bps,
-        sell_slippage_bps=base_config.sell_slippage_bps,
-        commission_bps=base_config.commission_bps,
-        stamp_tax_bps=base_config.stamp_tax_bps,
-        min_commission=base_config.min_commission,
     )
     settle, open_new, sell_mode = _phase_flags(phase)
     account, rank, summary = run_paper_day(
@@ -762,6 +1111,9 @@ def run_paper_from_prices(
     summary["optimized_threshold"] = threshold
     summary["optimized_max_position_pct"] = config.max_position_pct
     summary["optimization_total_return"] = best.get("total_return")
+    summary["optimization_status"] = best.get("status")
+    summary["optimization_reason"] = best.get("reason")
+    summary["tail_features"] = getattr(model, "metadata", {}).get("tail_features", {})
     summary["learning_top5_hit_rate"] = learning.get("top5_hit_rate")
     rank.to_csv(REPORT_DIR / "latest_rank.csv", index=False)
     display_rank = rank.head(10).copy()
@@ -806,6 +1158,19 @@ def run_paper_from_prices(
         )
     print(json.dumps(summary, indent=2, default=str))
     return rank, summary
+
+
+def mask_unfinished_buy_outcomes(frame: pd.DataFrame) -> pd.DataFrame:
+    """Keep the current bar for ranking without learning its unfinished outcome."""
+    result = frame.copy()
+    current = result["date"].max()
+    unfinished = pd.to_datetime(result["target_end_date"], errors="coerce") >= current
+    outcome_columns = [
+        "next_open", "next_high", "next_close", "next_limit_up_price",
+        "target_limit_up_next", "target_close_limit_up_next",
+    ]
+    result.loc[unfinished, outcome_columns] = np.nan
+    return result
 
 
 def load_trade_lists(date: str) -> tuple[pd.DataFrame, pd.DataFrame]:

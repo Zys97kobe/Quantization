@@ -30,9 +30,9 @@
   <key>StartCalendarInterval</key>
   <dict>
     <key>Hour</key>
-    <integer>15</integer>
+    <integer>14</integer>
     <key>Minute</key>
-    <integer>10</integer>
+    <integer>50</integer>
   </dict>
   <key>StandardOutPath</key>
   <string>/Users/baibaibaibaibai/git_repo/git_hub/Quantization/reports/daily.out.log</string>

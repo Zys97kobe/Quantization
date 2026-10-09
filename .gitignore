@@ -8,3 +8,6 @@ data/
 /reports/monthly/
 /outputs/
 /reports/
+!/reports/
+/reports/*
+!/reports/com.quant.limitup.refresh-close.plist
